@@ -4,7 +4,7 @@ description: Connect to COMSOL or Ansys Fluent through the configured MCP provid
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.3.1"
+  version: "0.3.2"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -47,6 +47,8 @@ Older references describe optional validation/RSI workflows and historical polic
 3. Anchor setters to installed-version documentation and native properties. See applicable [API patterns](../docs/api-patterns.md). Use live `properties()` or engineer-provided Copy as Code rather than repeated guesses. Feature classes, inlet choices and coupled/segregated sequences are model-specific, not universal recipes.
 4. Read back effective geometry, selections, material properties, boundaries, sources, coupling, initialization and study/time settings. Verify changed parameters affect the built model. Preserve units and material validity ranges. Do not silently replace physics or empty selections.
 5. Establish task resource/solve/repair limits. Reconcile active/unknown jobs before submission, preserve task ownership, avoid duplicates and never force-kill another task. A local lease is not a distributed lock. See operational mechanics in [operations reliability](../docs/operations-reliability-v0.7.7-rc1.md); its paper-specific acceptance requirements are opt-in.
+   - For queued COMSOL studies or cases, read `comsol_queue_status` before submission. Verify `paper2simu_version`, `runtime_root`, and `output_root` against the configured connector. Missing `submission_budget` means the running connector cannot report its window. When `expires_soon` is true, flag the deadline and save the checkpoint, job IDs and model/study identities while the JVM is idle.
+   - On a budget denial, use `submission_budget.block_reasons`. Poll a full active queue, escalate a cumulative cap to the operator, and use the [local renewal procedure](../docs/connectors.md#submission-window-and-recovery) for an expired window. Preserve job history. After recovery, verify the same runtime or reconcile recovered jobs, then submit only work confirmed pending and within the task's authorization.
 6. Save a new checkpoint before expensive solves. Use asynchronous jobs and inspect accepted steps, native progress, warnings and requested monitors within budget. MPh study tools require the returned study label, not an assumed Java tag. Diagnose stalls before task-authorized retries; retain failed baselines.
 7. Record configured native criteria and actual termination. Native convergence, job completion and file creation are distinct observations. Do not invent a residual floor or rerun solely on an optional diagnostic alarm. Actual failure remains failure even if assumptions or checks are also unresolved.
 8. Save results before expensive postprocessing. Record run/model/parameter/mesh/study/solution/dataset identities and hashes to prevent stale mixing. Model changes invalidate affected checks. Preserve sources and use explicit new paths under the configured output root, respecting path/symlink protections.

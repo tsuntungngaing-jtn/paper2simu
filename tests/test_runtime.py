@@ -247,6 +247,43 @@ class RuntimeTests(unittest.TestCase):
                     assert "Disabled" in denied.content[0].text
         asyncio.run(run())
 
+    def test_stdio_budget_errors_and_local_renewal(self):
+        from mcp import ClientSession, StdioServerParameters
+        from mcp.client.stdio import stdio_client
+        (self.tmp_path / 'job-manifests').mkdir()
+        (self.tmp_path / 'job-manifests/prior.json').write_text(
+            json.dumps({'job_id': 'prior', 'status': 'completed'}), encoding='utf-8')
+        env = dict(os.environ, COMSOL_OUTPUT_ROOT=str(self.tmp_path), COMSOL_MAX_SUBMISSIONS='1',
+                   COMSOL_SUBMISSION_WINDOW_SECONDS='86400', COMSOL_TOOL_ROLE='operator')
+
+        async def run():
+            params = StdioServerParameters(command=sys.executable, args=['-m', 'server.main'],
+                                           cwd=str(ROOT), env=env)
+            async with stdio_client(params) as (reader, writer):
+                async with ClientSession(reader, writer) as session:
+                    await session.initialize()
+                    status = await session.call_tool('comsol_queue_status', {})
+                    self.assertFalse(status.isError)
+                    self.assertEqual(status.structuredContent['recovery_pending'], ['prior'])
+                    runtime_id = status.structuredContent['runtime_id']
+                    receipt = subprocess.run(
+                        [sys.executable, '-m', 'server.main', 'renew-window', '--runtime-id', runtime_id,
+                         '--reason', 'Approved test renewal'],
+                        env=env, cwd=ROOT, capture_output=True, check=True, timeout=10,
+                    )
+                    grant = Path(json.loads(receipt.stdout)['grant_path']).stem
+                    for tool, arguments in (('study_solve', {}), ('study_solve_async', {}),
+                                            ('comsol_run_case', {'case_id': 'heat_sink_3d'})):
+                        with self.subTest(tool=tool):
+                            result = await session.call_tool(tool, arguments)
+                            self.assertTrue(result.isError)
+                            self.assertEqual(result.structuredContent['reason'], 'TOTAL_SUBMISSION_LIMIT_REACHED')
+                            budget = result.structuredContent['submission_budget']
+                            self.assertEqual(budget['submissions']['used'], 1)
+                            self.assertEqual(budget['window']['renewal_grant_id'], grant)
+                            self.assertEqual(json.loads(result.content[0].text), result.structuredContent)
+        asyncio.run(run())
+
     def test_http_and_sse_real_protocol_with_bearer_auth(self):
         import httpx
         from mcp import ClientSession
