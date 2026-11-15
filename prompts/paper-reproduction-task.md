@@ -27,7 +27,52 @@
 
 每项检查用 PASS / FAIL / BLOCKED / NOT_RUN 并附证据。没有预定判据只报告数值，不报 PASS。求解完成不等于复刻通过；指标达标而必要检查缺失，应报告“指标达到，验证未完成”。原生求解失败不能被条件通过覆盖。只有所有声明必要检查和主要指标满足要求，才可在明确范围内声称通过。条件复刻不得包装成原文真实设置。主动跳过记 SCOPE_CHANGED，未执行记 NOT_RUN。
 
+## 一眼对照板 REPRODUCTION_DASHBOARD（必做）
+
+最终交付与阶段小结都必须用下面四块表**一眼展示**进展；底层仍写 INPUT_LEDGER / TRIAL_MATRIX / QOI_CONTRACT，但聊天与报告首屏不得只给散文或一句 PASS。未执行的格填 `NOT_RUN` / `—`，禁止把缺失结果填成 0 或“已对齐”。
+
+### A. 输入来源 SOURCE_MAP
+
+| input_id | 物理量 | 原文位置（页/表/图/公式） | origin | 证据摘录或路径 | 冲突/未找到说明 |
+|---|---|---|---|---|---|
+| … | … | … | paper_reported / derived / … | … | 查过何处仍未找到；或表图冲突保留双方 |
+
+### B. 原始具体输入 BASELINE_INPUTS
+
+冻结基线求解前的具体数值（含单位）。这是“文章给出 / 推导锁定 / 文档默认 / 初始假设”的快照，后续校准改的是相对此表的增量，不改写本表。
+
+| input_id | 具体值+单位 | layer | 是否进入方程/几何 | 备注 |
+|---|---|---|---|---|
+| … | … | lock / software_doc / tentative / numerical | 是/否 | … |
+
+### C. 每轮迭代更改 ITERATION_DELTA
+
+相对上一保留点，只列**实际生效**的更改（读回确认后的值）。计划未执行不得写入“已改”。
+
+| trial_id | 相对父试验 | 更改项 → 新值 | 预期影响 | 实测 e_i / J | 决策 KEEP/REVERT/HOLD/FAILED | 产物路径 |
+|---|---|---|---|---|---|---|
+| T000 | — | 基线建立 | — | … | KEEP | … |
+| T001 | T000 | θ_inlet: flat→parabolic | 降 ΔT 误差 | … | REVERT | … |
+
+### D. 最终输出对标 OUTPUT_VS_BENCHMARK
+
+以任务卡主要指标为准；补充诊断量另表，不得挤占主表门槛。
+
+| metric_id | 工况 | 论文 benchmark（值+单位+出处） | 复刻输出（值+单位+run/dataset） | e 或绝对误差 | 门槛 | 状态 | 最佳 trial |
+|---|---|---|---|---|---|---|---|
+| … | … | … | … | … | <15% 或任务覆盖 | PASS/FAIL/… | T0xx |
+
+对照板下方用三行摘要：
+
+1. **重建类型**：直接 / 条件 / 校准；锁定输入摘要；当前 \(\theta\) 或 \(\Theta_{\mathrm{feasible}}\)。  
+2. **最佳可比较点**：`best_comparable_trial` 的 J、超限项、模型/网格身份。  
+3. **未闭合项**：NOT_RUN 检查、未独立验证的拟合、冲突证据、下一步最小动作。
+
+校准进行中也要更新 C/D；失败交付同样填满四表。详细字段与事件格式见 [输入重建操作卡](paper-input-reconstruction.md)。
+
 ## 输入台账 INPUT_LEDGER（必做）
+
+先按 [文献输入重建与迭代记录](paper-input-reconstruction.md) 建立证据定位、依赖关系、假设卡和逐轮记录。来源、调控角色与拟合状态分别保存；`derived` 仅在其依赖与推导条件确定时锁定，否则随根输入传播不确定性。官方默认值不证明作者使用它。下表是兼容旧台账的简写，以这些区分解释。
 
 在求解与校准前建立并随任务更新台账。每行至少包含：
 
@@ -39,8 +84,8 @@
 
 | layer | 含义 | 可否为过线而调 |
 |---|---|---|
-| `lock` | 论文明确或由其直接导出 | 否 |
-| `software_doc` | 安装版官方文档默认/推荐 | 一般不调；仅切换文档推荐项并记账 |
+| `lock` | 论文明确，或依赖与推导条件均确定 | 否 |
+| `software_doc` | 安装版官方文档默认/推荐的来源标记 | 数值项归 numerical；未明确物理选择可有据归 tentative |
 | `tentative` | 论文未消歧、带物理先验盒的假设 | **唯一可调集** |
 | `numerical` | 网格/阶次/稳定化等 | 只估数值不确定，不作贴合旋钮 |
 | `fitted` | 校准得到的值或区间 | 产物，不得回标为 paper_reported |
@@ -95,14 +140,15 @@
 
 使用已选MCP路线，核查实际选区、边界、材料、耦合及结果身份。遵守预算，保留失败基线；修复记录修改、理由和受影响检查。参数/网格变动后重做依赖检查，不混用旧数据、不覆盖原始材料、不干扰他人任务。
 
-交付原生模型（含有价值的失败/部分模型）、实际调用/脚本、日志、**INPUT_LEDGER**、逐点对比表、**TRIAL_MATRIX**（若做了校准）、**FEASIBLE_SET**（若适用）、守恒收支、网格/时间步比较、未解决问题及继续运行设置。附run/model/mesh/study/solution/dataset身份和文件校验信息。重开未执行写NOT_RUN；不只交截图或一句PASS。
+交付原生模型（含有价值的失败/部分模型）、实际调用/脚本、日志、**REPRODUCTION_DASHBOARD**（SOURCE_MAP / BASELINE_INPUTS / ITERATION_DELTA / OUTPUT_VS_BENCHMARK）、**INPUT_LEDGER**、逐点对比表、**TRIAL_MATRIX**（若做了校准）、**FEASIBLE_SET**（若适用）、守恒收支、网格/时间步比较、未解决问题及继续运行设置。附run/model/mesh/study/solution/dataset身份和文件校验信息。重开未执行写NOT_RUN；不只交截图或一句PASS。
 
-最终报告：执行结果、证据与假设、主要指标误差与 \(J\)、检查结果、条件可行区间与未验证项、文件清单。检索token节省、RSI改进、软件开发验收只在另行要求且实测时报告。
+最终报告首屏必须是对照板四表，其后才是执行结果细节、证据与假设、主要指标误差与 \(J\)、检查结果、条件可行区间与未验证项、文件清单。检索token节省、RSI改进、软件开发验收只在另行要求且实测时报告。
 
 条件复刻通过时使用操作卡规定的交付句式：写明锁定输入、文档默认、\(\theta\in\Theta_{\mathrm{feasible}}\)，并声明可行区间≠作者设置唯一还原。
 
 ## 方法依据（并非统一门槛）
 
+- 输入重建与迭代操作卡（包内）：[`paper-input-reconstruction.md`](paper-input-reconstruction.md)
 - 条件校准操作卡（包内）：[`conditional-calibration.md`](conditional-calibration.md)
 - COMSOL 网格细化：https://www.comsol.com/support/knowledgebase/1261
 - COMSOL 热量平衡：https://doc.comsol.com/6.4/doc/com.comsol.help.heat/heat_ug_modeling.06.04.html

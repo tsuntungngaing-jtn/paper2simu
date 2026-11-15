@@ -4,7 +4,7 @@ description: Connect to COMSOL or Ansys Fluent through the configured MCP provid
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.2.3"
+  version: "0.3.1"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -19,6 +19,7 @@ Execute the user's modeling task and collect evidence. The caller supplies an ex
 **Paper reproduction (packaged prompts, not hand-paste):** when the user asks to reproduce a paper or fill a reproduction task card, the agent **must load and follow** the skill-packaged prompts below—do **not** require the human to paste their full text each session. Humans only fill the task card fields (paper, cases, metrics, budgets, authorization).
 
 - Unified acceptance / inference: [`../prompts/paper-reproduction-task.md`](../prompts/paper-reproduction-task.md)
+- Paper input extraction, bounded hypotheses and iteration records: [`../prompts/paper-input-reconstruction.md`](../prompts/paper-input-reconstruction.md)
 - Conditional calibration (tentative inputs → feasible set): [`../prompts/conditional-calibration.md`](../prompts/conditional-calibration.md)
 
 Do **not** activate those prompts merely by loading this skill for a non-reproduction execution job. Thresholds, paper matching, input ledger layers (`lock` / `tentative` / …), \(J=\max e_i/\tau\), trial matrix, conservation acceptance, grid studies and scientific claims belong to the packaged task prompts. No universal paper-error, residual, conservation or mesh-change threshold is built into this skill’s execution code. Optional checks calculate or collect evidence and judge only against the active task criteria.

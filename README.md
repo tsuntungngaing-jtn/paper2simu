@@ -12,19 +12,13 @@ Paper2Simu unifies the evidence-first COMSOL Automatic pipeline (up to v0.7.6) a
 
 **Release migration:** `python scripts/release.py --output ../Paper2Simu-v0.2.0.zip` and `python scripts/install_skill.py` produce the new package/install name without overwriting an existing directory. Keep the old install until a complete rollback-tested integration is accepted. Never transfer COMSOL tokens or private solver artifacts into the public Git repository.
 
-## Execution/acceptance separation (v0.2.2+)
+## Paper input reconstruction (v0.3.1)
 
-The [canonical skill](paper2simu/SKILL.md) handles solver connection, authorized execution and evidence delivery. For paper reproduction, the agent loads packaged [acceptance prompt](prompts/paper-reproduction-task.md) and [conditional calibration card](prompts/conditional-calibration.md) automatically; fill the **task card** only (no hand-paste of the full policy each turn). Configurable paper-metric default is strict <15% with \(J=\max e_i/0.15\). Pure modeling without reproduction still executes without a PASS claim. See [migration/API notes](docs/execution-acceptance-separation.md) and [filled example](examples/paper-reproduction-task-example.md).
-
-The controller reports execution, checks and paper comparisons separately. Failed/partial artifacts are deliverable. Optional legacy checks remain available, but historical policies below are not automatically activated by loading the skill. Live solver validation of this change remains NOT_RUN.
-
-## Fluent licensing preflight (v0.2.3)
-
-Skill version **0.2.3** adds Windows Fluent / Ansys licensing-client preflight for agent hosts: launch identity, `%APPDATA%\Ansys` write rights for dynamic `ansyscl` port files, log locations, and official PyFluent-MCP session-log notes. See [Fluent licensing preflight](docs/fluent-licensing-preflight.md) and the Fluent section in [connectors](docs/connectors.md). Connection recovery is not paper acceptance.
+Skill version **0.3.1** adds the packaged [paper input reconstruction card](prompts/paper-input-reconstruction.md) and a mandatory **REPRODUCTION_DASHBOARD** in the [acceptance prompt](prompts/paper-reproduction-task.md): SOURCE_MAP (input provenance), BASELINE_INPUTS (concrete starting values), ITERATION_DELTA (per-trial effective changes), and OUTPUT_VS_BENCHMARK (reproduced outputs vs paper metrics). Acceptance thresholds stay in the task prompts; this release does **not** add a stricter solver gate. The calibration helper no longer returns `VALIDATED` from a different `claim_id` alone—hold-out partition, frozen model revision, hold-out run and score evidence are required. Live COMSOL/Fluent verification of reproduction error or success-rate impact remains **NOT_RUN**.
 
 ## Execution/acceptance separation (v0.2.2+)
 
-The [canonical skill](paper2simu/SKILL.md) handles solver connection, authorized execution and evidence delivery. For paper reproduction, the agent loads packaged [acceptance prompt](prompts/paper-reproduction-task.md) and [conditional calibration card](prompts/conditional-calibration.md) automatically; fill the **task card** only (no hand-paste of the full policy each turn). Configurable paper-metric default is strict <15% with \(J=\max e_i/0.15\). Pure modeling without reproduction still executes without a PASS claim. See [migration/API notes](docs/execution-acceptance-separation.md) and [filled example](examples/paper-reproduction-task-example.md).
+The [canonical skill](paper2simu/SKILL.md) handles solver connection, authorized execution and evidence delivery. For paper reproduction, the agent loads packaged [acceptance prompt](prompts/paper-reproduction-task.md), [input reconstruction card](prompts/paper-input-reconstruction.md) and [conditional calibration card](prompts/conditional-calibration.md) automatically; fill the **task card** only (no hand-paste of the full policy each turn). Configurable paper-metric default is strict <15% with \(J=\max e_i/0.15\). Pure modeling without reproduction still executes without a PASS claim. See [migration/API notes](docs/execution-acceptance-separation.md) and [filled example](examples/paper-reproduction-task-example.md).
 
 The controller reports execution, checks and paper comparisons separately. Failed/partial artifacts are deliverable. Optional legacy checks remain available, but historical policies below are not automatically activated by loading the skill. Live solver validation of this change remains NOT_RUN.
 

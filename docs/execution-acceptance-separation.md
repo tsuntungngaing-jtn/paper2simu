@@ -2,7 +2,7 @@
 
 The canonical skill is `paper2simu/SKILL.md`. Root `SKILL.md`, `COMSOFLENT_SKILL.md` and `comsoflent/SKILL.md` only route to it. No inherited instruction chain reactivates historical paper acceptance rules. The full package is required; copying a router alone is insufficient.
 
-Paper-reproduction acceptance lives **inside the skill package** as `prompts/paper-reproduction-task.md` plus `prompts/conditional-calibration.md`. When the user requests paper reproduction, the agent loads those files automatically; the human fills the **task card** only—do not require pasting the full prompt each turn. Pure execution jobs still must not activate acceptance merely by loading the skill. The Chinese prompt applies to either COMSOL or Fluent, with one solver selected per task. Its configurable default is strict paper-metric relative error <15% with \(J=\max_i(e_i/0.15)\), not a default in skill execution code. Conservation, mesh and stability criteria are task-specific and predeclared. Existing calculation/diagnostic tools remain available on explicit request.
+Paper-reproduction acceptance lives **inside the skill package** as `prompts/paper-reproduction-task.md`, `prompts/paper-input-reconstruction.md` and `prompts/conditional-calibration.md`. When the user requests paper reproduction, the agent loads those files automatically; the human fills the **task card** only—do not require pasting the full prompt each turn. Pure execution jobs still must not activate acceptance merely by loading the skill. The Chinese prompt applies to either COMSOL or Fluent, with one solver selected per task. Its configurable default is strict paper-metric relative error <15% with \(J=\max_i(e_i/0.15)\), not a default in skill execution code. Conservation, mesh and stability criteria are task-specific and predeclared. Existing calculation/diagnostic tools remain available on explicit request.
 
 ## Controller interface
 
@@ -36,7 +36,7 @@ Acceptance configuration is frozen at case start; use a new case for a revised c
 
 1. Load the canonical execution skill through any supported entrypoint.
 2. For execution only, supply a well-posed execution task and budget. Do not fabricate acceptance criteria.
-3. For reproduction, load packaged `prompts/paper-reproduction-task.md` (and `conditional-calibration.md` when calibrating), fill the **task card** only, and fix criteria before comparing results. Maintain INPUT_LEDGER / TRIAL_MATRIX / FEASIBLE_SET as required. Infer missing inputs as instructed, with provenance and sensitivity; block only dependencies that cannot be defined.
+3. For reproduction, load packaged `prompts/paper-reproduction-task.md`, `paper-input-reconstruction.md`, and `conditional-calibration.md` when calibrating; fill the **task card** only, and fix criteria before comparing results. Maintain INPUT_LEDGER / TRIAL_MATRIX / FEASIBLE_SET as required. Infer missing inputs as instructed, with provenance and sensitivity; block only dependencies that cannot be defined.
 4. Pass optional comparison criteria explicitly to the controller. Attach actual logs/native data separately. Do not pass old datasets as current results.
 5. Report execution, checks, paper agreement and reconstruction type separately (direct / conditional / calibrated). Missing final validation limits claims, not delivery of useful failed/conditional artifacts.
 

@@ -19,13 +19,15 @@
 
 | 层 | 标签 | 可否调 | 用途 |
 |---|---|---|---|
-| 锁定 | `paper_reported` / `derived` | 否 | 几何表、Tin、流量、热流、物性表、指标定义与截面 |
-| 软件默认真源 | `software_documented` | 一般不调 | 官方推荐 BC/耦合/稳定化默认；只换文档推荐项并记账 |
+| 锁定 | `paper_reported` / 依赖与条件确定的 `derived` | 否 | 明确的几何表、Tin、流量、热流、物性表、指标定义与截面 |
+| 软件文档依据 | `software_documented` | 按实际角色分类 | 证明软件行为而非作者选择；数值项归 numerical，未明确的物理选择可作有据 tentative |
 | 待定假设 | `tentative`（可与 `inferred` 同记录，须标 tentative） | **唯一可调** | 论文未消歧且物理合理的入口剖面、界面集合解释等 |
 | 数值诊断 | `numerical` | 不作贴合旋钮 | 网格、阶次、稳定化：只估数值不确定度 |
 | 拟合产物 | `fitted` | 校准输出 | 写入可行区间；不得再标成 paper_reported |
 
 禁止进入 `tentative`：诊断热源、任意接触热阻、改参考值、改平均方式、为过线删点。
+
+按 [输入重建操作卡](paper-input-reconstruction.md) 分别记录来源、角色和拟合状态；`derived` 继承根输入的不确定性，`fitted` 不抹去原来源。每轮先写计划再追加实际证据。联合可行集的单参数投影不能当作任意组合都通过的范围；独立验证需实际留出数据和运行证据，不能只换 claim_id。
 
 ## 3. 多指标目标
 
@@ -82,7 +84,9 @@ Fluent 侧用任务授权的参数研究/优化工具，同样要求先验盒、
 Kennedy & O’Hagan 贝叶斯校准（含 discrepancy）：仅在任务明确要求后验/模型偏差分离时启用。  
 “接近论文表值”的常规条件复刻用 4.1–4.3 即可。
 
-## 5. 必须记录的三张表
+## 5. 必须记录的表
+
+人读首屏继续更新任务卡 **REPRODUCTION_DASHBOARD** 的 SOURCE_MAP / BASELINE_INPUTS / ITERATION_DELTA / OUTPUT_VS_BENCHMARK。以下为校准专用落盘表，与对照板同步，不互相替代。
 
 ### INPUT_LEDGER（节选列）
 
@@ -91,6 +95,8 @@ Kennedy & O’Hagan 贝叶斯校准（含 discrepancy）：仅在任务明确要
 ### TRIAL_MATRIX
 
 `trial_id | run_id | θ 变化 | e_i 向量 | J | decision(continue/stop/switch_factor) | artifact`
+
+同步写入对照板 **ITERATION_DELTA**（生效更改）与 **OUTPUT_VS_BENCHMARK**（该轮对标）。
 
 ### FEASIBLE_SET
 

@@ -246,10 +246,50 @@ class CalibrationTests(unittest.TestCase):
                       method='least_squares', run_id='r-fit')
         self.assertEqual(rec['origin'], 'fitted')
         self.assertFalse(cal.may_independently_validate(parameter_id='theta', claim_id='A'))
-        self.assertTrue(cal.may_independently_validate(parameter_id='theta', claim_id='B'))
+        # Different claim_id alone is not independent validation.
+        self.assertFalse(cal.may_independently_validate(parameter_id='theta', claim_id='B'))
+        self.assertEqual(cal.final_status(parameter_id='theta', independent_claim_ids=['B']),
+                         'CALIBRATED_NOT_INDEPENDENTLY_VALIDATED')
         self.assertEqual(cal.final_status(parameter_id='theta', independent_claim_ids=[]),
                          'CALIBRATED_NOT_INDEPENDENTLY_VALIDATED')
-        self.assertNotEqual(cal.final_status(parameter_id='theta', independent_claim_ids=[]), 'VALIDATED')
+        self.assertNotEqual(cal.final_status(parameter_id='theta', independent_claim_ids=['B']),
+                            'VALIDATED')
+
+    def test_holdout_evidence_required_before_validated(self):
+        cal = CalibrationLedger()
+        cal.fit(parameter_id='theta', value=0.3, unit='1', target_claim_id='A',
+                method='least_squares', run_id='r-fit')
+        cal.record_holdout(
+            parameter_id='theta', claim_id='B',
+            partition={'cases': ['holdout-1'], 'frozen_at': 'fit-complete'},
+            frozen_parameter_ids=['theta'], frozen_model_revision=2,
+            holdout_run_id='r-holdout', score={'B': {'status': 'PASS', 'error': 0.04}},
+            evidence_paths=['trials/T-holdout/score.json'],
+        )
+        self.assertTrue(cal.may_independently_validate(parameter_id='theta', claim_id='B'))
+        self.assertEqual(cal.final_status(parameter_id='theta', independent_claim_ids=['B']),
+                         'VALIDATED')
+
+    def test_holdout_used_for_refit_revokes_independent_status(self):
+        cal = CalibrationLedger()
+        cal.fit(parameter_id='theta', value=0.3, unit='1', target_claim_id='A',
+                method='least_squares', run_id='r-fit')
+        cal.record_holdout(
+            parameter_id='theta', claim_id='B',
+            partition={'cases': ['holdout-1']},
+            frozen_parameter_ids=['theta'], frozen_model_revision=2,
+            holdout_run_id='r-holdout', score={'B': {'status': 'PASS'}},
+        )
+        cal.record_holdout(
+            parameter_id='theta', claim_id='B',
+            partition={'cases': ['holdout-1']},
+            frozen_parameter_ids=['theta'], frozen_model_revision=3,
+            holdout_run_id='r-refit', score={'B': {'status': 'PASS'}},
+            used_for_refit=True,
+        )
+        self.assertFalse(cal.may_independently_validate(parameter_id='theta', claim_id='B'))
+        self.assertEqual(cal.final_status(parameter_id='theta', independent_claim_ids=['B']),
+                         'CALIBRATED_NOT_INDEPENDENTLY_VALIDATED')
 
 
 class DeliveryTests(unittest.TestCase):
@@ -323,6 +363,13 @@ class GoldenFixtures(unittest.TestCase):
                 method='nlls', run_id='fit1')
         self.assertEqual(cal.get('theta')['origin'], 'fitted')
         self.assertFalse(cal.may_independently_validate('theta', 'A'))
+        self.assertFalse(cal.may_independently_validate('theta', 'holdout_B'))
+        cal.record_holdout(
+            parameter_id='theta', claim_id='holdout_B',
+            partition={'cases': ['B']}, frozen_parameter_ids=['theta'],
+            frozen_model_revision=1, holdout_run_id='hold1',
+            score={'holdout_B': {'status': 'PASS'}},
+        )
         self.assertTrue(cal.may_independently_validate('theta', 'holdout_B'))
 
     def test_case_f_restart_historical(self):
