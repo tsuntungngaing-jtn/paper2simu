@@ -1,6 +1,6 @@
 """Build a self-contained skill ZIP from an explicit public-source allowlist.
 
-Run from any directory: python scripts/release.py --output ../Paper2Simu-v0.3.0.zip
+Run from any directory: python scripts/release.py --output ../Paper2Simu-v0.3.1.zip
 No network access, repository-wide glob upload, credentials, or model files.
 """
 from __future__ import annotations

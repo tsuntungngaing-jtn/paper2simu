@@ -51,7 +51,7 @@ Mechanical (tag/API/stale dataset): auto-admissible. The opt-in legacy repair AP
 
 ## Calibration
 
-Fitted origin stays `fitted`. Same claim cannot independently validate. Without hold-out: `CALIBRATED_NOT_INDEPENDENTLY_VALIDATED`, never `VALIDATED`.
+Fitted origin stays `fitted`. Same claim cannot independently validate. A different `claim_id` alone never mints `VALIDATED`. Independent status requires recorded hold-out partition, frozen model/parameter identity, hold-out run and score evidence; using that hold-out to refit revokes independence. Without qualifying hold-out: `CALIBRATED_NOT_INDEPENDENTLY_VALIDATED`, never `VALIDATED`. See [paper input reconstruction](../prompts/paper-input-reconstruction.md).
 
 ## Validation semantics
 

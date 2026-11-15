@@ -31,8 +31,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 16834,
-      "sha256": "7ee844e7f61cd03702136226abe6f971657dcea07fc724dbe70597f7e199f4de"
+      "bytes": 17130,
+      "sha256": "9f08f9957b4f62b379b2d169ee009472bd08a0d347f747cd0f42991ff398547e"
     },
     {
       "path": "SKILL.md",
@@ -166,8 +166,8 @@
     },
     {
       "path": "docs/closed-loop-controller.md",
-      "bytes": 4253,
-      "sha256": "d63a9031cca18469bcd16f662301ad572fa7c356d0162d6ed0b773b8316d0ab9"
+      "bytes": 4568,
+      "sha256": "9562b9ff0297cbe6c8149daf08d9ddc139187ce4cc70dd4a2f25f014b75dd9a6"
     },
     {
       "path": "docs/closed-loop-rsi-note.md",
@@ -216,8 +216,8 @@
     },
     {
       "path": "docs/execution-acceptance-separation.md",
-      "bytes": 6507,
-      "sha256": "5ae4f559d091179936ce280d91873dbbac9cc333374657508403a804b1823dd0"
+      "bytes": 6579,
+      "sha256": "531f63461cdf3d8ddf3482e27723a4538a9094961510cc995fec41b8ccbfab93"
     },
     {
       "path": "docs/figure-evidence.md",
@@ -446,28 +446,33 @@
     },
     {
       "path": "examples/paper-reproduction-task-example.md",
-      "bytes": 3792,
-      "sha256": "7d9e78a25f7a7b5ddd8fc76f589565949e8f625d2dc4ff3b8a73fdd2f168a1d8"
+      "bytes": 5375,
+      "sha256": "796880831de2d0bcfcb1886b8ccf14d1077bb5003996d1eccd48c286432b14ea"
     },
     {
       "path": "paper2simu/SKILL.md",
-      "bytes": 9762,
-      "sha256": "7da980a8001ed18e0c0c865da5e9f2b1dac6ca02381d7b52c04d6687da922b8d"
+      "bytes": 9880,
+      "sha256": "0d3e2991e3ef0d79f3f6ca5dc50399fc084590eb94f4cd32ae17cf2520ca0d9f"
     },
     {
       "path": "prompts/conditional-calibration.md",
-      "bytes": 8093,
-      "sha256": "a29681f991aaaa9d0bb2459e4e3c2b0dac0e427585141f213bce6384d24bdacb"
+      "bytes": 8458,
+      "sha256": "cf4029d600d02b4bd29b11d179fb91eb82bdd11596c3ae3b3e8c0bb379d2a2b2"
+    },
+    {
+      "path": "prompts/paper-input-reconstruction.md",
+      "bytes": 9066,
+      "sha256": "99a3d41eca7bf87b3df47bb9ea4b375117d9543942e92a334de38011c80ea6bb"
     },
     {
       "path": "prompts/paper-reproduction-task.md",
-      "bytes": 11907,
-      "sha256": "2a68d0545093db9b15106740e816ed2488dd70d0307e8b72272117f4f306eadb"
+      "bytes": 15012,
+      "sha256": "41528c98dee48544dfa86e929d87cb9c7b5af14f7922dbff9d6043db4258a5ea"
     },
     {
       "path": "pyproject.toml",
       "bytes": 1161,
-      "sha256": "d38373bdc59806c928943269fdc28c4be1258a3c0f216aed032851dacb2a21ee"
+      "sha256": "2d42e279ebd2411d72af4663b13f3e0e85004766ce7b6cc5b8dadb7c0b877063"
     },
     {
       "path": "research_design/__init__.py",
@@ -617,7 +622,7 @@
     {
       "path": "scripts/release.py",
       "bytes": 5650,
-      "sha256": "76e56054094b15bd9dac45f2969ac600c46ff9c7dfe95e41cb89ba91aac3f9bb"
+      "sha256": "d969cf756ef4b2ad2d3b6118d816e072b2635b296a6c58d3c0580da5f87a5dc3"
     },
     {
       "path": "scripts/start-mcp.ps1",
@@ -632,12 +637,12 @@
     {
       "path": "server/__init__.py",
       "bytes": 98,
-      "sha256": "e14eed0c248320d4032fe1cade89e32251c0f14f9527b268458d5d2216eee79a"
+      "sha256": "368b27f47c54d9d2973bd5fc725dd5e47835803184a4ba87adff0ae6feab6d0c"
     },
     {
       "path": "server/calibration.py",
-      "bytes": 1489,
-      "sha256": "0b56077f17ad04565d702b95f5ee0b99c3c6872fd8d10cd47f3b53df83a02146"
+      "bytes": 5393,
+      "sha256": "3632e8eb21d78d7a18f21a9844d75d06f3a53ff708706b8b25210efc7ae73038"
     },
     {
       "path": "server/claims.py",
@@ -806,8 +811,8 @@
     },
     {
       "path": "tests/test_closed_loop.py",
-      "bytes": 18779,
-      "sha256": "8afdf692040810eaeddbcda84f40b4bf667670af26014575e9af64ba638cb131"
+      "bytes": 22938,
+      "sha256": "929caee0f2973e048ce13118f31b439dbc2b4fb9ce9e3fcad816aecec9b2c4e9"
     },
     {
       "path": "tests/test_discovery_surrogate.py",
@@ -886,8 +891,8 @@
     },
     {
       "path": "tests/test_release.py",
-      "bytes": 3926,
-      "sha256": "3f30acd94c967c8ad0450c5c0e905e77cf38b933655a89cf6b5e7fc3abfb9c3c"
+      "bytes": 3992,
+      "sha256": "08392b2efc8dabc311d86485babfce7a0e59590efb2c23c68df7ab00fc382d22"
     },
     {
       "path": "tests/test_release_repairs.py",
