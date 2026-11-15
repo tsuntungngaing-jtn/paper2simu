@@ -1,6 +1,6 @@
 ---
 name: comsoflent
-description: Compatibility entrypoint for Paper2Simu COMSOL and Fluent connection and execution. Acceptance criteria come from the task prompt.
+description: Compatibility entrypoint for Paper2Simu COMSOL and Fluent connection and execution. Paper-reproduction acceptance comes from packaged prompts under prompts/; fill the task card only.
 license: MIT
 ---
 

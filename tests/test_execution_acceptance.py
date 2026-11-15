@@ -130,6 +130,33 @@ class ExecutionAcceptanceTests(unittest.TestCase):
         restored = ClosedLoopController(self.tmp.name)
         self.assertEqual(restored.delivery_report('c')['paper_comparison_status'], 'FAIL')
 
+    def test_late_checks_cannot_be_assigned_to_a_new_run(self):
+        self.start(.15)
+        self.ctrl.record_execution('c', 'r2', 'COMPLETED')
+        result = self.ctrl.submit_validation('c', {'numerical': 'PASS'},
+                     run_id='r', model_revision=1, spec_revision=1)
+        self.assertEqual(result['status'], 'STALE')
+        self.assertEqual(self.ctrl.delivery_report('c')['check_status'], 'NOT_RUN')
+
+    def test_failed_new_run_invalidates_prior_terminal_pass(self):
+        self.start(.15)
+        self.ctrl.evaluate_acceptance('c', 'r', 1, 1, {'T': {'value': 100, 'unit': 'K'}})
+        self.ctrl.force_state('c', 'DELIVERY_READY')
+        self.ctrl.store.transition('c', 'PASS')
+        self.ctrl.record_execution('c', 'failed', 'FAIL', {'termination': 'diverged'})
+        report = self.ctrl.deliver('c')
+        self.assertEqual(report['final_workflow_state'], 'FAIL')
+        self.assertEqual(report['execution_details']['termination'], 'diverged')
+        self.assertEqual(report['paper_comparison_status'], 'NOT_RUN')
+
+    def test_model_change_invalidates_prior_terminal_pass(self):
+        self.start(.15)
+        self.ctrl.evaluate_acceptance('c', 'r', 1, 1, {'T': {'value': 100, 'unit': 'K'}})
+        self.ctrl.force_state('c', 'DELIVERY_READY')
+        self.ctrl.store.transition('c', 'PASS')
+        self.ctrl.mutate_model('c', 'mesh')
+        self.assertEqual(self.ctrl.delivery_report('c')['final_workflow_state'], 'MODEL_BUILD')
+
     def test_invalid_contract_has_no_created_case(self):
         with self.assertRaises(ValueError):
             self.ctrl.start('bad', {'acceptance_spec': {'criteria': [

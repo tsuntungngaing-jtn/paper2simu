@@ -1,6 +1,6 @@
 ---
 name: paper2simu
-description: Connect to COMSOL or Ansys Fluent through the configured MCP provider, build and run authorized simulation tasks, and save traceable models, results and logs. Reproduction acceptance is supplied separately by the task prompt.
+description: Connect to COMSOL or Ansys Fluent through the configured MCP provider, build and run authorized simulation tasks, and save traceable models, results and logs. Paper-reproduction acceptance lives in packaged prompts (not skill code gates); load those prompts for reproduction tasks instead of pasting them by hand each turn.
 license: MIT
 metadata:
   display_name: Paper2Simu
@@ -16,7 +16,12 @@ This is the canonical skill entrypoint. Root and ComsoFlent entries route here w
 
 Execute the user's modeling task and collect evidence. The caller supplies an execution specification (solver, inputs, operations, outputs and budgets) and optionally a separate acceptance specification. A clear execution task needs no reproduction acceptance specification. Without one, deliver the actual execution outcome and evidence; do not claim reproduction PASS.
 
-For paper reproduction, the host can supply [the unified task prompt](../prompts/paper-reproduction-task.md). Do not activate it merely by loading this skill. Thresholds, paper matching, input inference policy, conservation acceptance, grid studies and scientific claims belong to that task. No universal paper-error, residual, conservation or mesh-change threshold is built into this skill. Optional checks calculate or collect evidence and judge only against explicit criteria.
+**Paper reproduction (packaged prompts, not hand-paste):** when the user asks to reproduce a paper or fill a reproduction task card, the agent **must load and follow** the skill-packaged prompts below—do **not** require the human to paste their full text each session. Humans only fill the task card fields (paper, cases, metrics, budgets, authorization).
+
+- Unified acceptance / inference: [`../prompts/paper-reproduction-task.md`](../prompts/paper-reproduction-task.md)
+- Conditional calibration (tentative inputs → feasible set): [`../prompts/conditional-calibration.md`](../prompts/conditional-calibration.md)
+
+Do **not** activate those prompts merely by loading this skill for a non-reproduction execution job. Thresholds, paper matching, input ledger layers (`lock` / `tentative` / …), \(J=\max e_i/\tau\), trial matrix, conservation acceptance, grid studies and scientific claims belong to the packaged task prompts. No universal paper-error, residual, conservation or mesh-change threshold is built into this skill’s execution code. Optional checks calculate or collect evidence and judge only against the active task criteria.
 
 Older references describe optional validation/RSI workflows and historical policies. Reading an API reference does not activate its old acceptance gates. Use validation interfaces only when requested by the task. See [interface and migration notes](../docs/execution-acceptance-separation.md).
 
