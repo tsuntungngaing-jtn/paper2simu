@@ -44,6 +44,7 @@ class ReleaseTests(unittest.TestCase):
             self.fixture(root)
             expected = ['paper2simu/SKILL.md', 'comsoflent/SKILL.md',
                         'COMSOFLENT_SKILL.md', 'prompts/paper-reproduction-task.md',
+                        'prompts/conditional-calibration.md',
                         'rsi/controller.py', 'uncertainty/inference.py']
             for name in expected:
                 path = root / name

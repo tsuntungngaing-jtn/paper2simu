@@ -1,6 +1,6 @@
 # Filled task-card example — COMSOL conduction reconstruction
 
-**Illustrative training example, not a published paper and not an executed simulation.** Supply this card together with the full `prompts/paper-reproduction-task.md`; the card alone is not a replacement policy.
+**Illustrative training example, not a published paper and not an executed simulation.** For a real reproduction job the agent loads packaged `prompts/paper-reproduction-task.md` (and `conditional-calibration.md` when calibrating); this file is only a **filled task card**. The card alone is not a replacement policy.
 
 - Solver: COMSOL, via the simulation machine's configured COMSOL MCP. Discover actual version/modules/session before modeling; do not launch Fluent. No machine connection or launch authorization is asserted by this example.
 - Source: analytical constant-property one-dimensional conduction benchmark. Reference derivation, not claimed paper data: L=0.01 m, A=0.0001 m², k=10 W/(m K), end temperatures 310 K/300 K, insulated lateral walls. Q=k A ΔT/L=1 W; midpoint T=305 K.
@@ -22,7 +22,7 @@ Example controller comparison contract (a project input, not a skill default):
 
 ## Same prompt, Fluent selection
 
-Reuse the full `prompts/paper-reproduction-task.md` without a second acceptance policy. Change only the task card solver line, for example:
+Reuse the same packaged acceptance prompt without a second policy document. Change only the task card solver line, for example:
 
 - Solver: Fluent, via the simulation machine's configured official PyFluent MCP. Discover actual version/session before modeling; do not launch COMSOL.
 - Keep the same metric IDs, relative-error `<15%` (or an explicit override), conservation and two-grid sensitivity definitions, budgets and `acceptance_spec` shape.
