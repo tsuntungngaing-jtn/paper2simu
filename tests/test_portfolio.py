@@ -1,17 +1,20 @@
 """Software fault injection only; no COMSOL physics validation."""
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 import copy
 import json
 import os
 from pathlib import Path
 import tempfile
 import threading
+import time
 import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
 from server.contracts import validate_document, admit_task, new_report
 from server.runtime import Runtime
 from server.scientific_gates import evaluate
+from server.submission_window import authorize_renewal
 
 ROOT=Path(__file__).resolve().parents[1]
 class PortfolioTests(unittest.TestCase):
@@ -104,11 +107,76 @@ class PortfolioTests(unittest.TestCase):
             finally:runtime.executor.shutdown()
 
     def test_submission_budget_denies_without_new_job(self):
-        with tempfile.TemporaryDirectory() as directory,patch.dict(os.environ,{'COMSOL_MAX_SUBMISSIONS':'1'}):
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {
+            'COMSOL_MAX_SUBMISSIONS': '1', 'COMSOL_SUBMISSION_WINDOW_SECONDS': '86400',
+        }):
             runtime=Runtime(output_root=directory)
             runtime.jobs['prior']={'job_id':'prior','status':'recovery_pending'}
             try:
                 result=runtime.submit_study(None,'mock')
                 self.assertEqual(result['error'],'SUBMISSION_BUDGET_EXHAUSTED')
+                self.assertEqual(result['reason'], 'TOTAL_SUBMISSION_LIMIT_REACHED')
+                runtime.started_at -= 86400
+                result = runtime.submit_study(None, 'mock')
+                self.assertEqual(result['submission_budget']['block_reasons'],
+                                 ['TOTAL_SUBMISSION_LIMIT_REACHED', 'SUBMISSION_WINDOW_EXPIRED'])
                 self.assertEqual(len(runtime.jobs),1)
             finally: runtime.executor.shutdown()
+
+    def test_expiry_renewal_and_restart_preserve_job_budget(self):
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {
+            'COMSOL_MAX_ACTIVE_JOBS': '8', 'COMSOL_MAX_SUBMISSIONS': '2',
+            'COMSOL_SUBMISSION_WINDOW_SECONDS': '86400',
+        }):
+            runtime = Runtime(output_root=directory)
+            self.addCleanup(runtime.executor.shutdown)
+            runtime.jobs['prior'] = {'job_id': 'prior', 'status': 'completed'}
+            runtime._persist('prior')
+            runtime.started_at = time.monotonic() - 84500
+            window = runtime.queue_status()['submission_budget']['window']
+            self.assertTrue(window['expires_soon'])
+            self.assertGreater(window['expires_at_unix'], time.time())
+            runtime.started_at -= 2000
+            denied = runtime.submit_study(None, 'mock')
+            self.assertEqual(denied['reason'], 'SUBMISSION_WINDOW_EXPIRED')
+            self.assertFalse(denied['inflight_cancelled'])
+            self.assertEqual(len(runtime.jobs), 1)
+
+            receipt = authorize_renewal(runtime.output_root, runtime.runtime_id, 'Approved diagnostic run')
+            grant = json.loads(Path(receipt['grant_path']).read_text(encoding='utf-8'))
+            self.assertEqual(grant['reason'], 'Approved diagnostic run')
+            self.assertTrue(grant['operator'])
+            budget = runtime.queue_status()['submission_budget']
+            self.assertTrue(budget['can_submit'])
+            self.assertEqual(budget['submissions']['remaining'], 1)
+            self.assertEqual(budget['window']['renewal_grant_id'], Path(receipt['grant_path']).stem)
+
+            restored = Runtime(output_root=directory)
+            self.addCleanup(restored.executor.shutdown)
+            self.assertEqual(restored.job_status('prior')['status'], 'recovery_pending')
+            self.assertEqual(restored.queue_status()['submission_budget']['submissions']['used'], 1)
+            self.assertIsNone(restored.queue_status()['submission_budget']['window']['renewal_grant_id'])
+            runtime.jobs['other'] = {'job_id': 'other', 'status': 'completed'}
+            self.assertEqual(runtime.submit_study(None, 'mock')['reason'], 'TOTAL_SUBMISSION_LIMIT_REACHED')
+
+    def test_concurrent_admission_reserves_one_active_slot(self):
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {
+            'COMSOL_MAX_ACTIVE_JOBS': '1', 'COMSOL_MAX_SUBMISSIONS': '100',
+            'COMSOL_SUBMISSION_WINDOW_SECONDS': '86400',
+        }):
+            runtime = Runtime(output_root=directory)
+            release = threading.Event()
+            model = SimpleNamespace(name=lambda: 'mock', solve=lambda _: release.wait(5))
+            runtime.manager = SimpleNamespace(is_connected=True, get_model=lambda _: model)
+            try:
+                with ThreadPoolExecutor(max_workers=4) as callers:
+                    results = list(callers.map(lambda _: runtime.submit_study(None, 'mock'), range(4)))
+                self.assertEqual(sum(result['success'] for result in results), 1)
+                for result in results:
+                    if not result['success']:
+                        self.assertEqual(result['reason'], 'ACTIVE_JOB_LIMIT_REACHED')
+                        self.assertTrue(result['retryable'])
+                self.assertEqual(len(list((runtime.output_root / 'job-manifests').glob('*.json'))), 1)
+            finally:
+                release.set()
+                runtime.executor.shutdown()

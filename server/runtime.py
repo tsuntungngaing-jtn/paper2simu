@@ -22,6 +22,9 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 from uuid import uuid4
 
+from . import __version__
+from .submission_window import latest_renewal
+
 _RESOURCES = Path(__file__).resolve().parent / 'resources'
 ROOT = _RESOURCES if (_RESOURCES / 'vendor').is_dir() else Path(__file__).resolve().parents[1]
 
@@ -68,6 +71,7 @@ class Runtime:
         self.lock = threading.Lock()
         self.desktop_process = None
         self.desktop_endpoint = None
+        self.runtime_id = uuid4().hex
         self.started_at = time.monotonic()
         self.journal_errors = []
         self._restore_jobs()
@@ -103,34 +107,114 @@ class Runtime:
 
     def queue_status(self):
         with self.lock:
-            active = [j['job_id'] for j in self.jobs.values() if j['status'] in ('running','queued')]
+            active = self._active_jobs()
             return {'success':True, 'busy':bool(active), 'active_jobs':active,
                     'metadata_nonblocking':True, 'java_reads_require_idle':True,
                     'recovery_pending':[j['job_id'] for j in self.jobs.values() if j['status']=='recovery_pending'],
-                    'journal_errors':list(self.journal_errors)}
+                    'journal_errors':list(self.journal_errors),
+                    'submission_budget':self._submission_budget(len(active)), **self.runtime_info()}
+
+    def _active_jobs(self):
+        return [job['job_id'] for job in self.jobs.values() if job['status'] in ('queued', 'running')]
+
+    def runtime_info(self):
+        return {'runtime_id': self.runtime_id, 'paper2simu_version': __version__,
+                'runtime_root': str(self.root), 'python_executable': sys.executable,
+                'output_root': str(self.output_root)}
 
     async def call(self, function, *args, **kwargs):
-        if self.queue_status()['busy']:
-            return {'success':False, 'status':'BLOCKED', 'error':'JVM_BUSY',
-                    'retryable':True, 'next_step':'Poll job metadata; do not queue repair calls behind a solve.'}
+        with self.lock:
+            if self._active_jobs():
+                return {'success':False, 'status':'BLOCKED', 'error':'JVM_BUSY',
+                        'retryable':True, 'next_step':'Poll job metadata; do not queue repair calls behind a solve.'}
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(self.executor, functools.partial(function, *args, **kwargs))
 
-    def _admit_submission(self):
-        active = sum(j['status'] in ('queued','running') for j in self.jobs.values())
-        try:
-            max_active = int(os.getenv('COMSOL_MAX_ACTIVE_JOBS', '8'))
-            max_jobs = int(os.getenv('COMSOL_MAX_SUBMISSIONS', '100'))
-            max_seconds = float(os.getenv('COMSOL_SUBMISSION_WINDOW_SECONDS', '86400'))
-        except ValueError:
-            return {'success':False, 'status':'BLOCKED', 'error':'Invalid submission budget'}
-        if max_active <= 0 or max_jobs <= 0 or not math.isfinite(max_seconds) or max_seconds <= 0:
-            return {'success':False, 'status':'BLOCKED', 'error':'Invalid submission budget'}
-        # Submission count includes recovered jobs; restart does not reset this budget.
-        if active >= max_active or len(self.jobs) >= max_jobs or time.monotonic()-self.started_at >= max_seconds:
-            return {'success':False, 'status':'BLOCKED', 'error':'SUBMISSION_BUDGET_EXHAUSTED',
-                    'inflight_cancelled':False}
-        return None
+    def _submission_budget(self, active: int) -> dict:
+        # Call with self.lock held so status and admission use a consistent job count.
+        limits = {}
+        invalid = []
+        for key, variable, parse, default in (
+            ('active_jobs', 'COMSOL_MAX_ACTIVE_JOBS', int, '8'),
+            ('submissions', 'COMSOL_MAX_SUBMISSIONS', int, '100'),
+            ('window_seconds', 'COMSOL_SUBMISSION_WINDOW_SECONDS', float, '86400'),
+        ):
+            try:
+                value = parse(os.getenv(variable, default))
+                if value <= 0 or (parse is float and not math.isfinite(value)):
+                    raise ValueError
+                limits[key] = value
+            except ValueError:
+                invalid.append(variable)
+
+        total = len(self.jobs) + len(self.journal_errors)
+        budget = {'can_submit': False, 'active_jobs': {'used': active}, 'submissions': {'used': total},
+                  'invalid_settings': invalid, 'block_reasons': []}
+        if invalid:
+            budget['block_reasons'] = ['INVALID_SUBMISSION_BUDGET']
+            return budget
+
+        now = time.monotonic()
+        started_at, grant = latest_renewal(self.output_root, self.runtime_id, self.started_at, now)
+        duration = limits['window_seconds']
+        elapsed = now - started_at
+        remaining = max(0.0, duration - elapsed)
+        warning_seconds = min(3600.0, duration / 10)
+        for key, used, code in (('active_jobs', active, 'ACTIVE_JOB_LIMIT_REACHED'),
+                                ('submissions', total, 'TOTAL_SUBMISSION_LIMIT_REACHED')):
+            limit = limits[key]
+            budget[key].update(limit=limit, remaining=max(0, limit - used))
+            if used >= limit:
+                budget['block_reasons'].append(code)
+        if remaining == 0:
+            budget['block_reasons'].append('SUBMISSION_WINDOW_EXPIRED')
+        budget.update(can_submit=not budget['block_reasons'], window={
+            'duration_seconds': duration, 'elapsed_seconds': elapsed, 'remaining_seconds': remaining,
+            'expires_at_unix': time.time() + duration - elapsed,
+            'expires_soon': 0 < remaining <= warning_seconds, 'warning_seconds': warning_seconds,
+            'renewal_grant_id': grant,
+        })
+        return budget
+
+    def _queue_job(self, job: dict, run, *args) -> dict:
+        job_id = job['job_id']
+        with self.lock:
+            budget = self._submission_budget(len(self._active_jobs()))
+            if not budget['can_submit']:
+                reasons = budget['block_reasons']
+                actions = {
+                    'ACTIVE_JOB_LIMIT_REACHED': 'Poll active jobs until a slot is available.',
+                    'TOTAL_SUBMISSION_LIMIT_REACHED': 'Review the cumulative cap with the operator and keep the job journal.',
+                    'SUBMISSION_WINDOW_EXPIRED': 'Save the checkpoint and obtain a local renewal grant for this runtime.',
+                    'INVALID_SUBMISSION_BUDGET': 'Correct the listed connector environment settings and reload the runtime.',
+                }
+                return {'success': False, 'status': 'BLOCKED',
+                        'error': 'Invalid submission budget' if budget['invalid_settings'] else 'SUBMISSION_BUDGET_EXHAUSTED',
+                        'reason': reasons[0], 'submission_budget': budget, 'runtime_id': self.runtime_id,
+                        'retryable': reasons == ['ACTIVE_JOB_LIMIT_REACHED'], 'inflight_cancelled': False,
+                        'next_step': ' '.join(actions[reason] for reason in reasons)}
+            self.jobs[job_id] = job
+            try:
+                self._persist(job_id)
+            except (OSError, ValueError) as error:
+                del self.jobs[job_id]
+                return {'success': False, 'status': 'BLOCKED', 'error': 'JOB_JOURNAL_WRITE_FAILED',
+                        'detail': str(error), 'next_step': 'Restore write access to the output root before submitting.'}
+            try:
+                future = self.executor.submit(run, *args)
+            except RuntimeError as error:
+                job.update(status='failed', error={'type': type(error).__name__, 'message': str(error)},
+                           completed_at=time.time())
+                try:
+                    self._persist(job_id)
+                except (OSError, ValueError) as persist_error:
+                    job['persistence_error'] = str(persist_error)
+                return {'success': False, 'status': 'failed', 'error': 'JOB_SCHEDULING_FAILED', 'job_id': job_id}
+            self.futures[job_id] = future
+            if job.get('kind') == 'study':
+                self.latest_study_job = job_id
+        future.add_done_callback(lambda _: self._finished(job_id))
+        return {'success': True, 'job_id': job_id, 'status': 'queued', 'poll_tool': 'comsol_job_status'}
 
     def installation_root(self, version: str | None = None) -> Path:
         import mph
@@ -149,7 +233,7 @@ class Runtime:
 
     def doctor(self) -> dict:
         import importlib.metadata
-        info = {"success": True, "python": sys.version.split()[0], "output_root": str(self.output_root),
+        info = {"success": True, "python": sys.version.split()[0], **self.runtime_info(),
                 "code_execution_enabled": os.getenv("COMSOL_ALLOW_CODE") == "1",
                 "transport_warning": "Trusted single-user automation; not a sandbox or multi-tenant service."}
         for name in ("mph", "mcp", "JPype1"):
@@ -335,9 +419,6 @@ class Runtime:
 
     def submit_case(self, case_id: str, solve: bool = False, study: str | None = None,
                     show_desktop: bool = True) -> dict:
-        denied = self._admit_submission()
-        if denied:
-            return denied
         if not re.fullmatch(r"[a-z][a-z0-9_]{0,79}", case_id):
             return {"success": False, "error": "Invalid case id."}
         entry = next((case for case in self.catalog() if case["id"] == case_id), None)
@@ -345,14 +426,9 @@ class Runtime:
             return {"success": False, "error": "Unknown case; call comsol_list_cases."}
         job_id = uuid4().hex
         directory = inside(self.output_root, job_id + "_" + case_id)
-        with self.lock:
-            self.jobs[job_id] = {"job_id": job_id, "case_id": case_id, "status": "queued", "events": [],
-                                 "output_dir": str(directory), "submitted_at": time.time()}
-        with self.lock:
-            self._persist(job_id)
-        self.futures[job_id] = self.executor.submit(self._run_case, job_id, entry, directory, solve, study, show_desktop)
-        self.futures[job_id].add_done_callback(lambda future: self._finished(job_id))
-        return {"success": True, "job_id": job_id, "status": "queued", "poll_tool": "comsol_job_status"}
+        job = {"job_id": job_id, "case_id": case_id, "status": "queued", "events": [],
+               "output_dir": str(directory), "submitted_at": time.time()}
+        return self._queue_job(job, self._run_case, job_id, entry, directory, solve, study, show_desktop)
 
     def _progress(self, job_id: str, message: str):
         with self.lock:
@@ -434,16 +510,11 @@ class Runtime:
             return json.loads(json.dumps(dict(success=True, **self.jobs[job_id]), default=str))
 
     def submit_study(self, study_name: str | None, model_name: str | None) -> dict:
-        denied = self._admit_submission()
-        if denied:
-            return denied
         model_name = model_name or (self.manager.current_model if self.manager else None)
         job_id = uuid4().hex
-        with self.lock:
-            self.jobs[job_id] = {"job_id": job_id, "kind": "study", "status": "queued", "events": [],
-                                 "model_name": model_name, "study_name": study_name, "submitted_at": time.time()}
-            self.latest_study_job = job_id
-            self._persist(job_id)
+        job = {"job_id": job_id, "kind": "study", "status": "queued", "events": [],
+               "model_name": model_name, "study_name": study_name, "submitted_at": time.time()}
+
         def solve():
             with self.lock:
                 self.jobs[job_id]["status"] = "running"
@@ -462,9 +533,7 @@ class Runtime:
                 with self.lock:
                     self.jobs[job_id].update(status="failed", completed_at=time.time(),
                                              error={"type": type(error).__name__, "message": str(error)[:12000]})
-        self.futures[job_id] = self.executor.submit(solve)
-        self.futures[job_id].add_done_callback(lambda future: self._finished(job_id))
-        return {"success": True, "job_id": job_id, "status": "queued", "poll_tool": "comsol_job_status"}
+        return self._queue_job(job, solve)
 
     async def wait_job(self, job_id: str | None, timeout: float | None = None) -> dict:
         if not job_id or job_id not in self.jobs:

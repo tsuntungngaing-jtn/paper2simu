@@ -31,8 +31,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 17130,
-      "sha256": "9f08f9957b4f62b379b2d169ee009472bd08a0d347f747cd0f42991ff398547e"
+      "bytes": 17477,
+      "sha256": "0060b10ca18ca075a03138dc8cf5a43ff3735983d652d52f4748036e7444d98a"
     },
     {
       "path": "SKILL.md",
@@ -186,8 +186,8 @@
     },
     {
       "path": "docs/connectors.md",
-      "bytes": 3414,
-      "sha256": "8c5ec9eb955f665b027318b9ccc07e19eeebdd9accce086decd3ccb90b62928c"
+      "bytes": 7517,
+      "sha256": "434229e1bf01c6a1977a2d5fb22a2898d4052c0e81d0bd2e4b2580f520f959ce"
     },
     {
       "path": "docs/context-retrieval-rsi-evaluation.md",
@@ -326,8 +326,8 @@
     },
     {
       "path": "docs/portfolio-feedback.md",
-      "bytes": 8046,
-      "sha256": "6373e244beccf044bd3ebef44f1c56498fd1a4eeac6ccd9f5f95f00b3cd8339a"
+      "bytes": 8085,
+      "sha256": "6b29ff02a92b52371db53940497ef55aeb4a9f5bda5149675edaf3c606fc29bb"
     },
     {
       "path": "docs/publishing.md",
@@ -451,8 +451,8 @@
     },
     {
       "path": "paper2simu/SKILL.md",
-      "bytes": 9880,
-      "sha256": "0d3e2991e3ef0d79f3f6ca5dc50399fc084590eb94f4cd32ae17cf2520ca0d9f"
+      "bytes": 10692,
+      "sha256": "73bd14362e88ddbd18b08c43b67c12bc9a17c9b0a8fa4d00e27010fc188857e1"
     },
     {
       "path": "prompts/conditional-calibration.md",
@@ -472,7 +472,7 @@
     {
       "path": "pyproject.toml",
       "bytes": 1161,
-      "sha256": "2d42e279ebd2411d72af4663b13f3e0e85004766ce7b6cc5b8dadb7c0b877063"
+      "sha256": "4bbd41021b838bebd1185b43dd5efffa9198028bfeb38a383fc5b93db384d1f7"
     },
     {
       "path": "research_design/__init__.py",
@@ -622,12 +622,12 @@
     {
       "path": "scripts/release.py",
       "bytes": 5650,
-      "sha256": "d969cf756ef4b2ad2d3b6118d816e072b2635b296a6c58d3c0580da5f87a5dc3"
+      "sha256": "5cdd41dc497110c272d0c52800bf5acfc33084a08b4fd78bd460c96066cee967"
     },
     {
       "path": "scripts/start-mcp.ps1",
-      "bytes": 3150,
-      "sha256": "b81806c5c65851eb0988ba6ba9f05fd64c3404dee04c82a3413e0d51508f43c6"
+      "bytes": 3268,
+      "sha256": "47942b495f6037aea09fbe49a3ce6d6efd8c21273b5541f8dfab6378ac67f63c"
     },
     {
       "path": "scripts/test_inspector_mcp.py",
@@ -637,7 +637,7 @@
     {
       "path": "server/__init__.py",
       "bytes": 98,
-      "sha256": "368b27f47c54d9d2973bd5fc725dd5e47835803184a4ba87adff0ae6feab6d0c"
+      "sha256": "e1d99a1cdc2a11a54ec36fd50321394b559978daf77bf5ccf6ce6517d3bce4e9"
     },
     {
       "path": "server/calibration.py",
@@ -711,8 +711,8 @@
     },
     {
       "path": "server/main.py",
-      "bytes": 17082,
-      "sha256": "af9da14cd3307b2d10e7c2c9ae0ac512129e34c2138cf6241f07a3e3c8831a02"
+      "bytes": 19016,
+      "sha256": "ccf34032f2944737064e5c92f40e9828ff60adeb7693565afa68070640759425"
     },
     {
       "path": "server/mesh_native.py",
@@ -756,8 +756,8 @@
     },
     {
       "path": "server/runtime.py",
-      "bytes": 32465,
-      "sha256": "fd8f7ee0cba8a16a9c6231be454289a2a17aebf7942caa33319685e313dff22e"
+      "bytes": 35985,
+      "sha256": "8c7582e5d3bf2babe35819f08cf327c8bd54d38fdd34a7f3f6c389bf14eba45c"
     },
     {
       "path": "server/scientific_gates.py",
@@ -783,6 +783,11 @@
       "path": "server/source_precedence.py",
       "bytes": 10771,
       "sha256": "c561b19420e311559eb03583b253b1edcb356e1a878b759f39c08c0ab661c098"
+    },
+    {
+      "path": "server/submission_window.py",
+      "bytes": 2005,
+      "sha256": "5063642b78476c336329c205a14c0bf9b7db85d94b0f45b2b28613c3f3b87d50"
     },
     {
       "path": "server/validation_tools.py",
@@ -881,8 +886,8 @@
     },
     {
       "path": "tests/test_portfolio.py",
-      "bytes": 6313,
-      "sha256": "665490681c81f805b7f7b09d71f7d6e4e35ef8abf40adf1fa709ad80217eb6fb"
+      "bytes": 10388,
+      "sha256": "dd3f4f682a1f7c2d651c17da119ee03da5f7f2ac4b3430bd2d535dfe8c6f26c2"
     },
     {
       "path": "tests/test_recovery_harness.py",
@@ -921,8 +926,8 @@
     },
     {
       "path": "tests/test_runtime.py",
-      "bytes": 14003,
-      "sha256": "e2a6895196f57807e693042e4d0dad0cc32a48cb11d752ff2eede6a5c766ea74"
+      "bytes": 16515,
+      "sha256": "4a0b8d1c2c8c4af2e7078ff501e5dc23a394c529beea926a9b9bb9f1c34978da"
     },
     {
       "path": "tests/test_science_gate_regression.py",

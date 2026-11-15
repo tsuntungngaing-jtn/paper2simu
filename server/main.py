@@ -1,4 +1,4 @@
-"""MCP CLI: python -m server.main [doctor|serve] [--transport ...]."""
+"""MCP CLI for serving, installation diagnostics and local window renewal."""
 from __future__ import annotations
 
 import argparse
@@ -9,9 +9,19 @@ import logging
 import os
 from pathlib import Path
 import sys
+from typing import Annotated, Any
 from urllib.parse import urlsplit
 
+from mcp.types import CallToolResult, TextContent
+
+from . import __version__
 from .runtime import ROOT, Runtime, SerializedRegistrar
+from .submission_window import authorize_renewal
+
+
+def submission_result(payload: dict) -> CallToolResult:
+    return CallToolResult(content=[TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))],
+                          structuredContent=payload, isError=not payload["success"])
 
 
 def validate_token(token: str | None) -> str:
@@ -130,9 +140,9 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
 
     @mcp.tool()
     async def comsol_run_case(case_id: str, solve: bool = False, study: str | None = None,
-                              show_desktop: bool = True) -> dict:
+                              show_desktop: bool = True) -> Annotated[CallToolResult, dict[str, Any]]:
         """Queue a classic case using MCP only; returns immediately with a job id. For library cases solve=False loads for inspection; solve=True computes a selected study or all studies. Original Python teaching cases always build AND solve. Check comsol_job_status; a failed license/solver is not success. At the end instruct the USER to manually import the named model via File > COMSOL Multiphysics Server > Import App from Server. No screen recognition or UI automation."""
-        return runtime.submit_case(case_id, solve, study, show_desktop)
+        return submission_result(runtime.submit_case(case_id, solve, study, show_desktop))
 
     @mcp.tool()
     async def comsol_job_status(job_id: str) -> dict:
@@ -146,15 +156,16 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
 
     @mcp.tool()
     async def study_solve(study_name: str | None = None, model_name: str | None = None,
-                          wait: bool = True, timeout: float | None = None) -> dict:
+                          wait: bool = True, timeout: float | None = None) -> Annotated[CallToolResult, dict[str, Any]]:
         """Solve on the one JVM thread. Returns a job id. wait=True waits at most 30 seconds; a running job continues and can be polled. study_name omitted solves all existing studies."""
         job = runtime.submit_study(study_name, model_name)
-        return await runtime.wait_job(job["job_id"], timeout) if wait and job.get("success") else job
+        result = await runtime.wait_job(job["job_id"], timeout) if wait and job.get("success") else job
+        return submission_result(result)
 
     @mcp.tool()
-    async def study_solve_async(study_name: str | None = None, model_name: str | None = None) -> dict:
+    async def study_solve_async(study_name: str | None = None, model_name: str | None = None) -> Annotated[CallToolResult, dict[str, Any]]:
         """Queue a study on the dedicated JVM thread; use returned job_id with comsol_job_status."""
-        return runtime.submit_study(study_name, model_name)
+        return submission_result(runtime.submit_study(study_name, model_name))
 
     @mcp.tool()
     async def study_get_progress(job_id: str | None = None) -> dict:
@@ -197,8 +208,8 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
         return await runtime.call(create)
 
     @mcp.tool()
-    async def comsol_queue_status() -> dict:
-        """Nonblocking job metadata, recovery and JVM busy state; no Java read."""
+    async def comsol_queue_status() -> dict[str, Any]:
+        """Read jobs, recovery, runtime version and submission limits, expiry and warning without a Java call. Check before submitting."""
         return runtime.queue_status()
 
     from .scientific_gates import evaluate
@@ -234,12 +245,30 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="COMSOL MCP: trusted single-user command automation")
-    parser.add_argument("command", nargs="?", choices=["serve", "doctor"], default="serve")
+    parser.add_argument("command", nargs="?", choices=["serve", "doctor", "renew-window"], default="serve")
+    parser.add_argument("--version", action="version", version=f"Paper2Simu {__version__}")
+    parser.add_argument("--expected-version", help="Require this Paper2Simu runtime version at startup.")
+    parser.add_argument("--runtime-id", help="Live runtime_id from comsol_queue_status (renew-window only).")
+    parser.add_argument("--reason", help="Local operator's audit reason (renew-window only).")
     parser.add_argument("--transport", choices=["stdio", "streamable-http", "sse"], default="stdio")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--public-url", help="Optional HTTPS proxy origin for Host/Origin protection, e.g. https://comsol.example.org")
     args = parser.parse_args(argv)
+    if args.expected_version and args.expected_version != __version__:
+        parser.error(f"Expected Paper2Simu {args.expected_version}, loaded {__version__} from {ROOT}.")
+    if args.command == "renew-window":
+        if not args.runtime_id or not args.reason:
+            parser.error("renew-window requires --runtime-id and --reason.")
+        root = Path(os.getenv("COMSOL_OUTPUT_ROOT", str(Path.home() / "comsol-automatic-output"))).resolve()
+        try:
+            result = authorize_renewal(root, args.runtime_id, args.reason)
+        except (OSError, ValueError) as error:
+            parser.error(str(error))
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 0
+    if args.runtime_id is not None or args.reason is not None:
+        parser.error("--runtime-id and --reason are for renew-window.")
     logging.basicConfig(level=logging.INFO, stream=sys.stderr)
     runtime = Runtime()
     if args.command == "doctor":

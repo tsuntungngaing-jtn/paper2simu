@@ -3,6 +3,7 @@ param(
     [int]$Port = 8765,
     [string]$BindHost = "127.0.0.1",
     [string]$PublicUrl = "",
+    [string]$ExpectedVersion = "",
     [switch]$CopyHeader,
     [switch]$PrepareTokenOnly
 )
@@ -59,6 +60,7 @@ $VenvPython = Join-Path $RepoRoot ".venv\Scripts\python.exe"
 if (-not (Test-Path -LiteralPath $VenvPython)) { throw "Run scripts/install.ps1 first." }
 $LaunchArgs = @("-m", "server.main", "serve", "--transport", $Transport, "--port", "$Port", "--host", $BindHost)
 if ($PublicUrl) { $LaunchArgs += @("--public-url", $PublicUrl) }
+if ($ExpectedVersion) { $LaunchArgs += @("--expected-version", $ExpectedVersion) }
 Push-Location -LiteralPath $RepoRoot
 try {
     & $VenvPython @LaunchArgs

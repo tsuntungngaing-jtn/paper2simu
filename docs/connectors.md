@@ -1,7 +1,7 @@
 # Installation and connectors
 Install into a new directory and dedicated Python 3.10+ environment. `scripts/install.ps1` creates .venv and installs the complete source editable. A licensed COMSOL installation must already exist. The source directory must remain available after editable installation.
 
-For stdio, configure the client with the absolute `.venv/Scripts/python.exe` path, arguments `-m server.main serve --transport stdio`, and the extracted skill folder as cwd. Set `COMSOL_OUTPUT_ROOT` to a writable research directory. Optional `COMSOL_VERSION=6.4` selects a discovered installation. `COMSOL_ROOT` must match that installation, not merely point to another directory. `COMSOL_ALLOW_CODE=1` enables trusted operator code through MCP; it is not required for Inspector and is not a sandbox.
+For stdio, configure the client with the absolute `.venv/Scripts/python.exe` path, arguments `-m server.main serve --transport stdio`, and the same runtime checkout as cwd. Add `--expected-version 0.3.2` to the connector arguments to catch a launch from an unexpected runtime. Set `COMSOL_OUTPUT_ROOT` to a writable research directory. Optional `COMSOL_VERSION=6.4` selects a discovered installation. `COMSOL_ROOT` must match that installation, not merely point to another directory. `COMSOL_ALLOW_CODE=1` enables trusted operator code through MCP; it is not required for Inspector and is not a sandbox.
 
 ## Client–server and licensing
 
@@ -12,6 +12,22 @@ After connect, resolve tracked model identity before edits. Connectivity smoke: 
 To install only skill discovery files, run `python scripts/install_skill.py --skills-dir <client-skills-directory>`. It refuses an existing destination. This does not install dependencies or configure a connector. Clients with an Upload Skill feature require that separate action; local copying does not prove visibility.
 
 For HTTP/SSE, use scripts/start-mcp.ps1 with the desired transport. Bind localhost unless external access is explicitly needed. The launcher preserves its local token and refuses conflicting credentials. Use an Authorization: Bearer header and an HTTPS reverse proxy for external transport. Never send tokens in chat. Skill upload, dependency installation, MCP connection, tool discovery and license availability are separate checks.
+
+## Submission window and recovery
+
+1. Install the runtime from the version-matched checkout. Point the host connector at that checkout's absolute interpreter and working directory. Check the local interpreter with `python -m server.main --version`. After the host reloads, check the live `paper2simu_version`, `runtime_root`, `python_executable` and `output_root` in `comsol_queue_status`. For HTTP/SSE, use `scripts/start-mcp.ps1 -Transport streamable-http -ExpectedVersion 0.3.2` or specify the existing transport. Retain the original `COMSOL_OUTPUT_ROOT`, transport endpoint and credentials. In Codex, `codex mcp list` verifies the configured connector. The version reported by the live tool verifies what actually started.
+2. Before each queued study or case, read `comsol_queue_status.submission_budget`. It reports used, limit and remaining for the active queue and cumulative submissions. `window.remaining_seconds` and `window.expires_at_unix` report the current deadline. `window.expires_soon` flags the final 10% of the window, up to one hour, whenever status is queried. In that interval, record a checkpoint path, the server/model/study identity and accepted job IDs. Save the model to a new checkpoint while the JVM is idle. A status snapshot is advisory. The server rechecks all limits when admitting each job.
+3. If a submission returns `SUBMISSION_BUDGET_EXHAUSTED`, read `submission_budget.block_reasons` for every cause. For `ACTIVE_JOB_LIMIT_REACHED`, poll existing jobs. For `TOTAL_SUBMISSION_LIMIT_REACHED`, have the operator review the configured cumulative limit and preserve `job-manifests`. For `SUBMISSION_WINDOW_EXPIRED`, an authorized local operator can open a new window on the live process. A successful COMSOL connection diagnoses connectivity only. When a job already has an ID, consult its status and native error for solver or license failures.
+4. To renew the current window, run this in a trusted terminal on the simulation machine using the connector's runtime and the same `COMSOL_OUTPUT_ROOT`. Replace the example ID with the live `runtime_id` from `comsol_queue_status`.
+
+   ```powershell
+   .\.venv\Scripts\python.exe -m server.main renew-window --runtime-id "<runtime_id>" --reason "Resume approved diagnostic studies"
+   ```
+
+   This local command writes a record under `submission-window-grants/<runtime_id>/` with the OS account, time and reason. The live process reads the grant on the next status or admission call. The new window starts at grant time and uses the configured duration. Verify its grant ID and remaining budget before submitting pending work. A grant applies only to that runtime and leaves the active/cumulative limits and COMSOL connection intact. Use a single owner per output root and keep the local grants with the job journal.
+5. To migrate an already running pre-0.3.2 connector, let active jobs finish and save an explicit model checkpoint before reloading. In COMSOL Desktop keep the Multiphysics server running if prompted. Reopen the MCP session through its host, or gracefully restart the separately launched HTTP/SSE process. Reconnect to the verified Multiphysics endpoint and confirm the model identity. If the new connector lacks the in-memory model handle, load the saved checkpoint with `model_load`. Keep prior job IDs and reconcile `recovery_pending` against saved artifacts and native state before submitting any pending work. A recovered manifest is historical and cannot establish whether its solve finished.
+
+Official references are the [MCP lifecycle](https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle), [MCP tool results and errors](https://modelcontextprotocol.io/specification/2025-11-25/server/tools), [Codex MCP setup](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) and [COMSOL 6.4 client/server recovery and preferences](https://doc.comsol.com/6.4/doc/com.comsol.help.comsol/comsol_ref_running.38.20.html). The submission window is configured by Paper2Simu.
 
 ## Fluent (official PyFluent MCP)
 

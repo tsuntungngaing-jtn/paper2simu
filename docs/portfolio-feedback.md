@@ -43,7 +43,7 @@ This maintenance release addresses confirmed error-reporting and runtime gaps an
 
 `COMSOL_TOOL_ROLE=operator` is the compatible default. `reviewer` exposes only job/queue metadata and offline validators and no resources. This is a capability reduction, not a sandbox or multi-tenant authorization system. It intentionally does not expose Java Inspector while a solver may be busy.
 
-`COMSOL_MAX_ACTIVE_JOBS=8`, `COMSOL_MAX_SUBMISSIONS=100`, and `COMSOL_SUBMISSION_WINDOW_SECONDS=86400` bound asynchronous submissions. Count includes restored manifests. The time window restarts with the process; it is not a cumulative research budget. Necessary/repair attribution and code-internal solve counts remain unguarded. In-flight solves are never interrupted by a cap. The server assumes one owner per output root; concurrent processes sharing the journal are unsupported.
+`COMSOL_MAX_ACTIVE_JOBS=8`, `COMSOL_MAX_SUBMISSIONS=100`, and `COMSOL_SUBMISSION_WINDOW_SECONDS=86400` bound the case and study queues. The count includes restored manifests and records with recovery errors. The window starts with the process and can be renewed by a local operator. [Queue diagnostics and recovery](connectors.md#submission-window-and-recovery) explain the independent limits. Code-internal solves are outside the queue accounting. In-flight solves continue at expiry. Use one MCP process per output root.
 
 `job-manifests/*.json` is local state, not a distributed job system. Startup treats ALL recovered jobs as historical/unverified, even formerly completed jobs. Corrupt files appear in queue diagnostics. Verify the server, model, study and dataset before using results. A job completed status means the Python call returned, not physical convergence or a new validated dataset.
 
