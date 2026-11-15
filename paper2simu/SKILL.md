@@ -4,7 +4,7 @@ description: Connect to COMSOL or Ansys Fluent through the configured MCP provid
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.2.3"
+  version: "0.3.0"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 

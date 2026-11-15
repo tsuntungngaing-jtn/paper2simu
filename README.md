@@ -1,26 +1,16 @@
 # Paper2Simu — Paper-to-Simulation for COMSOL and Ansys Fluent
 
-**Project generation: v0.2.0 (unified codebase; solver-specific scientific validation ongoing).**
+**Current version: v0.3.0. Commercial-solver verification of this release remains NOT_RUN.**
 
-Paper2Simu unifies the evidence-first COMSOL Automatic pipeline (up to v0.7.6) and the ComsoFlent v0.1.0 MCP-routing preview. The project is no longer named ComsoFlent. The repository URL may still display the old GitHub slug until the repository owner renames it in GitHub Settings. Legacy names in historical notes are attribution and compatibility references, not separate active products.
+Paper2Simu unifies the evidence-first COMSOL Automatic pipeline (up to v0.7.6) and the ComsoFlent v0.1.0 MCP-routing preview. The project is no longer named ComsoFlent. The canonical repository is [paper2simu](https://github.com/tsuntungngaing-jtn/paper2simu). Legacy names in historical notes are attribution and compatibility references, not separate active products.
 
 **Execution scope:** The user reports an actual Fluent-workstation connection. This does not independently establish that all Ansys simulation tools, restart flows, or full CFD reproductions have been verified. COMSOL and Fluent use separate MCP providers, environments, model files and solver settings. The unified Skill orchestrates routing and scientific evidence; it does not silently load or operate a different solver.
 
 **Skill entry:** [paper2simu/SKILL.md](paper2simu/SKILL.md) or the compatibility [root SKILL.md](SKILL.md). Additional architecture: [legacy ComsoFlent migration design](docs/comsoflent-v0.1.0.md), [operations guard](docs/operations-reliability-v0.7.7-rc1.md), [vendor-native convergence](docs/native-convergence-policy.md).
 
-**Installation:** Python project `paper2simu==0.2.0` retains `comsol-automatic` and `comsol-skill-mcp` command aliases for existing COMSOL setups; new aliases: `paper2simu`, `paper2simu-comsol-mcp`. These aliases start the **COMSOL MCP service**, not a Fluent solver. Install official [Ansys PyFluent MCP](https://github.com/ansys/pyfluent-mcp) separately with its documented Python environment and register a distinct host server ID. Do not assume a single shared virtualenv can satisfy both products.
+**Installation:** Python project `paper2simu==0.3.0` retains `comsol-automatic` and `comsol-skill-mcp` command aliases for existing COMSOL setups; new aliases: `paper2simu`, `paper2simu-comsol-mcp`. These aliases start the **COMSOL MCP service**, not a Fluent solver. Install official [Ansys PyFluent MCP](https://github.com/ansys/pyfluent-mcp) separately with its documented Python environment and register a distinct host server ID. Do not assume a single shared virtualenv can satisfy both products.
 
-**Release migration:** `python scripts/release.py --output ../Paper2Simu-v0.2.0.zip` and `python scripts/install_skill.py` produce the new package/install name without overwriting an existing directory. Keep the old install until a complete rollback-tested integration is accepted. Never transfer COMSOL tokens or private solver artifacts into the public Git repository.
-
-## Execution/acceptance separation (v0.2.2+)
-
-The [canonical skill](paper2simu/SKILL.md) handles solver connection, authorized execution and evidence delivery. For paper reproduction, the agent loads packaged [acceptance prompt](prompts/paper-reproduction-task.md) and [conditional calibration card](prompts/conditional-calibration.md) automatically; fill the **task card** only (no hand-paste of the full policy each turn). Configurable paper-metric default is strict <15% with \(J=\max e_i/0.15\). Pure modeling without reproduction still executes without a PASS claim. See [migration/API notes](docs/execution-acceptance-separation.md) and [filled example](examples/paper-reproduction-task-example.md).
-
-The controller reports execution, checks and paper comparisons separately. Failed/partial artifacts are deliverable. Optional legacy checks remain available, but historical policies below are not automatically activated by loading the skill. Live solver validation of this change remains NOT_RUN.
-
-## Fluent licensing preflight (v0.2.3)
-
-Skill version **0.2.3** adds Windows Fluent / Ansys licensing-client preflight for agent hosts: launch identity, `%APPDATA%\Ansys` write rights for dynamic `ansyscl` port files, log locations, and official PyFluent-MCP session-log notes. See [Fluent licensing preflight](docs/fluent-licensing-preflight.md) and the Fluent section in [connectors](docs/connectors.md). Connection recovery is not paper acceptance.
+**Release migration:** `python scripts/release.py --output ../Paper2Simu-v0.3.0.zip` and `python scripts/install_skill.py` produce the new package/install name without overwriting an existing directory. Keep the old install until a complete rollback-tested integration is accepted. Never transfer COMSOL tokens or private solver artifacts into the public Git repository.
 
 ## Execution/acceptance separation (v0.2.2+)
 
@@ -31,6 +21,13 @@ The controller reports execution, checks and paper comparisons separately. Faile
 ## Fluent licensing preflight (v0.2.3)
 
 Skill version **0.2.3** adds Windows Fluent / Ansys licensing-client preflight for agent hosts: launch identity, `%APPDATA%\Ansys` write rights for dynamic `ansyscl` port files, log locations, and official PyFluent-MCP session-log notes. See [Fluent licensing preflight](docs/fluent-licensing-preflight.md) and the Fluent section in [connectors](docs/connectors.md). Connection recovery is not paper acceptance.
+
+## Paper2Simu v0.3.0
+
+- [Reproduction task card](prompts/paper-reproduction-task.md): reuse saved solutions to audit fixed QoIs, effective settings, and conservation before spending solver time.
+- [Conditional calibration](prompts/conditional-calibration.md): compare mesh and tentative effects, advance the accepted checkpoint only on a resolved improvement, and report observed feasible points and holdout scope. See the [P005 example](examples/p005-conditional-calibration.md).
+- [Discovery](docs/discovery-surrogate-workflow-v0.3.0.md): opt-in, offline design-space and surrogate screening. Solver work follows the separately authorized MCP route.
+- [RSI](docs/context-retrieval-rsi-evaluation.md): optional bounded retrieval and paired held-out comparisons. Favorable comparisons leave policy activation pending independent review.
 
 ## Previous COMSOL Automatic capabilities (preserved)
 

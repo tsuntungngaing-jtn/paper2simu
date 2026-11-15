@@ -49,9 +49,12 @@ class RoutingTests(unittest.TestCase):
         self.assertTrue(all(c["manifest"] for c in manifest["candidates"]))
 
     def test_tie_abstains(self):
-        result = route_figure(self.root, self.path, [
-            self._curve([255, 0, 0], "red"), self._curve([254, 0, 0], "near_red")
-        ])
+        red = self._curve([255, 0, 0], "red")
+        near_red = self._curve([254, 0, 0], "near_red")
+        for candidate in (red, near_red):
+            candidate["spec"]["rgb_distance_max"] = 1
+        result = route_figure(self.root, self.path, [red, near_red])
+        self.assertEqual([c["score"] for c in result["candidates"]], [1.0, 1.0])
         self.assertFalse(result["success"])
         self.assertEqual(result["status"], "ABSTAIN")
         self.assertIsNone(result["selected_candidate"])
