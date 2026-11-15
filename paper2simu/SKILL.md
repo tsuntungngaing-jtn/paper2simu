@@ -25,6 +25,11 @@ Do **not** activate those prompts merely by loading this skill for a non-reprodu
 
 Older references describe optional validation/RSI workflows and historical policies. Reading an API reference does not activate its old acceptance gates. Use validation interfaces only when requested by the task. See [interface and migration notes](../docs/execution-acceptance-separation.md).
 
+## Optional Discovery and RSI
+
+- Use **DISCOVERY** only for an explicitly scoped new-design study with its own study ID. Read [the offline Discovery workflow](../docs/discovery-surrogate-workflow-v0.3.0.md). Its evidence checks inspect caller declarations. Its surrogate ranks proposals and does not submit commercial solver jobs. Use the normal authorized MCP route for any later solver work.
+- For optional historical retrieval or evaluation of changes to the agent policy, read [bounded retrieval and held-out RSI evaluation](../docs/context-retrieval-rsi-evaluation.md). Held-out cases stay out of learning and retrieval. Favorable comparisons leave promotion pending independent review.
+
 ## Connect and select one route
 
 - Inspect actual registered MCP providers and tool schemas. `solver_route_plan` consumes supplied inventory; it is not live discovery. Select exactly one authorized solver/session and record namespace and ownership. Preserve existing host assignments (LAB7/LAB8 Fluent, LAB9/LAB10 COMSOL when in scope). Do not launch the other solver merely because the skill is loaded.

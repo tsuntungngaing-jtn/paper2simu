@@ -1,6 +1,6 @@
 # Paper2Simu Research Branch — AI Experiment Design v0.1.0
 
-**Status:** isolated research scaffold, **NOT a production solver/optimizer**. The main Paper2Simu package remains v0.2.0; this branch is optional and MUST NOT be merged or enabled on running COMSOL/Fluent workstations without separate review.
+**Status:** opt-in offline experiment design scaffold. Select DISCOVERY for a separately scoped study. Use the normal authorized solver route for any proposed simulation.
 
 ## Purpose
 
