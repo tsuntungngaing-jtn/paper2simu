@@ -47,6 +47,7 @@ class ReleaseTests(unittest.TestCase):
                         'prompts/conditional-calibration.md',
                         'prompts/paper-input-reconstruction.md',
                         'docs/scheduled-connection-recovery.md',
+                        'docs/research-plan-and-handoff.md', 'scripts/research_resume.py',
                         'rsi/controller.py', 'uncertainty/inference.py']
             for name in expected:
                 path = root / name

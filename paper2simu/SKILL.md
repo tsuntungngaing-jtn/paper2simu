@@ -4,7 +4,7 @@ description: Connect to COMSOL or Ansys Fluent through the configured MCP provid
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.3.3"
+  version: "0.3.5"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -46,6 +46,12 @@ Older references describe optional validation/RSI workflows and historical polic
 - Resolve MCP tool access, solver attachment, existing jobs and submission eligibility independently. For COMSOL, read `comsol_queue_status` and known job IDs first. `JVM_BUSY` on `comsol_status` means defer the native read and keep polling job metadata. For Fluent, use the installed provider's read-only session status when exposed and the task's durable job records.
 - If attachment is lost, use only a configured, authorized attach to an already running, verified solver endpoint. Recheck session and job identity before resuming. If the route is blocked or the old job is unresolved, preserve evidence, report the affected state, and refrain from replacement submissions.
 - At the task's dated cutoff in its configured timezone, close new submission while continuing in-flight monitoring and authorized finalization. After verified idle, follow the task's explicit repeat or pause policy and preserve the schedule entry. A cutoff, exhausted budget, or connection error never authorizes deleting a scheduled task.
+
+## Research plans and handoff
+
+- For multi-stage or recurring work, load [research plans and handoff](../docs/research-plan-and-handoff.md). Set phase completion criteria and budgets in the existing task directory. Reuse the task card and trial journal.
+- At the start of a resumed or scheduled turn, read the task's `resume.md`, then verify the referenced plan, evidence and original jobs through the configured provider. Keep an unknown submission unresolved until reconciled.
+- Before a submission, record the hypothesis, expected observation and operation ID. After evaluation, record effective readback, QoIs and required checks, the decision and the evidence-driven next action. Refresh `resume.md` with `scripts/research_resume.py` from the task records. Use `HOLD` when evidence is incomplete. Apply independent RSI review before promoting trial learning into a shared rule.
 
 ## Build and execute
 
