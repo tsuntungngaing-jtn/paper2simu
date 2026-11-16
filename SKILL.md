@@ -1,6 +1,6 @@
 ---
 name: paper2simu
-description: Compatibility entrypoint for Paper2Simu COMSOL and Fluent connection and execution. Paper-reproduction acceptance comes from packaged prompts under prompts/; fill the task card only.
+description: Compatibility entrypoint for Paper2Simu COMSOL and Fluent connection, execution, and scheduled or overnight monitoring. Paper-reproduction acceptance uses packaged prompts.
 license: MIT
 ---
 

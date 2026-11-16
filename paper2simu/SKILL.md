@@ -1,10 +1,10 @@
 ---
 name: paper2simu
-description: Connect to COMSOL or Ansys Fluent through the configured MCP provider, build and run authorized simulation tasks, and save traceable models, results and logs. Paper-reproduction acceptance lives in packaged prompts (not skill code gates); load those prompts for reproduction tasks instead of pasting them by hand each turn.
+description: Connect to COMSOL or Ansys Fluent through the configured MCP provider, run and monitor authorized simulations including unattended and overnight tasks, recover connections to existing solver sessions, and save traceable results. Load packaged acceptance prompts for paper reproduction.
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.3.2"
+  version: "0.3.3"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -39,6 +39,13 @@ Older references describe optional validation/RSI workflows and historical polic
 - Fluent preflight (before launch/connect retries): record actual process identity (for example CodexSandboxOnline vs Offline vs interactive), `APPDATA` / `LOCALAPPDATA` / `TEMP` / `TMP`, task ownership and existing Fluent/license-client jobs. Confirm the launch identity can write `%APPDATA%\Ansys` (dynamic `ansyscl.<HOST>.<acl-id>` port files) and can create logs under `%TEMP%\.ansys`. Official PyFluent-MCP session logs also default under `%APPDATA%\Ansys\...`; override with `FLUIDS_MCP_SESSION_LOG_DIR` or disable with `FLUIDS_MCP_DISABLE_SESSION_LOGS=1` when documenting alternatives. A listening ACL port that cannot be written is still a launch failure; do not treat that ephemeral port as a permanent `ansyslmd.ini` server value.
 - If connection/license is unavailable, report BLOCKED with log paths (`ansyscl*.log`, `licdebug*.out`), preserve completed work, and stop repeated launches. Do not silently bypass MCP with GUI automation or direct external API scripts. Do not alter another session or machine. License checkout tests consume seats; exit code 0 alone is not proof of checkout - read utility output and logs. Missing Chinese message catalogs that also appear on successful checkouts are not this failure mode's root cause.
 - Honor authorization already supplied by the user. Read-only access does not authorize solves or source overwrites; authorized modeling/solve tasks do not need repeated permission for ordinary steps. Operator code still requires the environment's explicit opt-in. Connection recovery is not paper-reproduction acceptance.
+
+## Scheduled and overnight runs
+
+- Load [scheduled connection recovery](../docs/scheduled-connection-recovery.md) every scheduled turn. Use this turn's registered MCP tools, including for status checks. Never send solver queries through `write_stdin`, an old PTY, or another chat's terminal session.
+- Resolve MCP tool access, solver attachment, existing jobs and submission eligibility independently. For COMSOL, read `comsol_queue_status` and known job IDs first. `JVM_BUSY` on `comsol_status` means defer the native read and keep polling job metadata. For Fluent, use the installed provider's read-only session status when exposed and the task's durable job records.
+- If attachment is lost, use only a configured, authorized attach to an already running, verified solver endpoint. Recheck session and job identity before resuming. If the route is blocked or the old job is unresolved, preserve evidence, report the affected state, and refrain from replacement submissions.
+- At the task's dated cutoff in its configured timezone, close new submission while continuing in-flight monitoring and authorized finalization. After verified idle, follow the task's explicit repeat or pause policy and preserve the schedule entry. A cutoff, exhausted budget, or connection error never authorizes deleting a scheduled task.
 
 ## Build and execute
 
