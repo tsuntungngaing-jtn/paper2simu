@@ -31,8 +31,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 17887,
-      "sha256": "3d9258c0adf63180c08726e30f0ee623c2df91d932329352b0c9dc7befd3b82a"
+      "bytes": 18275,
+      "sha256": "cd9f67e63d71d2103136232d4000f05913dd873422abdf68e5c83d717408c300"
     },
     {
       "path": "SKILL.md",
@@ -187,7 +187,7 @@
     {
       "path": "docs/connectors.md",
       "bytes": 7727,
-      "sha256": "dd33ad745127a65ff569537b53e17080ca7ba9c11f78325d4c5abd8b3d39482d"
+      "sha256": "3d8abb4a165ebe0badf912a500815ce18ed65fb565df8d51d8f23383f0006c70"
     },
     {
       "path": "docs/context-retrieval-rsi-evaluation.md",
@@ -340,6 +340,11 @@
       "sha256": "0e1eac17ada031014df8458af204871ab1475202efed2ecb22c72c0848f58ea5"
     },
     {
+      "path": "docs/research-plan-and-handoff.md",
+      "bytes": 8165,
+      "sha256": "e014594bf950926646ec4eeeb5b252167aec2cdd7b99fc8a3845783f3288db4d"
+    },
+    {
       "path": "docs/research-workflow.md",
       "bytes": 717,
       "sha256": "077d5b908851e2cdae585f7aaa789c024a7d34c255949589be0acabd8782e791"
@@ -356,8 +361,8 @@
     },
     {
       "path": "docs/scheduled-connection-recovery.md",
-      "bytes": 6642,
-      "sha256": "2efe926aab576fc4bd0defde6acdae42c76748f6154b7c9f317af31216c2524d"
+      "bytes": 6950,
+      "sha256": "2ca8fe2983374750634b929ca49d800dab936cc4438aee8a6c30c74a56398478"
     },
     {
       "path": "docs/scientific-validity-under-uncertainty.md",
@@ -456,8 +461,8 @@
     },
     {
       "path": "paper2simu/SKILL.md",
-      "bytes": 11973,
-      "sha256": "d472ac3f4b86bd188869f66fffc7dfee8804effa3088c24dccf1e7f5fadf587a"
+      "bytes": 12857,
+      "sha256": "bc8f624cec4e868a43f7cc6cb5b9a7ffdfeb5d335730b00b61e8f884720bcf19"
     },
     {
       "path": "prompts/conditional-calibration.md",
@@ -466,18 +471,18 @@
     },
     {
       "path": "prompts/paper-input-reconstruction.md",
-      "bytes": 9066,
-      "sha256": "99a3d41eca7bf87b3df47bb9ea4b375117d9543942e92a334de38011c80ea6bb"
+      "bytes": 9376,
+      "sha256": "5fdf6fd6ed16cb02ca0023c0eb992c90eccade3bb96c3a23388bdda1918298fa"
     },
     {
       "path": "prompts/paper-reproduction-task.md",
-      "bytes": 15012,
-      "sha256": "41528c98dee48544dfa86e929d87cb9c7b5af14f7922dbff9d6043db4258a5ea"
+      "bytes": 15282,
+      "sha256": "14ef6b8bcdb7e6ff7b6f4244ed893ea8f45cb510ebd3d2f44a0a7896156c240b"
     },
     {
       "path": "pyproject.toml",
       "bytes": 1161,
-      "sha256": "830edcbe664b57929f89740665970b179b901b19f9aa29cab0134e29c8276676"
+      "sha256": "3c62c201ce060b9d68b392d246253fb2544baa4e6222d0a6118d1607afa7c457"
     },
     {
       "path": "research_design/__init__.py",
@@ -627,7 +632,12 @@
     {
       "path": "scripts/release.py",
       "bytes": 5650,
-      "sha256": "e880f783fdc7e6bd531b31bdf6fcd7fc2b291b8b12fbe0a629503a3e560270c5"
+      "sha256": "a21f0df0e01ef430c9e65a6e08ff4975fa7c6031675d7f9a4ee43f381d3a2773"
+    },
+    {
+      "path": "scripts/research_resume.py",
+      "bytes": 9944,
+      "sha256": "a8488b8dcbf7b2f7369ddcde42de86fa65218b770e771305f7c0b82d39cfd4b0"
     },
     {
       "path": "scripts/start-mcp.ps1",
@@ -642,7 +652,7 @@
     {
       "path": "server/__init__.py",
       "bytes": 98,
-      "sha256": "2074d4f708dd7cdb1c7e684fea3f65b6e89664ee00cfdb385eefa3d2108f5708"
+      "sha256": "1f4e29f3c8646d821bc75121038d434ad1aa0b22bc69c5bba8fa6ab7ec515f89"
     },
     {
       "path": "server/calibration.py",
@@ -901,8 +911,8 @@
     },
     {
       "path": "tests/test_release.py",
-      "bytes": 4058,
-      "sha256": "281161ae6aa440ac346fd31e0613aaa1b9e9b243613651d1a9321741948becaf"
+      "bytes": 4150,
+      "sha256": "b7b9fd6560bf8cfb859e611f50b4ea28fc0b5aea69b6ac99340803cc74f61f82"
     },
     {
       "path": "tests/test_release_repairs.py",
@@ -918,6 +928,11 @@
       "path": "tests/test_research_design.py",
       "bytes": 6142,
       "sha256": "254a1a33b6cd73ba2f38f54a23497ff91b64e31302fb4e2a4c510b35380fb301"
+    },
+    {
+      "path": "tests/test_research_resume.py",
+      "bytes": 6215,
+      "sha256": "50434262fdb9518b93867f7600c3583e3bd0832c7d70eb38af25e5c6e95c4ac1"
     },
     {
       "path": "tests/test_rsi_autonomy_channels.py",
