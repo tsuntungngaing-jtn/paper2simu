@@ -46,6 +46,7 @@ class ReleaseTests(unittest.TestCase):
                         'COMSOFLENT_SKILL.md', 'prompts/paper-reproduction-task.md',
                         'prompts/conditional-calibration.md',
                         'prompts/paper-input-reconstruction.md',
+                        'docs/scheduled-connection-recovery.md',
                         'rsi/controller.py', 'uncertainty/inference.py']
             for name in expected:
                 path = root / name
