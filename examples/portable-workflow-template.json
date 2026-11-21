@@ -1,0 +1,46 @@
+{
+  "schema_version": "portable-workflow/1",
+  "record_kind": "PLAN_TEMPLATE",
+  "workflow_id": null,
+  "task_ref": null,
+  "input_ledger_ref": null,
+  "qoi_contract_ref": null,
+  "journal_ref": null,
+  "contract_revision": null,
+  "authorized_operations": [],
+  "budgets": {
+    "max_solves": 0,
+    "max_retries": 0,
+    "wall_time_seconds": 0
+  },
+  "native_recipes": [],
+  "assets": [],
+  "checks": {
+    "archive_restore": {
+      "status": "NOT_RUN",
+      "criteria_ref": null,
+      "observations": null,
+      "native_evidence": []
+    },
+    "zero_iteration_readback": {
+      "status": "NOT_RUN",
+      "criteria_ref": null,
+      "observations": null,
+      "native_evidence": []
+    },
+    "fresh_parametric_replay": {
+      "status": "NOT_RUN",
+      "criteria_ref": null,
+      "observations": null,
+      "native_evidence": []
+    },
+    "scientific_validation": {
+      "status": "NOT_RUN",
+      "criteria_ref": null,
+      "observations": null,
+      "native_evidence": []
+    }
+  },
+  "note": "Planning template only; null means unfilled, not zero or verified. No solve authorized by this file.",
+  "states": {}
+}
