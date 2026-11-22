@@ -31,8 +31,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 18896,
-      "sha256": "8b2447edd4887756c2a99c7ea989b41508d9b55dba4f5478e7d75616bd5a704d"
+      "bytes": 19266,
+      "sha256": "fb6af229da756d2972f53da9ae5db94ef442dc1a9eaf7a7ffd23f5a793cbbafc"
     },
     {
       "path": "SKILL.md",
@@ -186,8 +186,8 @@
     },
     {
       "path": "docs/connectors.md",
-      "bytes": 7727,
-      "sha256": "9f53539e87e197547050d4694dfc07e824883407950634cd138d5d7c0f6499f2"
+      "bytes": 7865,
+      "sha256": "85d69fb0c834ad1857146b97a29d42dd89419c431059294b01394203ad9eaed4"
     },
     {
       "path": "docs/context-retrieval-rsi-evaluation.md",
@@ -381,8 +381,8 @@
     },
     {
       "path": "docs/scheduled-connection-recovery.md",
-      "bytes": 6950,
-      "sha256": "2ca8fe2983374750634b929ca49d800dab936cc4438aee8a6c30c74a56398478"
+      "bytes": 10316,
+      "sha256": "1fa6e0832147b955e84c67f65bb0ebbed40b7c551eff9021f44ef2527642b098"
     },
     {
       "path": "docs/scientific-validity-under-uncertainty.md",
@@ -496,8 +496,8 @@
     },
     {
       "path": "paper2simu/SKILL.md",
-      "bytes": 14193,
-      "sha256": "85ab3378dd03005ff8a9fdac37002c14790f4afed3cb99c2002ea74e35bf2fc5"
+      "bytes": 14525,
+      "sha256": "17fec6ba582b94801b055a229caf006989159522deb938a097e89bc96da964bd"
     },
     {
       "path": "prompts/conditional-calibration.md",
@@ -522,7 +522,7 @@
     {
       "path": "pyproject.toml",
       "bytes": 1161,
-      "sha256": "b5e5cbc59e7d882f57d8c63b3175a408e436b1daf456ad44458b0735defa9041"
+      "sha256": "3cb585c83b3d3dd1fb4d8c69239802d75065ed238fd765880d1ad4d97b25089e"
     },
     {
       "path": "research_design/__init__.py",
@@ -682,7 +682,7 @@
     {
       "path": "scripts/release.py",
       "bytes": 5650,
-      "sha256": "0a5329f64504d64c2095a8d0dc8766074a1129a92033edcbf839c228b5f00a44"
+      "sha256": "854248415114c67aaaf6d6501ac6133bafc5ed5b82bafa25cc2f75fb96db81f1"
     },
     {
       "path": "scripts/research_resume.py",
@@ -702,7 +702,7 @@
     {
       "path": "server/__init__.py",
       "bytes": 98,
-      "sha256": "1a42aed1bf90f8085311506e22840df7844c275fadbef67ac214f784cf73186c"
+      "sha256": "9855700824bf9b8377a8243b550cb1cbc4526ee249de40b0412f9b65a63b783a"
     },
     {
       "path": "server/calibration.py",

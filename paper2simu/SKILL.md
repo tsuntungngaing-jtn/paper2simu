@@ -4,7 +4,7 @@ description: Connect to COMSOL or Ansys Fluent through the configured MCP provid
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.3.8"
+  version: "0.3.9"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -51,6 +51,7 @@ Report archive restore, saved-solution zero-iteration readback, fresh replay and
 ## Scheduled and overnight runs
 
 - Load [scheduled connection recovery](../docs/scheduled-connection-recovery.md) every scheduled turn. Use this turn's registered MCP tools, including for status checks. Never send solver queries through `write_stdin`, an old PTY, or another chat's terminal session.
+- If the registered local HTTP MCP endpoint returns `502` before a tool response, follow the [loopback HTTP 502 check](../docs/scheduled-connection-recovery.md#loopback-http-502) before attempting solver attachment. After renewing the client connection, check the original job IDs through the registered provider before continuing.
 - Resolve MCP tool access, solver attachment, existing jobs and submission eligibility independently. For COMSOL, read `comsol_queue_status` and known job IDs first. `JVM_BUSY` on `comsol_status` means defer the native read and keep polling job metadata. For Fluent, use the installed provider's read-only session status when exposed and the task's durable job records.
 - If attachment is lost, use only a configured, authorized attach to an already running, verified solver endpoint. Recheck session and job identity before resuming. If the route is blocked or the old job is unresolved, preserve evidence, report the affected state, and refrain from replacement submissions.
 - At the task's dated cutoff in its configured timezone, close new submission while continuing in-flight monitoring and authorized finalization. After verified idle, follow the task's explicit repeat or pause policy and preserve the schedule entry. A cutoff, exhausted budget, or connection error never authorizes deleting a scheduled task.
