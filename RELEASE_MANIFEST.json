@@ -31,8 +31,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 18275,
-      "sha256": "cd9f67e63d71d2103136232d4000f05913dd873422abdf68e5c83d717408c300"
+      "bytes": 19266,
+      "sha256": "fb6af229da756d2972f53da9ae5db94ef442dc1a9eaf7a7ffd23f5a793cbbafc"
     },
     {
       "path": "SKILL.md",
@@ -186,8 +186,8 @@
     },
     {
       "path": "docs/connectors.md",
-      "bytes": 7727,
-      "sha256": "3d8abb4a165ebe0badf912a500815ce18ed65fb565df8d51d8f23383f0006c70"
+      "bytes": 7865,
+      "sha256": "85d69fb0c834ad1857146b97a29d42dd89419c431059294b01394203ad9eaed4"
     },
     {
       "path": "docs/context-retrieval-rsi-evaluation.md",
@@ -238,6 +238,11 @@
       "path": "docs/geometry-workflow.md",
       "bytes": 7990,
       "sha256": "4a708e8914bdb73438547a90dc2d4f2ae7d9d6fa87ac43f03c3349e3e1920106"
+    },
+    {
+      "path": "docs/grid-refinement-reporting.md",
+      "bytes": 3713,
+      "sha256": "cc324b677242b28bce1e7c18b69d207afce6a23b5096e32fd0b5258b1bb00edc"
     },
     {
       "path": "docs/harness-retention-heuristics.md",
@@ -300,6 +305,11 @@
       "sha256": "cb0a76a839f687dddcb858df1f02bbf177fe06e0148c30319b0a1ff0329f60ab"
     },
     {
+      "path": "docs/paper-evidence-map-v0.3.8.md",
+      "bytes": 6260,
+      "sha256": "f968ee29cc20411091ca130a3eaf58e571c9a233c514bf974f4ff7e089e67c31"
+    },
+    {
       "path": "docs/paper-only-vs-oracle-compare.md",
       "bytes": 3464,
       "sha256": "644ed647e461e7d66961e190c8cf47b191d35d608c9fa38f478ff02521a56e1c"
@@ -325,6 +335,11 @@
       "sha256": "77f9c872b8054285d92c0761bd234839cef929b71395ce6e3ea406f2df3eda9b"
     },
     {
+      "path": "docs/portable-workflow-contract.md",
+      "bytes": 5414,
+      "sha256": "40bb690d861b31d0810124c3fbe1e8b772a09c5121847ee71a1764251d2dbd8b"
+    },
+    {
       "path": "docs/portfolio-feedback.md",
       "bytes": 8085,
       "sha256": "6b29ff02a92b52371db53940497ef55aeb4a9f5bda5149675edaf3c606fc29bb"
@@ -333,6 +348,11 @@
       "path": "docs/publishing.md",
       "bytes": 712,
       "sha256": "4eaba73dccabdf9e4c59235b80ffd500613f4559812a43d2e5cbc1cd84d68433"
+    },
+    {
+      "path": "docs/regression-matrix-v0.3.8.md",
+      "bytes": 2385,
+      "sha256": "f37c0a9e9540e5da09b859a679eb436637123b2263dce3591ade04885c6477d6"
     },
     {
       "path": "docs/repair-validation.md",
@@ -361,8 +381,8 @@
     },
     {
       "path": "docs/scheduled-connection-recovery.md",
-      "bytes": 6950,
-      "sha256": "2ca8fe2983374750634b929ca49d800dab936cc4438aee8a6c30c74a56398478"
+      "bytes": 10316,
+      "sha256": "1fa6e0832147b955e84c67f65bb0ebbed40b7c551eff9021f44ef2527642b098"
     },
     {
       "path": "docs/scientific-validity-under-uncertainty.md",
@@ -405,6 +425,11 @@
       "sha256": "2e94f44460e61f8ff563a5dee347d54ca956f07c5041e6af9e8c0d899c866955"
     },
     {
+      "path": "docs/staged-solve-contract.md",
+      "bytes": 1548,
+      "sha256": "4183c40acbc17ef4ab9d1a9ac62e3c99c7e509f562a59550358129907a7b2d29"
+    },
+    {
       "path": "docs/uncertainty-aware-rsi.md",
       "bytes": 1653,
       "sha256": "921d35335938df1bf7644dec857c567ad7d7ee7e9efa64b880338d8ad22ccb9c"
@@ -440,6 +465,11 @@
       "sha256": "677864e4a33c079d44b4fa5b8c43516f11e43de4634a67184aaaaa996b315198"
     },
     {
+      "path": "examples/cand-1114-005-portability.md",
+      "bytes": 2315,
+      "sha256": "11bf73beebc2a7a0f45a2b6e9eda3df0a27e88d74010c08d847da33b8741030b"
+    },
+    {
       "path": "examples/catalog.json",
       "bytes": 46527,
       "sha256": "67bc729eb4336587d3982e6f6d29e8573d85ead5c9c83861da36868a72ae3836"
@@ -460,14 +490,19 @@
       "sha256": "796880831de2d0bcfcb1886b8ccf14d1077bb5003996d1eccd48c286432b14ea"
     },
     {
+      "path": "examples/portable-workflow-template.json",
+      "bytes": 1134,
+      "sha256": "5afac291645ee45669a8b6b6b626bed8eb2911a815b0274ad9dcedae8c519e93"
+    },
+    {
       "path": "paper2simu/SKILL.md",
-      "bytes": 12857,
-      "sha256": "bc8f624cec4e868a43f7cc6cb5b9a7ffdfeb5d335730b00b61e8f884720bcf19"
+      "bytes": 14525,
+      "sha256": "17fec6ba582b94801b055a229caf006989159522deb938a097e89bc96da964bd"
     },
     {
       "path": "prompts/conditional-calibration.md",
-      "bytes": 8458,
-      "sha256": "cf4029d600d02b4bd29b11d179fb91eb82bdd11596c3ae3b3e8c0bb379d2a2b2"
+      "bytes": 8602,
+      "sha256": "c3e072971d8aa96bc82c1ec0d7bda90e0091b255bc75bc750b50c941a23ba681"
     },
     {
       "path": "prompts/paper-input-reconstruction.md",
@@ -476,13 +511,18 @@
     },
     {
       "path": "prompts/paper-reproduction-task.md",
-      "bytes": 15282,
-      "sha256": "14ef6b8bcdb7e6ff7b6f4244ed893ea8f45cb510ebd3d2f44a0a7896156c240b"
+      "bytes": 15512,
+      "sha256": "66174a774562cf059671be3d157e789dac49cb1d8fa77d7ad471bace761edf8f"
+    },
+    {
+      "path": "prompts/portable-workflow-task.md",
+      "bytes": 2599,
+      "sha256": "00f915a42f4f7fdf93a1e7e1407b5d45932c6220b17e74c41312ef271d7b573f"
     },
     {
       "path": "pyproject.toml",
       "bytes": 1161,
-      "sha256": "3c62c201ce060b9d68b392d246253fb2544baa4e6222d0a6118d1607afa7c457"
+      "sha256": "3cb585c83b3d3dd1fb4d8c69239802d75065ed238fd765880d1ad4d97b25089e"
     },
     {
       "path": "research_design/__init__.py",
@@ -605,6 +645,11 @@
       "sha256": "ff63996cec627110ccc04782b4177fb7bccfc3adfbb9f088c17e32209ffa3c96"
     },
     {
+      "path": "schemas/portable-workflow.schema.json",
+      "bytes": 5717,
+      "sha256": "eb8cd8e16b2b0032620fdd5ea29eeda739a3fcd4c3707aea8e3a8a341db6a1b0"
+    },
+    {
       "path": "schemas/repair-plan.schema.json",
       "bytes": 783,
       "sha256": "896a12347443d730420d960f8e36b47d4b5cd192af335a14c41f12c0e213c823"
@@ -620,6 +665,11 @@
       "sha256": "33456426d86d8dcfd031c8f75afd295371868cba0b8851cdcd0f708c2424d091"
     },
     {
+      "path": "scripts/check_portable_workflow.py",
+      "bytes": 8664,
+      "sha256": "1e7555c9ecd33f25f50e2aed7da2127224c0837f16c3a136167f9a9066cca652"
+    },
+    {
       "path": "scripts/install.ps1",
       "bytes": 891,
       "sha256": "58b94f3336d1ebfb33cbb5b11010b2ca8db98e91ba16e407d8f7418dcb9932b3"
@@ -632,7 +682,7 @@
     {
       "path": "scripts/release.py",
       "bytes": 5650,
-      "sha256": "a21f0df0e01ef430c9e65a6e08ff4975fa7c6031675d7f9a4ee43f381d3a2773"
+      "sha256": "854248415114c67aaaf6d6501ac6133bafc5ed5b82bafa25cc2f75fb96db81f1"
     },
     {
       "path": "scripts/research_resume.py",
@@ -652,7 +702,7 @@
     {
       "path": "server/__init__.py",
       "bytes": 98,
-      "sha256": "1f4e29f3c8646d821bc75121038d434ad1aa0b22bc69c5bba8fa6ab7ec515f89"
+      "sha256": "9855700824bf9b8377a8243b550cb1cbc4526ee249de40b0412f9b65a63b783a"
     },
     {
       "path": "server/calibration.py",
@@ -898,6 +948,11 @@
       "path": "tests/test_physics_diagnostics.py",
       "bytes": 8203,
       "sha256": "a95d5d8379c55cc9e835727c02f3f8927d0b1f649ff70756c64bd277e573e580"
+    },
+    {
+      "path": "tests/test_portable_workflow.py",
+      "bytes": 6322,
+      "sha256": "ca777cb668cab7173c6af7e04f75083b37ef3f3855fbbe809eb72b9a19ec5635"
     },
     {
       "path": "tests/test_portfolio.py",
