@@ -1,6 +1,6 @@
 # Paper2Simu — Paper-to-Simulation for COMSOL and Ansys Fluent
 
-**Current version: v0.3.9. Commercial-solver verification of this release remains NOT_RUN.**
+**Current version: v0.3.10. Commercial-solver verification of this release remains NOT_RUN.**
 
 Paper2Simu unifies the evidence-first COMSOL Automatic pipeline (up to v0.7.6) and the ComsoFlent v0.1.0 MCP-routing preview. The project is no longer named ComsoFlent. The canonical repository is [paper2simu](https://github.com/tsuntungngaing-jtn/paper2simu). Legacy names in historical notes are attribution and compatibility references, not separate active products.
 
@@ -8,9 +8,9 @@ Paper2Simu unifies the evidence-first COMSOL Automatic pipeline (up to v0.7.6) a
 
 **Skill entry:** [paper2simu/SKILL.md](paper2simu/SKILL.md) or the compatibility [root SKILL.md](SKILL.md). Additional architecture: [legacy ComsoFlent migration design](docs/comsoflent-v0.1.0.md), [operations guard](docs/operations-reliability-v0.7.7-rc1.md), [vendor-native convergence](docs/native-convergence-policy.md).
 
-**Installation:** Python project `paper2simu==0.3.9` retains `comsol-automatic` and `comsol-skill-mcp` command aliases for existing COMSOL setups; new aliases: `paper2simu`, `paper2simu-comsol-mcp`. These aliases start the **COMSOL MCP service**, not a Fluent solver. Install official [Ansys PyFluent MCP](https://github.com/ansys/pyfluent-mcp) separately with its documented Python environment and register a distinct host server ID. Do not assume a single shared virtualenv can satisfy both products.
+**Installation:** Python project `paper2simu==0.3.10` retains `comsol-automatic` and `comsol-skill-mcp` command aliases for existing COMSOL setups; new aliases: `paper2simu`, `paper2simu-comsol-mcp`. These aliases start the **COMSOL MCP service**, not a Fluent solver. Install official [Ansys PyFluent MCP](https://github.com/ansys/pyfluent-mcp) separately with its documented Python environment and register a distinct host server ID. Do not assume a single shared virtualenv can satisfy both products.
 
-**Release migration:** `python scripts/release.py --output ../Paper2Simu-v0.3.9.zip` and `python scripts/install_skill.py` produce the new package/install name without overwriting an existing directory. Keep the old install until a complete rollback-tested integration is accepted. Never transfer COMSOL tokens or private solver artifacts into the public Git repository.
+**Release migration:** `python scripts/release.py --output ../Paper2Simu-v0.3.10.zip` and `python scripts/install_skill.py` produce the new package/install name without overwriting an existing directory. Keep the old install until a complete rollback-tested integration is accepted. Never transfer COMSOL tokens or private solver artifacts into the public Git repository.
 
 ## Execution/acceptance separation (v0.2.2+)
 
@@ -21,6 +21,10 @@ The controller reports execution, checks and paper comparisons separately. Faile
 ## Fluent licensing preflight (v0.2.3)
 
 Skill version **0.2.3** adds Windows Fluent / Ansys licensing-client preflight for agent hosts: launch identity, `%APPDATA%\Ansys` write rights for dynamic `ansyscl` port files, log locations, and official PyFluent-MCP session-log notes. See [Fluent licensing preflight](docs/fluent-licensing-preflight.md) and the Fluent section in [connectors](docs/connectors.md). Connection recovery is not paper acceptance.
+
+## Paper2Simu v0.3.10
+
+[Windows Fluent MPI startup preflight](docs/fluent-windows-mpi-preflight.md) covers compute-node startup failures after license checkout. Use an empty one-process local trial and a controlled two-process comparison through the official provider. Record native startup and gRPC readiness independently. Workstation verification remains NOT_RUN.
 
 ## Paper2Simu v0.3.9
 

@@ -31,8 +31,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 19266,
-      "sha256": "fb6af229da756d2972f53da9ae5db94ef442dc1a9eaf7a7ffd23f5a793cbbafc"
+      "bytes": 19641,
+      "sha256": "e51ae39fc29853ee84a2a7a3eea858c33fe7682c64bd9dbcc4d753ba2d29dfd1"
     },
     {
       "path": "SKILL.md",
@@ -186,8 +186,8 @@
     },
     {
       "path": "docs/connectors.md",
-      "bytes": 7865,
-      "sha256": "85d69fb0c834ad1857146b97a29d42dd89419c431059294b01394203ad9eaed4"
+      "bytes": 8117,
+      "sha256": "c400949f6753c321d4159cef564cf6f5f4fdf9179dcbab254e45032c3466ef58"
     },
     {
       "path": "docs/context-retrieval-rsi-evaluation.md",
@@ -228,6 +228,11 @@
       "path": "docs/fluent-licensing-preflight.md",
       "bytes": 5389,
       "sha256": "195f0a5cb1c9d444ff1ca6d168515afcbfb2e7eb0cd8cf05484b5f726fb7329c"
+    },
+    {
+      "path": "docs/fluent-windows-mpi-preflight.md",
+      "bytes": 6958,
+      "sha256": "91f186886d6b7bc5a623cfc1b526e687b72d4f5ac33dcd50105b0b8d4969ee54"
     },
     {
       "path": "docs/geometry-validation-results.md",
@@ -381,8 +386,8 @@
     },
     {
       "path": "docs/scheduled-connection-recovery.md",
-      "bytes": 10316,
-      "sha256": "1fa6e0832147b955e84c67f65bb0ebbed40b7c551eff9021f44ef2527642b098"
+      "bytes": 10625,
+      "sha256": "134185fa90e02c03ac503b522195dd488fa265e5e21feaf413df59daae70504e"
     },
     {
       "path": "docs/scientific-validity-under-uncertainty.md",
@@ -496,8 +501,8 @@
     },
     {
       "path": "paper2simu/SKILL.md",
-      "bytes": 14525,
-      "sha256": "17fec6ba582b94801b055a229caf006989159522deb938a097e89bc96da964bd"
+      "bytes": 15011,
+      "sha256": "dd9e8d859c9290ed2da08c868e8b957095beb8d4e3146ee79464eb875e25b675"
     },
     {
       "path": "prompts/conditional-calibration.md",
@@ -521,8 +526,8 @@
     },
     {
       "path": "pyproject.toml",
-      "bytes": 1161,
-      "sha256": "3cb585c83b3d3dd1fb4d8c69239802d75065ed238fd765880d1ad4d97b25089e"
+      "bytes": 1162,
+      "sha256": "0dbaeea55497ad00acb95f26e964af6ed467337c28673cc3bf1a5397b730f0c0"
     },
     {
       "path": "research_design/__init__.py",
@@ -681,8 +686,8 @@
     },
     {
       "path": "scripts/release.py",
-      "bytes": 5650,
-      "sha256": "854248415114c67aaaf6d6501ac6133bafc5ed5b82bafa25cc2f75fb96db81f1"
+      "bytes": 5651,
+      "sha256": "6b48077b11d314d21679941ec37c201afdb3f09ee8acebdd2ebd7b5b367f39fd"
     },
     {
       "path": "scripts/research_resume.py",
@@ -701,8 +706,8 @@
     },
     {
       "path": "server/__init__.py",
-      "bytes": 98,
-      "sha256": "9855700824bf9b8377a8243b550cb1cbc4526ee249de40b0412f9b65a63b783a"
+      "bytes": 99,
+      "sha256": "1b665d1717af4a47f39c712298dd3438e38d3bd1cfb9c022290d5fc1dc63e554"
     },
     {
       "path": "server/calibration.py",
