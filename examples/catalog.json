@@ -22,7 +22,7 @@
       "category": "Original teaching example",
       "status": "catalogued_not_run_in_this_release",
       "license_verified": false,
-      "study_hint": "Inspect the installed model studies and official tutorial before selecting a study.",
+      "study_hint": "Build without solving with solve=false. With solve=true, choose std1 (stationary), std2 (transient), or omit study for both.",
       "validation_suggestions": [
         "Read the actual version manual and official case documentation.",
         "Check provenance, warnings, convergence and relevant conservation.",

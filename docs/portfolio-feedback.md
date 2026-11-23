@@ -11,7 +11,7 @@ This maintenance release addresses confirmed error-reporting and runtime gaps an
 | C02 | Fixed top-level false PASS; per-task admission available. Legacy solve tools are not automatically spec-bound | server/contracts.py |
 | C03 | Explicit cancel request/unsupported state; no unsupported Java interrupt claim | server/runtime.py; queued/running tests |
 | C04 | Busy Java calls rejected; metadata remains nonblocking; no live residual stream added | runtime.call; queue tests |
-| C05 | Atomic job manifests; restart recovery_pending, no resubmit. Server/solution reattachment remains manual | runtime persistence tests |
+| C05 | Atomic job manifests; interrupted jobs become recovery_pending after restart, with no automatic resubmission. Server/solution reattachment remains manual | runtime persistence tests |
 | C06 | PARTIAL: revision/invalidation handoff instructions; enforced single-writer/revision protocol NOT_RUN/not implemented | stage-contracts.md |
 | C07 | Reviewer tool/resource allowlist excludes mutation/code. Operator code remains unsandboxed | reviewer discovery test |
 | C08 | PARTIAL: submission count/active-job/window caps. Per-build, per-repair and arbitrary-code budgets not enforced | runtime admission; budget test |
@@ -54,7 +54,7 @@ Busy checking is conservative admission, not a cross-process COMSOL lock. Extern
 1. Install this package in an isolated environment; do not hot-swap an active solve's server.
 2. Read actual build, Java/MPh/JPype versions and licensed modules through MCP. For non-6.4 stop for explicit re-anchoring. Read the corresponding installed official manual.
 3. Run a dedicated small study, poll queue metadata, attempt queued cancellation and active cancellation. Active cancellation must remain unsupported until real termination is observed; any manual Stop is user-operated.
-4. Restart only an isolated test MCP process after its model work is safe; confirm recovery_pending and no automatic resubmit. Never kill the production COMSOL process for a test.
+4. Restart only an isolated test MCP process after its model work is safe; confirm the interrupted job becomes recovery_pending and no automatic resubmission occurs. Never kill the production COMSOL process for a test.
 5. Execute the SST recipe in new models. Record actual residual definitions, initialization state/effect, conservation integrals, mesh levels, source/result hashes and independent reopen measurements.
 6. Inject an old dataset, absent B solution, missing storage term and failed mesh level. Admission must not PASS. Capture identities from the actual server; self-reported JSON alone is insufficient scientific evidence.
 

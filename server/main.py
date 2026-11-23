@@ -140,14 +140,16 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
 
     @mcp.tool()
     async def comsol_run_case(case_id: str, solve: bool = False, study: str | None = None,
-                              show_desktop: bool = True) -> Annotated[CallToolResult, dict[str, Any]]:
-        """Queue a classic case using MCP only; returns immediately with a job id. For library cases solve=False loads for inspection; solve=True computes a selected study or all studies. Original Python teaching cases always build AND solve. Check comsol_job_status; a failed license/solver is not success. At the end instruct the USER to manually import the named model via File > COMSOL Multiphysics Server > Import App from Server. No screen recognition or UI automation."""
-        return submission_result(runtime.submit_case(case_id, solve, study, show_desktop))
+                              show_desktop: bool = True, operation_id: str | None = None,
+                              require_hard_deadline: bool = False) -> Annotated[CallToolResult, dict[str, Any]]:
+        """Queue a library load or original build and return a job ID. solve=False never solves; solve=True computes the selected study or all studies. Pass a stable operation_id to reconcile a lost receipt. A required hard deadline blocks submission on this backend. The USER manually imports the named model via File > COMSOL Multiphysics Server > Import App from Server."""
+        return submission_result(runtime.submit_case(case_id, solve, study, show_desktop, operation_id,
+                                                      require_hard_deadline))
 
     @mcp.tool()
-    async def comsol_job_status(job_id: str) -> dict:
-        """Read queued/running/completed/failed status and bounded progress without waiting behind a long COMSOL solve."""
-        return runtime.job_status(job_id)
+    async def comsol_job_status(job_id: str | None = None, operation_id: str | None = None) -> dict[str, Any]:
+        """Read one original job by job_id or operation_id without waiting for COMSOL. A missing operation is unknown."""
+        return runtime.job_status(job_id, operation_id)
 
     @mcp.tool()
     async def comsol_model_code(model_name: str, code: str) -> dict:
@@ -156,16 +158,19 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
 
     @mcp.tool()
     async def study_solve(study_name: str | None = None, model_name: str | None = None,
-                          wait: bool = True, timeout: float | None = None) -> Annotated[CallToolResult, dict[str, Any]]:
-        """Solve on the one JVM thread. Returns a job id. wait=True waits at most 30 seconds; a running job continues and can be polled. study_name omitted solves all existing studies."""
-        job = runtime.submit_study(study_name, model_name)
+                          wait: bool = True, timeout: float | None = None, operation_id: str | None = None,
+                          require_hard_deadline: bool = False) -> Annotated[CallToolResult, dict[str, Any]]:
+        """Solve on the one JVM thread. wait=True waits at most 30 seconds without stopping the job. Pass a stable operation_id for reconciliation. A required hard deadline blocks submission on this backend."""
+        job = runtime.submit_study(study_name, model_name, operation_id, require_hard_deadline)
         result = await runtime.wait_job(job["job_id"], timeout) if wait and job.get("success") else job
         return submission_result(result)
 
     @mcp.tool()
-    async def study_solve_async(study_name: str | None = None, model_name: str | None = None) -> Annotated[CallToolResult, dict[str, Any]]:
-        """Queue a study on the dedicated JVM thread; use returned job_id with comsol_job_status."""
-        return submission_result(runtime.submit_study(study_name, model_name))
+    async def study_solve_async(study_name: str | None = None, model_name: str | None = None,
+                                operation_id: str | None = None,
+                                require_hard_deadline: bool = False) -> Annotated[CallToolResult, dict[str, Any]]:
+        """Queue a study on the JVM thread. Pass a stable operation_id for reconciliation. A required hard deadline blocks submission on this backend."""
+        return submission_result(runtime.submit_study(study_name, model_name, operation_id, require_hard_deadline))
 
     @mcp.tool()
     async def study_get_progress(job_id: str | None = None) -> dict:
@@ -212,6 +217,11 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
         """Read jobs, recovery, runtime version and submission limits, expiry and warning without a Java call. Check before submitting."""
         return runtime.queue_status()
 
+    @mcp.tool()
+    async def comsol_execution_capabilities() -> dict[str, Any]:
+        """Read the running COMSOL connector fingerprint and scope of job control without using Java."""
+        return {**runtime.runtime_info(), 'capabilities': runtime.execution_capabilities()}
+
     from .scientific_gates import evaluate
     @mcp.tool()
     async def validation_gate(kind: str, payload: dict) -> dict:
@@ -232,7 +242,7 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
         raise ValueError('COMSOL_TOOL_ROLE must be operator or reviewer')
     if role == 'reviewer':
         # Explicit allowlist; no arbitrary code, mutation, result export or resources.
-        allowed = {'comsol_queue_status','comsol_job_status','study_get_progress',
+        allowed = {'comsol_queue_status','comsol_job_status','study_get_progress','comsol_execution_capabilities',
                    'simulation_spec_validate','simulation_task_admit','validation_gate',
                    'workflow_status', 'paper_figure_analyze', 'paper_figure_route', 'mesh_native_analyze', 'simulation_dataset_plan', 'simulation_dataset_record', 'physics_diagnostic_plan', 'physics_diagnostic_record', 'recovery_contract_freeze', 'recovery_commission', 'recovery_propose', 'recovery_assess', 'source_precedence_review', 'solver_route_plan', 'native_convergence_review'}
         for name in list(mcp._tool_manager._tools):
@@ -271,6 +281,7 @@ def main(argv=None):
         parser.error("--runtime-id and --reason are for renew-window.")
     logging.basicConfig(level=logging.INFO, stream=sys.stderr)
     runtime = Runtime()
+    runtime.transport = args.transport
     if args.command == "doctor":
         result = runtime.doctor()
         print(json.dumps(result, ensure_ascii=False, indent=2))

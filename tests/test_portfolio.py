@@ -87,7 +87,8 @@ class PortfolioTests(unittest.TestCase):
                 release.set();runtime.executor.shutdown()
             restored=Runtime(output_root=directory)
             try:
-                self.assertEqual(restored.job_status(job)['status'],'recovery_pending')
+                self.assertEqual(restored.job_status(job)['status'], 'completed')
+                self.assertTrue(restored.job_status(job)['historical'])
                 self.assertFalse(restored.futures)
             finally:restored.executor.shutdown()
 
@@ -153,7 +154,8 @@ class PortfolioTests(unittest.TestCase):
 
             restored = Runtime(output_root=directory)
             self.addCleanup(restored.executor.shutdown)
-            self.assertEqual(restored.job_status('prior')['status'], 'recovery_pending')
+            self.assertEqual(restored.job_status('prior')['status'], 'completed')
+            self.assertTrue(restored.job_status('prior')['historical'])
             self.assertEqual(restored.queue_status()['submission_budget']['submissions']['used'], 1)
             self.assertIsNone(restored.queue_status()['submission_budget']['window']['renewal_grant_id'])
             runtime.jobs['other'] = {'job_id': 'other', 'status': 'completed'}

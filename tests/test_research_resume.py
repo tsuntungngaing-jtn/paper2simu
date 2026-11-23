@@ -30,6 +30,38 @@ def baseline():
 
 
 class ResearchResumeTests(unittest.TestCase):
+    def test_deadline_blocker_and_unknown_job_leave_independent_work_available(self):
+        data = dict(plan(), work_nodes=[
+            {"id": "physics", "action": "Write the dry/wet balance and map units"},
+            {"id": "build", "action": "Assemble verified branches", "depends_on": ["physics"],
+             "requires_idle_solver": True},
+            {"id": "solve", "action": "Run under the hard deadline", "depends_on": ["build"],
+             "requires_submission": True},
+            {"id": "compare", "action": "Score the frozen dataset", "depends_on": ["solve"]},
+        ])
+        blocked = {"event": "work_blocked", "node_id": "solve", "blocker_type": "capability_missing",
+                   "timestamp_utc": "2026-11-23T00:00:00Z", "evidence_refs": ["provider.json"],
+                   "last_attempt": "Read stop capabilities", "actual_return": "unsupported",
+                   "resume_when": "Verified isolated native worker", "next_action": "Check the designated host"}
+        pending = {"event": "submission_started", "trial_id": "diagnostic", "operation_id": "initial"}
+        summary = render_summary(data, [pending, blocked], Path("events.jsonl"))
+        self.assertIn("Next action: Write the dry/wet balance", summary)
+        self.assertIn("WAITING: solve | recorded blocker", summary)
+        self.assertIn("WAITING: compare | needs solve", summary)
+        self.assertIn("observed: unsupported", summary)
+        self.assertIn("diagnostic: UNKNOWN", summary)
+        self.assertNotIn("native_solver_failure", summary)
+        completed = {"event": "work_completed", "node_id": "physics", "evidence_refs": ["balance.md"]}
+        summary = render_summary(data, [pending, blocked, completed], Path("events.jsonl"))
+        self.assertIn("WAITING: build | reconcile original jobs", summary)
+        with self.assertRaisesRegex(ValueError, "resolve its blockers and dependencies"):
+            render_summary(data, [blocked, dict(completed, node_id="compare")], Path("events.jsonl"))
+
+    def test_work_graph_rejects_circular_dependencies(self):
+        data = dict(plan(), work_nodes=[{"id": "one", "action": "Draft", "depends_on": ["one"]}])
+        with self.assertRaisesRegex(ValueError, "cycle"):
+            render_summary(data, [], Path("events.jsonl"))
+
     def test_lost_ack_survives_fresh_turn_and_reserves_budget(self):
         events = [baseline(), {"event": "phase_entered", "phase_id": "trials"},
                   {"event": "planned", "trial_id": "T1"},

@@ -7,12 +7,15 @@ from __future__ import annotations
 
 import asyncio
 import functools
+import hashlib
+import importlib.metadata
 import importlib.util
 import inspect
 import json
 import math
 import os
 from pathlib import Path
+import platform
 import re
 import subprocess
 import sys
@@ -27,6 +30,7 @@ from .submission_window import latest_renewal
 
 _RESOURCES = Path(__file__).resolve().parent / 'resources'
 ROOT = _RESOURCES if (_RESOURCES / 'vendor').is_dir() else Path(__file__).resolve().parents[1]
+TERMINAL_JOB_STATES = {"completed", "failed", "cancelled"}
 
 
 def inside(root: Path, value: str | Path) -> Path:
@@ -64,6 +68,8 @@ class Runtime:
         self.server = None
         self.client_handle = None
         self.last_endpoint = None
+        self.connection_lost = False
+        self.needs_model_rebind = False
         self.tracked_tags = {}
         self.jobs: dict[str, dict] = {}
         self.futures = {}
@@ -73,7 +79,15 @@ class Runtime:
         self.desktop_endpoint = None
         self.runtime_id = uuid4().hex
         self.started_at = time.monotonic()
+        self.started_at_unix = time.time()
+        self.transport = "unknown"
         self.journal_errors = []
+        self.operations: dict[str, str] = {}
+        self.ambiguous_operations: set[str] = set()
+        digest = hashlib.sha256()
+        for source in sorted(Path(__file__).resolve().parent.glob("*.py")):
+            digest.update(source.name.encode() + b"\0" + source.read_bytes() + b"\0")
+        self.runtime_source_sha256 = digest.hexdigest()
         self._restore_jobs()
 
     def _restore_jobs(self):
@@ -82,10 +96,17 @@ class Runtime:
                 job = json.loads(path.read_text(encoding='utf-8'))
                 if job['job_id'] != path.stem:
                     raise ValueError('Job identity mismatch')
-                job['previous_status'] = job['status']
-                job['status'] = 'recovery_pending'
+                operation_id = job.get('operation_id')
+                if operation_id and operation_id in self.operations:
+                    self.ambiguous_operations.add(operation_id)
+                job['historical'] = True
+                if job['status'] not in TERMINAL_JOB_STATES and job['status'] != 'recovery_pending':
+                    job['previous_status'] = job['status']
+                    job['status'] = 'recovery_pending'
                 job['recovery_note'] = 'Historical metadata only; verify server and solution identity. Never resubmit automatically.'
                 self.jobs[job['job_id']] = job
+                if operation_id:
+                    self.operations[operation_id] = job['job_id']
             except Exception as error:
                 self.journal_errors.append({'path':str(path), 'error':str(error)})
 
@@ -120,7 +141,39 @@ class Runtime:
     def runtime_info(self):
         return {'runtime_id': self.runtime_id, 'paper2simu_version': __version__,
                 'runtime_root': str(self.root), 'python_executable': sys.executable,
-                'output_root': str(self.output_root)}
+                'output_root': str(self.output_root), 'runtime_started_at_unix': self.started_at_unix,
+                'runtime_module_path': str(Path(__file__).resolve()),
+                'runtime_source_sha256': self.runtime_source_sha256,
+                'transport': self.transport, 'provider': 'paper2simu-comsol-mcp',
+                'python_version': platform.python_version(),
+                'os': platform.system(), 'os_release': platform.release()}
+
+    def execution_capabilities(self):
+        # This probe describes the running connector and never enters the JVM.
+        observations = {
+            'poll_metadata': ('supported', 'Python job journal, independent of the JVM executor'),
+            'queued_cancel': ('supported', 'Cancels a future only before it starts'),
+            'running_stop': ('unsupported', 'No independent running-stop path in this MCP'),
+            'deadline_enforcement': ('unsupported', 'Shared JVM worker has no isolated deadline controller'),
+            'desktop_identity': ('unsupported', 'Desktop display identity needs operator confirmation'),
+        }
+        for name in ('read_model', 'build_model', 'verify_effective_settings', 'solve',
+                     'native_log', 'checkpoint_reopen'):
+            observations[name] = ('unknown', 'Requires an observation from the selected native session')
+        return {
+            name: {'state': state, 'evidence': evidence, 'run_mode': 'mphserver',
+                   'provider_version': __version__, 'observed_at_unix': time.time()}
+            for name, (state, evidence) in observations.items()
+        }
+
+    def _submission_request_error(self, operation_id, require_hard_deadline):
+        if operation_id is not None and not re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", operation_id):
+            return {'success': False, 'status': 'BLOCKED', 'error': 'INVALID_OPERATION_ID'}
+        if require_hard_deadline:
+            return {'success': False, 'status': 'BLOCKED', 'error': 'HARD_DEADLINE_UNSUPPORTED',
+                    'runtime_id': self.runtime_id, 'capability': self.execution_capabilities()['deadline_enforcement'],
+                    'next_step': 'Continue independent modeling work or use a runtime with verified deadline enforcement.'}
+        return None
 
     async def call(self, function, *args, **kwargs):
         with self.lock:
@@ -178,7 +231,21 @@ class Runtime:
 
     def _queue_job(self, job: dict, run, *args) -> dict:
         job_id = job['job_id']
+        operation_id = job.get('operation_id')
         with self.lock:
+            if operation_id in self.ambiguous_operations:
+                return {'success': False, 'status': 'BLOCKED', 'error': 'OPERATION_ID_AMBIGUOUS',
+                        'operation_id': operation_id}
+            if operation_id and operation_id in self.operations:
+                original = self.jobs[self.operations[operation_id]]
+                if original.get('request') != job.get('request'):
+                    return {'success': False, 'status': 'BLOCKED', 'error': 'OPERATION_ID_CONFLICT',
+                            'job_id': original['job_id'], 'operation_id': operation_id}
+                return {'success': True, 'job_id': original['job_id'], 'status': original['status'],
+                        'operation_id': operation_id, 'existing_job': True, 'poll_tool': 'comsol_job_status'}
+            if operation_id and self.journal_errors:
+                return {'success': False, 'status': 'BLOCKED', 'error': 'OPERATION_JOURNAL_UNCERTAIN',
+                        'operation_id': operation_id, 'next_step': 'Reconcile the unreadable job manifests first.'}
             budget = self._submission_budget(len(self._active_jobs()))
             if not budget['can_submit']:
                 reasons = budget['block_reasons']
@@ -200,6 +267,8 @@ class Runtime:
                 del self.jobs[job_id]
                 return {'success': False, 'status': 'BLOCKED', 'error': 'JOB_JOURNAL_WRITE_FAILED',
                         'detail': str(error), 'next_step': 'Restore write access to the output root before submitting.'}
+            if operation_id:
+                self.operations[operation_id] = job_id
             try:
                 future = self.executor.submit(run, *args)
             except RuntimeError as error:
@@ -214,7 +283,8 @@ class Runtime:
             if job.get('kind') == 'study':
                 self.latest_study_job = job_id
         future.add_done_callback(lambda _: self._finished(job_id))
-        return {'success': True, 'job_id': job_id, 'status': 'queued', 'poll_tool': 'comsol_job_status'}
+        return {'success': True, 'job_id': job_id, 'status': 'queued', 'poll_tool': 'comsol_job_status',
+                **({'operation_id': operation_id} if operation_id else {})}
 
     def installation_root(self, version: str | None = None) -> Path:
         import mph
@@ -232,7 +302,6 @@ class Runtime:
         return discovered
 
     def doctor(self) -> dict:
-        import importlib.metadata
         info = {"success": True, "python": sys.version.split()[0], **self.runtime_info(),
                 "code_execution_enabled": os.getenv("COMSOL_ALLOW_CODE") == "1",
                 "transport_warning": "Trusted single-user automation; not a sandbox or multi-tenant service."}
@@ -259,6 +328,71 @@ class Runtime:
         manager.connect = self.connect
         manager.disconnect = self.disconnect
         manager.get_status = self.status
+        if hasattr(manager, "add_model"):
+            add_model = manager.add_model
+
+            def track_model(model):
+                tag = str(model.java.tag())
+                name = add_model(model)
+                self.tracked_tags[name] = tag
+                return name
+
+            manager.add_model = track_model
+        if hasattr(manager, "remove_model"):
+            remove_model = manager.remove_model
+
+            def untrack_model(name):
+                removed = remove_model(name)
+                if removed:
+                    self.tracked_tags.pop(name, None)
+                return removed
+
+            manager.remove_model = untrack_model
+
+    @staticmethod
+    def _connection_error_state(error):
+        if isinstance(error, (ConnectionError, EOFError)):
+            return 'dead'
+        message = str(error).lower()
+        if any(reason in message for reason in ('server is busy', 'server busy', 'server is currently busy')):
+            return 'busy'
+        if any(reason in message for reason in (
+            'not connected to a server', 'connection reset', 'connection refused', 'broken pipe',
+            'socket is closed', 'java.io.eofexception',
+        )):
+            return 'dead'
+        return 'unknown'
+
+    def _forget_dead_connection(self):
+        # MPh 1.4 only clears these fields if its Java disconnect call returns.
+        # Use Python metadata after a definite connection loss and retain tags.
+        self.manager._client = None
+        self.manager._models = {}
+        self.connection_lost = True
+        if self.client_handle is not None:
+            self.client_handle.host = None
+            self.client_handle.port = None
+
+    def _connection_probe(self):
+        if not self.manager or not self.manager.is_connected:
+            return 'detached', None
+        try:
+            available = {str(tag) for tag in self.manager.client.java.tags()}
+            if self.needs_model_rebind:
+                import mph
+                current = self.manager.current_model
+                refreshed = {name: mph.Model(self.client_handle.java.model(tag))
+                             for name, tag in self.tracked_tags.items() if tag in available}
+                self.manager._models = refreshed
+                self.manager._current_model = current if current in refreshed else next(iter(refreshed), None)
+                self.tracked_tags = {name: self.tracked_tags[name] for name in refreshed}
+                self.needs_model_rebind = False
+        except Exception as error:
+            state = self._connection_error_state(error)
+            if state == 'dead':
+                self._forget_dead_connection()
+            return state, str(error)
+        return 'connected', None
 
     def prepare_stdio_client(self):
         """Initialize only the JVM before MCP starts its blocking stdin reader.
@@ -276,30 +410,19 @@ class Runtime:
     def _attach(self, port: int, host: str, version: str | None = None):
         import mph
         if self.client_handle is None:
-            self.client_handle = mph.Client(port=port, host=host, version=version)
-        else:
-            self.client_handle.connect(port=port, host=host)
+            self.client_handle = mph.Client(host=None, version=version)
+        self.client_handle.connect(port=port, host=host)
+        self.manager._client = self.client_handle
+        self.manager._models = {}
+        self.needs_model_rebind = bool(self.tracked_tags)
         if self.last_endpoint is not None and self.last_endpoint != (host, port):
             # Old Java proxies must not be used against a different server. This
             # clears only Python tracking, never COMSOL's model collection.
-            self.manager._models = {}
             self.manager._current_model = None
             self.tracked_tags = {}
-        elif self.tracked_tags:
-            # COMSOL invalidates model proxies when disconnecting. Retrieve fresh
-            # wrappers by tag rather than reusing stale Python/Java references.
-            refreshed = {}
-            current = self.manager.current_model
-            for old_name, tag in self.tracked_tags.items():
-                try:
-                    model = mph.Model(self.client_handle.java.model(tag))
-                    refreshed[old_name] = model  # Preserve the public MCP handle even if Desktop changed its label.
-                except Exception:
-                    continue  # The user may have removed this model in Desktop.
-            self.manager._models = refreshed
-            self.manager._current_model = current if current in refreshed else next(iter(refreshed), None)
-        self.manager._client = self.client_handle
+            self.needs_model_rebind = False
         self.last_endpoint = (host, port)
+        self.connection_lost = False
         try:
             import jpype
             util = jpype.JClass("com.comsol.model.util.ModelUtil")
@@ -308,8 +431,11 @@ class Runtime:
             pass  # Older releases may lack the busy-handler overload.
 
     def start(self, cores=None, version=None, products=None) -> dict:
-        if self.manager.is_connected:
-            return dict(self.status(), success=True, message="Reused session; existing models preserved.")
+        if self.manager.is_connected or self.connection_lost:
+            status = self.status()
+            if status['connected'] is True:
+                return dict(status, success=True, message="Reused session; existing models preserved.")
+            return dict(status, success=False, error="Use comsol_connect with a verified existing endpoint; this runtime will not replace it.")
         import mph
         try:
             self.installation_root(version)
@@ -322,7 +448,8 @@ class Runtime:
                                          version=version or os.getenv("COMSOL_VERSION") or None,
                                          port=0, multi=True, timeout=180)
             self._attach(self.server.port, "localhost", self.server.version)
-            result = dict(self.status(), success=True)
+            status = self.status()
+            result = dict(status, success=status['connected'] is True)
             if products:
                 result["products_note"] = "Licenses are requested by each physics interface; products is not a license bypass."
             return result
@@ -331,14 +458,17 @@ class Runtime:
 
     def connect(self, port: int, host: str = "localhost") -> dict:
         if self.manager.is_connected:
-            if self.last_endpoint == (host, port):
-                return dict(self.status(), success=True)
-            return {"success": False, "error": "Already connected. Disconnect explicitly before changing server."}
+            status = self.status()
+            if status['connection_state'] != 'dead':
+                if self.last_endpoint == (host, port):
+                    return dict(status, success=status['connected'] is True)
+                return {"success": False, "error": "Existing connection is live or unresolved. Disconnect explicitly before changing server."}
         if not 1 <= port <= 65535:
             return {"success": False, "error": "Invalid TCP port."}
         try:
             self._attach(port, host, os.getenv("COMSOL_VERSION") or None)
-            return dict(self.status(), success=True)
+            status = self.status()
+            return dict(status, success=status['connected'] is True)
         except Exception as error:
             return {"success": False, "error": str(error)}
 
@@ -346,19 +476,24 @@ class Runtime:
         if not self.manager.is_connected:
             return {"success": True, "message": "Already disconnected; models preserved."}
         try:
-            self.tracked_tags = {name: str(model.java.tag()) for name, model in self.manager.models.items()
-                                 if hasattr(model, "java")}
             self.client_handle.disconnect()
             self.manager._client = None
             # Tracked proxies are kept for reconnection to this same server.
             return {"success": True, "message": "Disconnected without deleting models or stopping the multi-client server."}
         except Exception as error:
-            return {"success": False, "error": str(error)}
+            state = self._connection_error_state(error)
+            if state == 'dead':
+                self._forget_dead_connection()
+                return {"success": True, "connection_state": state, "warning": str(error)}
+            return {"success": False, "connection_state": state, "error": str(error)}
 
     def status(self) -> dict:
-        connected = bool(self.manager and self.manager.is_connected)
-        result = {"connected": connected, "models": [], "current_model": None}
-        if connected:
+        state, error = self._connection_probe()
+        connected = None if state in {'busy', 'unknown'} else state == 'connected'
+        result = {"connected": connected, "connection_state": state, "models": [], "current_model": None}
+        if error:
+            result['connection_error'] = error
+        if connected is True:
             client = self.manager.client
             result.update(version=client.version, cores=client.cores, standalone=bool(client.standalone),
                           host=client.host, port=client.port,
@@ -372,9 +507,15 @@ class Runtime:
             started = self.start()
             if not started.get("success"):
                 return started
+        else:
+            state, error = self._connection_probe()
+            if state != 'connected':
+                return {"success": False, "connection_state": state, "error": error}
         endpoint = (self.manager.client.host, self.manager.client.port)
+        visibility = {"desktop_process_started": True, "desktop_connected": "not_checked",
+                      "displayed_model_verified": "not_checked"}
         if self.desktop_process is not None and self.desktop_process.poll() is None and self.desktop_endpoint == endpoint:
-            return {"success": True, "already_open": True, "port": self.manager.client.port}
+            return {"success": True, "already_open": True, "port": self.manager.client.port, **visibility}
         root = self.installation_root()
         executable = root / "bin" / "win64" / "comsolmphclient.exe"
         if not executable.exists():
@@ -385,7 +526,7 @@ class Runtime:
                                                  "-port", str(self.manager.client.port)],
                                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         self.desktop_endpoint = endpoint
-        return {"success": True, "pid": self.desktop_process.pid, "port": self.manager.client.port,
+        return {"success": True, "pid": self.desktop_process.pid, "port": self.manager.client.port, **visibility,
                 "next_step": "Complete the simulation through MCP. At the end, the USER manually clicks File > COMSOL Multiphysics Server > Import App from Server and selects the returned model name. The agent must not use screen recognition, OCR, screenshots or UI automation."}
 
     def catalog(self) -> list[dict]:
@@ -418,7 +559,11 @@ class Runtime:
                 "hint": "Request case_id plus detail=true for one case's setup, study and validation instructions."}
 
     def submit_case(self, case_id: str, solve: bool = False, study: str | None = None,
-                    show_desktop: bool = True) -> dict:
+                    show_desktop: bool = True, operation_id: str | None = None,
+                    require_hard_deadline: bool = False) -> dict:
+        error = self._submission_request_error(operation_id, require_hard_deadline)
+        if error:
+            return error
         if not re.fullmatch(r"[a-z][a-z0-9_]{0,79}", case_id):
             return {"success": False, "error": "Invalid case id."}
         entry = next((case for case in self.catalog() if case["id"] == case_id), None)
@@ -427,7 +572,10 @@ class Runtime:
         job_id = uuid4().hex
         directory = inside(self.output_root, job_id + "_" + case_id)
         job = {"job_id": job_id, "case_id": case_id, "status": "queued", "events": [],
-               "output_dir": str(directory), "submitted_at": time.time()}
+               "output_dir": str(directory), "submitted_at": time.time(), "runtime_id": self.runtime_id,
+               "operation_id": operation_id,
+               "request": {"kind": "case", "case_id": case_id, "solve": solve, "study": study,
+                           "show_desktop": show_desktop}}
         return self._queue_job(job, self._run_case, job_id, entry, directory, solve, study, show_desktop)
 
     def _progress(self, job_id: str, message: str):
@@ -480,7 +628,8 @@ class Runtime:
                 module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(module)
                 self._progress(job_id, "Executing original teaching recipe: geometry, materials, physics, mesh, studies, results")
-                result = module.build(self.manager.client, directory, lambda msg: self._progress(job_id, msg))
+                result = module.build(self.manager.client, directory, lambda msg: self._progress(job_id, msg),
+                                      solve=solve, study_name=study)
                 name = result.get("model_name")
                 # The builder may create several models; track its explicit result only.
                 if name:
@@ -503,17 +652,34 @@ class Runtime:
             if directory.exists():
                 (directory / "job-error.json").write_text(json.dumps(detail, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    def job_status(self, job_id: str) -> dict:
+    def job_status(self, job_id: str | None = None, operation_id: str | None = None) -> dict:
+        if (job_id is None) == (operation_id is None):
+            return {"success": False, "error": "Specify exactly one job_id or operation_id."}
         with self.lock:
+            if operation_id is not None:
+                if operation_id in self.ambiguous_operations:
+                    return {"success": False, "status": "unknown", "operation_id": operation_id,
+                            "runtime_id": self.runtime_id, "error": "Multiple job manifests have this operation ID."}
+                job_id = self.operations.get(operation_id)
+                if job_id is None:
+                    return {"success": False, "status": "unknown", "operation_id": operation_id,
+                            "runtime_id": self.runtime_id, "error": "Operation not found in this job journal."}
             if job_id not in self.jobs:
                 return {"success": False, "error": "Unknown job id; check the configured output root and manifest recovery errors."}
             return json.loads(json.dumps(dict(success=True, **self.jobs[job_id]), default=str))
 
-    def submit_study(self, study_name: str | None, model_name: str | None) -> dict:
+    def submit_study(self, study_name: str | None, model_name: str | None,
+                     operation_id: str | None = None, require_hard_deadline: bool = False) -> dict:
+        error = self._submission_request_error(operation_id, require_hard_deadline)
+        if error:
+            return error
+        requested_model = model_name
         model_name = model_name or (self.manager.current_model if self.manager else None)
         job_id = uuid4().hex
         job = {"job_id": job_id, "kind": "study", "status": "queued", "events": [],
-               "model_name": model_name, "study_name": study_name, "submitted_at": time.time()}
+               "model_name": model_name, "study_name": study_name, "submitted_at": time.time(),
+               "runtime_id": self.runtime_id, "operation_id": operation_id,
+               "request": {"kind": "study", "model_name": requested_model, "study_name": study_name}}
 
         def solve():
             with self.lock:
@@ -542,7 +708,7 @@ class Runtime:
         deadline = time.monotonic() + duration
         while True:
             state = self.job_status(job_id)
-            if state["status"] in {"completed", "failed", "cancelled"} or time.monotonic() >= deadline:
+            if state["status"] in TERMINAL_JOB_STATES | {"recovery_pending"} or time.monotonic() >= deadline:
                 return state
             await asyncio.sleep(0.1)
 
@@ -551,16 +717,20 @@ class Runtime:
             return {"success": False, "error": "No matching job."}
         if self.futures[job_id].cancel():
             with self.lock:
-                self.jobs[job_id].update(status="cancelled", completed_at=time.time())
-                self._persist(job_id)
+                if self.jobs[job_id]['status'] != 'cancelled':
+                    self.jobs[job_id].update(status="cancelled", completed_at=time.time())
+                    self._persist(job_id)
             return dict(self.job_status(job_id), cancellation="cancelled_before_start")
         with self.lock:
+            status = self.jobs[job_id]['status']
+            if status in TERMINAL_JOB_STATES:
+                return {"success": False, "job_id": job_id, "status": status, "error": "Job is already terminal."}
             self.jobs[job_id]['cancel_requested'] = True
             self.jobs[job_id]['cancellation'] = 'cancel_not_supported'
             self._persist(job_id)
         return {"success": False, "job_id": job_id, "cancel_requested":True,
                 "cancellation":"cancel_not_supported", "status":self.job_status(job_id)['status'],
-                "error": "This job is already running or finished. Running Java calls cannot be safely interrupted from another Python thread. If needed, ask the USER to manually press COMSOL Desktop's Stop control; the agent must not use screen recognition or UI automation."}
+                "error": "Running Java calls cannot be safely interrupted from another Python thread. If needed, ask the USER to manually press COMSOL Desktop's Stop control; the agent must not use screen recognition or UI automation."}
 
     def execute_code(self, model_name: str, code: str) -> dict:
         if os.getenv("COMSOL_ALLOW_CODE") != "1":
