@@ -34,12 +34,31 @@ For a new plan, create `trials/events.jsonl` in the task directory, initially em
 |---|---|
 | `phase_entered` | `phase_id`, evidence of prior stage outcome, `next_action` when it differs from the plan. An open hypothesis or a `NOT_RUN` test remains visible at delivery. |
 | `planned` | Parent checkpoint and trial ID, one hypothesis, the single intervention or justified joint intervention, expected signed response, what would disconfirm it, and the cheapest useful check. Link the trial record. |
-| `submission_started` | Write and flush **before** the authorized solver submit call. Record `trial_id`, stable unique `operation_id`, and `phase_id`. This charges one attempt even when the reply is lost. A read-only saved-solution audit does not write this event. |
+| `submission_started` | Write and flush **before** the authorized solver submit call. Record `trial_id`, stable unique `operation_id`, and `phase_id`. Pass that ID to the COMSOL submit tool when its schema exposes it. This charges one attempt even when the reply is lost. A read-only saved-solution audit does not write this event. |
 | `submitted` | Record the returned `job_id` or stable runner `run_id`, connector `runtime_id` when available, and evidence for the original operation. If the reply was lost, keep the existing operation unresolved. |
 | `job_observed` | Record `QUEUED`, `RUNNING`, `UNKNOWN`, `TERMINAL` or `NOT_SUBMITTED`, known IDs including the observed `runtime_id` when available, and `evidence_refs` from the current registered provider or native records. A vanished job, empty queue or readable checkpoint alone does not justify `TERMINAL` or `NOT_SUBMITTED`. |
 | `evaluated` | Link actual setting readback, QoI and check results, scorer version, and trial evidence. Record `decision`, `reason`, and `next_action` explaining which hypothesis gained or lost support and what evidence to inspect next. Include `accepted_checkpoint` (path and/or hash as a string) only for a supported `KEEP`. |
 
 For a `KEEP`, preserve the existing acceptance rules. Check that compared runs use the same QoI definitions and that required physics and numerics pass. For heat-transfer cases, consider the applicable mass and energy balances, local temperature bounds, and whether the improvement exceeds observed mesh or extraction variation. Use `HOLD` when evidence cannot discriminate. Preserve `REVERT` and `FAILED` trial evidence. Select any new checkpoint only from a verified result. Corrections append a replacement observation or evaluation with a pointer to the old record. When correcting an identity, preserve the original record and document the identity reconciliation before reusing the operation. A case-level `KEEP` advances that task's checkpoint. Shared policy promotion follows [independent RSI evaluation](context-retrieval-rsi-evaluation.md).
+
+## Track independent work in the same plan
+
+Add an optional `work_nodes` list at the top level of `task-plan.json`. Use stable IDs and list the prerequisites for each node. For example:
+
+```json
+{
+  "work_nodes": [
+    {"id": "physics", "action": "Specify the dry and wet balance equations offline"},
+    {"id": "build", "action": "Assemble and verify the defined branches", "depends_on": ["physics"], "requires_idle_solver": true},
+    {"id": "solve", "action": "Run the verified model under the task budget", "depends_on": ["build"], "requires_submission": true},
+    {"id": "qoi", "action": "Freeze the paper comparison dataset and normalization"}
+  ]
+}
+```
+
+Append work events to the same journal. Use `node_id`, `timestamp_utc` and `evidence_refs` for `work_completed`, `work_blocked` and `work_unblocked`. For `work_blocked`, also supply `blocker_type` from the [dependency-scoped progress guide](dependency-scoped-progress.md), `last_attempt`, `actual_return`, `resume_when`, and `next_action`. For example, scope a missing hard deadline capability to `solve`; the offline physics and QoI tasks can advance. Complete a node after recording evidence that its prerequisites were met.
+
+The renderer defers `requires_idle_solver` and `requires_submission` nodes while original jobs are unreconciled. An unknown or exhausted task or phase solve budget also defers `requires_submission` nodes. Confirm real task authorization and native readiness before acting on any `READY` entry. The journal and existing task card remain the authority for evidence and authorization.
 
 ## Resume a task or read the four-machine board
 

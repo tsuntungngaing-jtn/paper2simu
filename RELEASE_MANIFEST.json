@@ -31,8 +31,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 19641,
-      "sha256": "e51ae39fc29853ee84a2a7a3eea858c33fe7682c64bd9dbcc4d753ba2d29dfd1"
+      "bytes": 20607,
+      "sha256": "0100f9f8f65a8b0d594e8732e5820dc803ab1ef77b4ef3585c1d69cce985d2f8"
     },
     {
       "path": "SKILL.md",
@@ -151,8 +151,8 @@
     },
     {
       "path": "docs/case-catalog.md",
-      "bytes": 716,
-      "sha256": "900ae64a5b0ed8e30cd27bddf40563b96b2edc07342fc1b52f32b00160232519"
+      "bytes": 1031,
+      "sha256": "69baba7f0f7341ac7a8479f7a4969d130c5e88a177ef49fb7f86239b5b187d40"
     },
     {
       "path": "docs/cht-coupling-energy-gates.md",
@@ -180,19 +180,39 @@
       "sha256": "3fec9c880e76937e19a4e84245e87fc7a336d8fb7d8ec7cf644923277b69dfd4"
     },
     {
+      "path": "docs/comsol-human-equivalent-workflow.md",
+      "bytes": 3914,
+      "sha256": "09440e7d47085f70f0b092b91b4d7710601ec274b66d7a839cff697bcf0c112e"
+    },
+    {
+      "path": "docs/comsol-observability-and-desktop.md",
+      "bytes": 2663,
+      "sha256": "520a7a834a8a849afd1c9d8a6f4a007c7fef3f407979f0d7bf9d761deae0c38c"
+    },
+    {
       "path": "docs/conditional-reconstruction-and-rsi-evidence-v0.2.1.md",
       "bytes": 6396,
       "sha256": "5288b1b60b2760ac99af401830cb6a92ffb20cb270162b103750974520daf4ad"
     },
     {
       "path": "docs/connectors.md",
-      "bytes": 8117,
-      "sha256": "c400949f6753c321d4159cef564cf6f5f4fdf9179dcbab254e45032c3466ef58"
+      "bytes": 8764,
+      "sha256": "fe2275dcf285d6f66beb6c8f75ef240f96b62ef4af46dc15c0dad892b28735ab"
     },
     {
       "path": "docs/context-retrieval-rsi-evaluation.md",
       "bytes": 5260,
       "sha256": "083eb1e0a5f957ee969e9e6367fdc3b7cde109d53a41a444fcc3629ec7ef1235"
+    },
+    {
+      "path": "docs/cross-host-capability-contract.md",
+      "bytes": 3035,
+      "sha256": "ca6b28365bfb10db67e151d6450477e27c494bfefd68244718daee692bc377a6"
+    },
+    {
+      "path": "docs/dependency-scoped-progress.md",
+      "bytes": 3154,
+      "sha256": "2e4b9410b435637aec9817beedfec2516379fd4f71cf24b9449fe28dc6fc8534"
     },
     {
       "path": "docs/discovery-surrogate-workflow-v0.3.0.md",
@@ -275,6 +295,11 @@
       "sha256": "c149cc9856f72dc88efb9495d9d611c7b8c853bd9f77d97a28608affb9c71f9f"
     },
     {
+      "path": "docs/job-deadline-contract.md",
+      "bytes": 3431,
+      "sha256": "89e1bc27f11dc536012881f2e9dd7a1762de9eca03fc8b9199520dfd55d2142b"
+    },
+    {
       "path": "docs/knowledge-guided-recovery.md",
       "bytes": 9135,
       "sha256": "e0fe986bbe016fbcd58d6080c2f96cffbc65950778e8ce7bd911ceaa3dd9e493"
@@ -346,8 +371,8 @@
     },
     {
       "path": "docs/portfolio-feedback.md",
-      "bytes": 8085,
-      "sha256": "6b29ff02a92b52371db53940497ef55aeb4a9f5bda5149675edaf3c606fc29bb"
+      "bytes": 8173,
+      "sha256": "e98fe2bf7fb47efa02f117364b82f2384f71ca06c928ddbc2bf02b4484776952"
     },
     {
       "path": "docs/publishing.md",
@@ -366,8 +391,8 @@
     },
     {
       "path": "docs/research-plan-and-handoff.md",
-      "bytes": 8165,
-      "sha256": "e014594bf950926646ec4eeeb5b252167aec2cdd7b99fc8a3845783f3288db4d"
+      "bytes": 9805,
+      "sha256": "2d40916a18adc3a2585ab03dca259456cc1ef50c975c9bd6f6da796d53125490"
     },
     {
       "path": "docs/research-workflow.md",
@@ -386,8 +411,8 @@
     },
     {
       "path": "docs/scheduled-connection-recovery.md",
-      "bytes": 10625,
-      "sha256": "134185fa90e02c03ac503b522195dd488fa265e5e21feaf413df59daae70504e"
+      "bytes": 11049,
+      "sha256": "61ab32a973249a2966d73f7bc032161f815d0564d1e059371b5f2cbb57c3dfbd"
     },
     {
       "path": "docs/scientific-validity-under-uncertainty.md",
@@ -476,13 +501,13 @@
     },
     {
       "path": "examples/catalog.json",
-      "bytes": 46527,
-      "sha256": "67bc729eb4336587d3982e6f6d29e8573d85ead5c9c83861da36868a72ae3836"
+      "bytes": 46568,
+      "sha256": "f5e470ca834fe4d9fa461cfe544f06b8282ad8bd4a7cc9c906439ebffbae89d9"
     },
     {
       "path": "examples/original/heat_sink_3d.py",
-      "bytes": 12207,
-      "sha256": "44ef09d1ec20df1a57868df6a16d285cf0a8263e7607bd4e4435e198a1e02958"
+      "bytes": 13741,
+      "sha256": "d5dc7ca1fabda38d5bf6b66ecb260b26dfad16548bda27a2382c530a282e2ff6"
     },
     {
       "path": "examples/p005-conditional-calibration.md",
@@ -501,8 +526,8 @@
     },
     {
       "path": "paper2simu/SKILL.md",
-      "bytes": 15011,
-      "sha256": "dd9e8d859c9290ed2da08c868e8b957095beb8d4e3146ee79464eb875e25b675"
+      "bytes": 17321,
+      "sha256": "d7f2018e42c0e39ad2509431c9019109a83c8c79e739855a586432d67be8b20a"
     },
     {
       "path": "prompts/conditional-calibration.md",
@@ -526,8 +551,8 @@
     },
     {
       "path": "pyproject.toml",
-      "bytes": 1162,
-      "sha256": "0dbaeea55497ad00acb95f26e964af6ed467337c28673cc3bf1a5397b730f0c0"
+      "bytes": 1161,
+      "sha256": "b9f19c78986c1c75f62cdb8da04ac46e3d80af042569c95a7c5531e9f2abbc06"
     },
     {
       "path": "research_design/__init__.py",
@@ -686,13 +711,13 @@
     },
     {
       "path": "scripts/release.py",
-      "bytes": 5651,
-      "sha256": "6b48077b11d314d21679941ec37c201afdb3f09ee8acebdd2ebd7b5b367f39fd"
+      "bytes": 5650,
+      "sha256": "35b64d9778e61320d9aae4e9f351363e7337c61ad2d985e13332e69612072d9f"
     },
     {
       "path": "scripts/research_resume.py",
-      "bytes": 9944,
-      "sha256": "a8488b8dcbf7b2f7369ddcde42de86fa65218b770e771305f7c0b82d39cfd4b0"
+      "bytes": 14296,
+      "sha256": "881fe618ada175e8f00dccf01131e176175076727bb6ae5c2029919d65245d3e"
     },
     {
       "path": "scripts/start-mcp.ps1",
@@ -706,8 +731,8 @@
     },
     {
       "path": "server/__init__.py",
-      "bytes": 99,
-      "sha256": "1b665d1717af4a47f39c712298dd3438e38d3bd1cfb9c022290d5fc1dc63e554"
+      "bytes": 98,
+      "sha256": "4da14243f9dad21dca7ec349119b6377c84b840a60f488e90401ff3c14ed2943"
     },
     {
       "path": "server/calibration.py",
@@ -781,8 +806,8 @@
     },
     {
       "path": "server/main.py",
-      "bytes": 19016,
-      "sha256": "ccf34032f2944737064e5c92f40e9828ff60adeb7693565afa68070640759425"
+      "bytes": 19905,
+      "sha256": "577675f3ac3ba9c13161b8e6f1bbc7a2a93f5a4fb76551329785d757d0f3744d"
     },
     {
       "path": "server/mesh_native.py",
@@ -826,8 +851,8 @@
     },
     {
       "path": "server/runtime.py",
-      "bytes": 35985,
-      "sha256": "8c7582e5d3bf2babe35819f08cf327c8bd54d38fdd34a7f3f6c389bf14eba45c"
+      "bytes": 45671,
+      "sha256": "b4e2aa9f111ee5b9ad6ab4f58faefb528f939afe6ae97f37f3005ef3b3951b27"
     },
     {
       "path": "server/scientific_gates.py",
@@ -961,8 +986,8 @@
     },
     {
       "path": "tests/test_portfolio.py",
-      "bytes": 10388,
-      "sha256": "dd3f4f682a1f7c2d651c17da119ee03da5f7f2ac4b3430bd2d535dfe8c6f26c2"
+      "bytes": 10519,
+      "sha256": "c9c7df3618962789e24509c3e17ca3df29dab7a1a119e6d0c0de145ffdd9c695"
     },
     {
       "path": "tests/test_recovery_harness.py",
@@ -991,8 +1016,8 @@
     },
     {
       "path": "tests/test_research_resume.py",
-      "bytes": 6215,
-      "sha256": "50434262fdb9518b93867f7600c3583e3bd0832c7d70eb38af25e5c6e95c4ac1"
+      "bytes": 8510,
+      "sha256": "9be3e22da5231f3c65f95d3f7860c0f7516667dd0c629a5773ec66b3c5d684c4"
     },
     {
       "path": "tests/test_rsi_autonomy_channels.py",
@@ -1006,8 +1031,8 @@
     },
     {
       "path": "tests/test_runtime.py",
-      "bytes": 16515,
-      "sha256": "4a0b8d1c2c8c4af2e7078ff501e5dc23a394c529beea926a9b9bb9f1c34978da"
+      "bytes": 25273,
+      "sha256": "ad0279a7861b0881c3417a3a9d6b4bb9b3820bd3667f04e99573d01f26c1740b"
     },
     {
       "path": "tests/test_science_gate_regression.py",

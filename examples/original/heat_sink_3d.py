@@ -1,6 +1,6 @@
 """Original teaching case: 3D finned aluminum heat sink, conduction + prescribed convection.
 
-Run through comsol_run_case('heat_sink_3d'). No proprietary model or external asset.
+Run through comsol_run_case('heat_sink_3d', solve=True) for the complete example. No proprietary model or external asset.
 The build function must execute on the MCP runtime's single COMSOL worker thread.
 """
 from pathlib import Path
@@ -11,7 +11,7 @@ import numpy as np
 import jpype
 
 
-def build(client, outdir, progress):
+def build(client, outdir, progress, *, solve=False, study_name=None):
     out = Path(outdir)
     out.mkdir(parents=True, exist_ok=True)
     JI = jpype.JInt
@@ -113,38 +113,31 @@ def build(client, outdir, progress):
     mesh.create('ftet1', 'FreeTet')
     save('02_materials_physics.mph')
     progress('physics: 10 W heat flux; convection h=10 W/(m² K), ambient 25 °C')
-    numerical = {}
-    numerical_specs = [
-        ('Tmax','MaxVolume','allsolid','T','degC'),('Tmin','MinVolume','allsolid','T','degC'),
-        ('Theater','AvSurface','heater','T','degC'),('Qout','IntSurface','cooling','hconv*(T-Tamb)','W'),
-        ('Qin','IntSurface','heater','Pheat/Lheat^2','W'),('Acool','IntSurface','cooling','1','m^2'),
-        ('Aheat','IntSurface','heater','1','m^2'),('Vol','IntVolume','allsolid','1','m^3')]
-    history = []
-    for h in [3., 2., 1.3]:
-        j.param().set('hbulk', f'{h}[mm]')
+    transient = j.study().create('std2')
+    ts = transient.create('time', 'Transient')
+    ts.set('tlist', '0 1 2 5 10 20 30 60 range(120,60,3600)')
+    ts.set('usertol', 'on')
+    ts.set('rtol', '1e-5')
+    ts.set('useinitsol', 'off')
+    ts.set('initmethod', 'init')
+    study_labels = {"std1": str(study.label()), "std2": str(transient.label())}
+    assumptions = ['constant aluminum properties', 'prescribed convection; no air CFD',
+                   'no radiation', 'heater is a heat flux on aluminum, not a separate chip']
+    summary = {'case_id': 'heat_sink_3d', 'model_tag': str(j.tag()), 'model_name': str(model.name()),
+               'comsol_version': str(client.version), 'studies': list(study_labels.values()),
+               'assumptions': assumptions, 'solved_this_run': solve, 'study_tags_solved': []}
+    if not solve:
         mesh.run()
-        progress(f'mesh: hmax={h} mm, {mesh.stat().getNumElem()} mesh elements; solving stationary')
-        study.run()
-        if not numerical:
-            # Result selections require a Solution dataset with component context.
-            for tag, kind, sel, expr, unit in numerical_specs:
-                q = j.result().numerical().create(tag, kind)
-                q.set('data', 'dset1')
-                q.selection().named(sel)
-                q.set('expr', expr)
-                q.set('unit', unit)
-                numerical[tag] = q
-        for q in numerical.values():
-            q.set('data', 'dset1')
-        values = {tag:float(np.asarray(q.getReal()).ravel()[-1]) for tag,q in numerical.items()}
-        values.update(hmax_mm=h, elements=int(mesh.stat().getNumElem()))
-        values['relative_heat_balance_error'] = abs(values['Qout']-values['Qin'])/values['Qin']
-        values['heater_thermal_resistance_K_per_W'] = (values['Theater']-25)/values['Qin']
-        history.append(values)
-    with (out/'mesh_convergence.csv').open('w', newline='', encoding='utf-8') as stream:
-        writer = csv.DictWriter(stream, fieldnames=history[0].keys())
-        writer.writeheader()
-        writer.writerows(history)
+        save('heat_sink_3d.mph')
+        save('heat_sink_3d.java')
+        progress('build-only: geometry, mesh, physics and both studies saved without solving')
+        return dict(summary, validation='not_run')
+
+    selected = [tag for tag, label in study_labels.items() if study_name in (None, tag, label)]
+    if not selected:
+        raise ValueError(f'Unknown study {study_name!r}; use a tag or label from {study_labels}')
+    summary['study_tags_solved'] = selected
+    checks = {}
 
     def export_plot(tag, filename, kind='Image3D'):
         image = j.result().export().create('img'+tag, kind)
@@ -160,91 +153,125 @@ def build(client, outdir, progress):
             image.set(f'options{dim}d', 'on')
         image.run()
 
-    for tag, label, expr, unit, filename in [
-        ('pgTemp','Steady temperature (degC)','T','degC','temperature_3d.png'),
-        ('pgFlux','Conductive heat flux magnitude','ht.tfluxMag','W/m^2','heat_flux_3d.png')]:
-        pg = j.result().create(tag, 'PlotGroup3D')
-        pg.label(label)
-        pg.set('data', 'dset1')
-        surface = pg.create('surf1', 'Surface')
-        surface.set('expr', expr)
-        surface.set('unit', unit)
-        pg.run()
-        export_plot(tag, filename)
-    save('03_stationary.mph')
-    progress('stationary: mesh refinement and energy balance evaluated; temperature and heat flux exported')
+    if 'std1' in selected:
+        numerical = {}
+        numerical_specs = [
+            ('Tmax','MaxVolume','allsolid','T','degC'),('Tmin','MinVolume','allsolid','T','degC'),
+            ('Theater','AvSurface','heater','T','degC'),('Qout','IntSurface','cooling','hconv*(T-Tamb)','W'),
+            ('Qin','IntSurface','heater','Pheat/Lheat^2','W'),('Acool','IntSurface','cooling','1','m^2'),
+            ('Aheat','IntSurface','heater','1','m^2'),('Vol','IntVolume','allsolid','1','m^3')]
+        history = []
+        for h in [3., 2., 1.3]:
+            j.param().set('hbulk', f'{h}[mm]')
+            mesh.run()
+            progress(f'mesh: hmax={h} mm, {mesh.stat().getNumElem()} mesh elements; solving stationary')
+            study.run()
+            if not numerical:
+                # Result selections require a Solution dataset with component context.
+                for tag, kind, sel, expr, unit in numerical_specs:
+                    q = j.result().numerical().create(tag, kind)
+                    q.set('data', 'dset1')
+                    q.selection().named(sel)
+                    q.set('expr', expr)
+                    q.set('unit', unit)
+                    numerical[tag] = q
+            for q in numerical.values():
+                q.set('data', 'dset1')
+            values = {tag:float(np.asarray(q.getReal()).ravel()[-1]) for tag,q in numerical.items()}
+            values.update(hmax_mm=h, elements=int(mesh.stat().getNumElem()))
+            values['relative_heat_balance_error'] = abs(values['Qout']-values['Qin'])/values['Qin']
+            values['heater_thermal_resistance_K_per_W'] = (values['Theater']-25)/values['Qin']
+            history.append(values)
+        with (out/'mesh_convergence.csv').open('w', newline='', encoding='utf-8') as stream:
+            writer = csv.DictWriter(stream, fieldnames=history[0].keys())
+            writer.writeheader()
+            writer.writerows(history)
 
-    transient = j.study().create('std2')
-    ts = transient.create('time', 'Transient')
-    ts.set('tlist', '0 1 2 5 10 20 30 60 range(120,60,3600)')
-    ts.set('usertol', 'on')
-    ts.set('rtol', '1e-5')
-    ts.set('useinitsol', 'off')
-    ts.set('initmethod', 'init')
-    before = set(str(tag) for tag in j.sol().tags())
-    # Generate the solver before running to configure consistent initialization.
-    transient.createAutoSequences('all')
-    added = set(str(tag) for tag in j.sol().tags()) - before
-    if len(added) != 1:
-        raise RuntimeError(f'Expected one transient solver, got {added}')
-    solver_tag = added.pop()
-    solver = j.sol(solver_tag)
-    time_features = [str(tag) for tag in solver.feature().tags() if str(solver.feature(str(tag)).getType())=='Time']
-    if len(time_features) != 1:
-        raise RuntimeError('Could not identify generated Time solver')
-    time_solver = solver.feature(time_features[0])
-    time_solver.set('consistent', 'on')
-    time_solver.set('initialstepbdfactive', 'on')
-    time_solver.set('initialstepbdf', '0.001[s]')
-    solver.runAll()
-    data = j.result().dataset().create('warmupData', 'Solution')
-    data.set('solution', solver_tag)
-    expressions = ['t','comp1.maxtemp((T-273.15[K])/1[K])',
-                   'comp1.avehot((T-273.15[K])/1[K])','comp1.avebody((T-273.15[K])/1[K])',
-                   'comp1.intcool(hconv*(T-Tamb))','comp1.intbody(rhoAl*CpAl*(T-Tamb))']
-    units = ['s','1','1','1','W','J']
-    q = j.result().numerical().create('warmupMetrics', 'EvalGlobal')
-    q.set('data', 'warmupData')
-    q.set('expr', expressions)
-    q.set('unit', units)
-    values = np.asarray(q.getReal(), dtype=float)
-    with (out/'warmup.csv').open('w', newline='', encoding='utf-8') as stream:
-        writer=csv.writer(stream)
-        writer.writerow(['time_s','Tmax_degC','heater_mean_degC','body_mean_degC','heat_out_W','stored_energy_J'])
-        writer.writerows(values.T)
-    pg = j.result().create('pgWarmup', 'PlotGroup1D')
-    pg.label('Warm-up from 25 degC')
-    pg.set('data', 'warmupData')
-    pg.set('ylabelactive', True)
-    pg.set('ylabel', 'Temperature (degC)')
-    graph = pg.create('glob1', 'Global')
-    graph.set('expr', expressions[1:4])
-    graph.set('unit', ['1','1','1'])
-    graph.set('descr', ['Maximum','Heater mean','Body mean'])
-    pg.run()
-    export_plot('pgWarmup', 'warmup.png', 'Image2D')
-    final=history[-1]
-    checks = {
-        'power_balance': final['relative_heat_balance_error'] < 1e-3,
-        'heater_area': abs(final['Aheat']-1e-4)<1e-8,
-        'cooled_area': abs(final['Acool']-.0123)<1e-6,
-        'volume': abs(final['Vol']-1.6e-5)<1e-9,
-        'Tmax_mesh_change_under_0p05_K': abs(history[-1]['Tmax']-history[-2]['Tmax']) < .05,
-        'initial_Tmax_within_0p1_K': abs(values[1,0]-25)<.1,
-        'final_matches_stationary_within_0p1_K': abs(values[1,-1]-final['Tmax'])<.1,
-    }
+        for tag, label, expr, unit, filename in [
+            ('pgTemp','Steady temperature (degC)','T','degC','temperature_3d.png'),
+            ('pgFlux','Conductive heat flux magnitude','ht.tfluxMag','W/m^2','heat_flux_3d.png')]:
+            pg = j.result().create(tag, 'PlotGroup3D')
+            pg.label(label)
+            pg.set('data', 'dset1')
+            surface = pg.create('surf1', 'Surface')
+            surface.set('expr', expr)
+            surface.set('unit', unit)
+            pg.run()
+            export_plot(tag, filename)
+        save('03_stationary.mph')
+        progress('stationary: mesh refinement and energy balance evaluated; temperature and heat flux exported')
+
+        final = history[-1]
+        summary.update(steady=final, mesh_history=history)
+        checks.update(
+            power_balance=final['relative_heat_balance_error'] < 1e-3,
+            heater_area=abs(final['Aheat'] - 1e-4) < 1e-8,
+            cooled_area=abs(final['Acool'] - .0123) < 1e-6,
+            volume=abs(final['Vol'] - 1.6e-5) < 1e-9,
+            Tmax_mesh_change_under_0p05_K=abs(final['Tmax'] - history[-2]['Tmax']) < .05,
+        )
+
+    if 'std2' in selected:
+        if 'std1' not in selected:
+            j.param().set('hbulk', '1.3[mm]')
+            mesh.run()
+        before = set(str(tag) for tag in j.sol().tags())
+        # Generate the solver before running to configure consistent initialization.
+        transient.createAutoSequences('all')
+        added = set(str(tag) for tag in j.sol().tags()) - before
+        if len(added) != 1:
+            raise RuntimeError(f'Expected one transient solver, got {added}')
+        solver_tag = added.pop()
+        solver = j.sol(solver_tag)
+        time_features = [str(tag) for tag in solver.feature().tags() if str(solver.feature(str(tag)).getType())=='Time']
+        if len(time_features) != 1:
+            raise RuntimeError('Could not identify generated Time solver')
+        time_solver = solver.feature(time_features[0])
+        time_solver.set('consistent', 'on')
+        time_solver.set('initialstepbdfactive', 'on')
+        time_solver.set('initialstepbdf', '0.001[s]')
+        solver.runAll()
+        data = j.result().dataset().create('warmupData', 'Solution')
+        data.set('solution', solver_tag)
+        expressions = ['t','comp1.maxtemp((T-273.15[K])/1[K])',
+                       'comp1.avehot((T-273.15[K])/1[K])','comp1.avebody((T-273.15[K])/1[K])',
+                       'comp1.intcool(hconv*(T-Tamb))','comp1.intbody(rhoAl*CpAl*(T-Tamb))']
+        units = ['s','1','1','1','W','J']
+        q = j.result().numerical().create('warmupMetrics', 'EvalGlobal')
+        q.set('data', 'warmupData')
+        q.set('expr', expressions)
+        q.set('unit', units)
+        values = np.asarray(q.getReal(), dtype=float)
+        with (out/'warmup.csv').open('w', newline='', encoding='utf-8') as stream:
+            writer=csv.writer(stream)
+            writer.writerow(['time_s','Tmax_degC','heater_mean_degC','body_mean_degC','heat_out_W','stored_energy_J'])
+            writer.writerows(values.T)
+        pg = j.result().create('pgWarmup', 'PlotGroup1D')
+        pg.label('Warm-up from 25 degC')
+        pg.set('data', 'warmupData')
+        pg.set('ylabelactive', True)
+        pg.set('ylabel', 'Temperature (degC)')
+        graph = pg.create('glob1', 'Global')
+        graph.set('expr', expressions[1:4])
+        graph.set('unit', ['1','1','1'])
+        graph.set('descr', ['Maximum','Heater mean','Body mean'])
+        pg.run()
+        export_plot('pgWarmup', 'warmup.png', 'Image2D')
+        summary.update(transient_initial=values[:, 0].tolist(), transient_final=values[:, -1].tolist())
+        checks['initial_Tmax_within_0p1_K'] = abs(values[1, 0] - 25) < .1
+        if 'std1' in selected:
+            checks['final_matches_stationary_within_0p1_K'] = abs(values[1, -1] - final['Tmax']) < .1
+        else:
+            summary['checks_not_run'] = ['final_matches_stationary_within_0p1_K']
+
     checks = {key: bool(value) for key, value in checks.items()}
-    summary = {'case_id':'heat_sink_3d','model_tag':str(j.tag()), 'model_name':str(model.name()),
-               'comsol_version':str(client.version), 'steady':final,'mesh_history':history,
-               'transient_initial':values[:,0].tolist(),'transient_final':values[:,-1].tolist(),
-               'checks':checks,'validated':all(checks.values()),
-               'assumptions':['constant aluminum properties','prescribed convection; no air CFD',
-                              'no radiation','heater is a heat flux on aluminum, not a separate chip']}
+    summary.update(checks=checks, validated=all(checks.values()))
     (out/'validation.json').write_text(json.dumps(summary, indent=2)+'\n', encoding='utf-8')
-    j.result('pgTemp').run()
+    if 'std1' in selected:
+        j.result('pgTemp').run()
     save('heat_sink_3d.mph')
     save('heat_sink_3d.java')
-    progress('complete: stationary and transient results saved; checks=' + str(checks))
+    progress('complete: selected studies saved; checks=' + str(checks))
     if not summary['validated']:
         raise RuntimeError('A physical validation check failed; inspect validation.json before using the results')
     return summary

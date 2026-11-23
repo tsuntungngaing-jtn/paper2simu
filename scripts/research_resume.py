@@ -3,12 +3,16 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+from graphlib import TopologicalSorter
 import json
 from pathlib import Path
 import tempfile
 
 
 UNRESOLVED_STATES = {"UNKNOWN", "UNVERIFIED", "QUEUED", "RUNNING"}
+WORK_EVENTS = {"work_completed", "work_blocked", "work_unblocked"}
+BLOCKER_TYPES = {"input_missing", "physics_unresolved", "model_incomplete", "capability_missing",
+                 "deployment_mismatch", "transport_error", "native_solver_failure", "comparison_ambiguous"}
 
 
 def read_events(path):
@@ -32,6 +36,78 @@ def remaining(limit, previously_used, reserved):
     if type(limit) is not int or type(previously_used) is not int or min(limit, previously_used) < 0:
         raise ValueError("solve budgets and prior attempts must be nonnegative integers or null")
     return str(max(0, limit - previously_used - reserved))
+
+
+def work_progress(plan, events, pending_jobs, can_submit):
+    entries = plan.get("work_nodes", [])
+    nodes = {entry["id"]: entry for entry in entries}
+    if len(nodes) != len(entries):
+        raise ValueError("work_nodes must have unique IDs")
+    dependencies = {}
+    for node_id, node in nodes.items():
+        parents = node.get("depends_on", [])
+        if not isinstance(parents, list) or any(parent not in nodes for parent in parents):
+            raise ValueError(f"{node_id}: depends_on must list known work node IDs")
+        if not node.get("action"):
+            raise ValueError(f"{node_id}: work node requires an action")
+        dependencies[node_id] = parents
+    order = list(TopologicalSorter(dependencies).static_order())
+    completed = set()
+    blockers = {}
+    for event in events:
+        kind = event["event"]
+        if kind not in WORK_EVENTS:
+            continue
+        node_id = event["node_id"]
+        if node_id not in nodes or not event.get("evidence_refs"):
+            raise ValueError(f"{kind} requires a known work node and evidence_refs")
+        if kind == "work_blocked":
+            if event.get("blocker_type") not in BLOCKER_TYPES or not all(
+                event.get(key) for key in ("timestamp_utc", "last_attempt", "actual_return", "resume_when", "next_action")
+            ):
+                raise ValueError(f"{node_id}: incomplete scoped blocker")
+            if node_id in completed:
+                raise ValueError(f"{node_id}: use a new work node for work after a completed revision")
+            blockers[node_id] = event
+        elif kind == "work_unblocked":
+            blockers.pop(node_id, None)
+        elif node_id in blockers or not set(dependencies[node_id]).issubset(completed):
+            raise ValueError(f"{node_id}: resolve its blockers and dependencies before marking it complete")
+        else:
+            completed.add(node_id)
+
+    waiting = {}
+    ready = []
+    for node_id in order:
+        if node_id in completed:
+            continue
+        if node_id in blockers:
+            waiting[node_id] = "recorded blocker"
+            continue
+        unfinished = [parent for parent in dependencies[node_id] if parent not in completed]
+        if unfinished:
+            waiting[node_id] = "needs " + ", ".join(unfinished)
+            continue
+        node = nodes[node_id]
+        if pending_jobs and (node.get("requires_submission") or node.get("requires_idle_solver")):
+            waiting[node_id] = "reconcile original jobs through MCP first"
+        elif node.get("requires_submission") and not can_submit:
+            waiting[node_id] = "requires a known positive solve budget"
+        else:
+            ready.append(node_id)
+
+    lines = []
+    if nodes:
+        lines.append("- Work by dependency:")
+        lines.extend(f"  - READY (verify authorization): {key} | {nodes[key]['action']}" for key in ready)
+        lines.extend(f"  - WAITING: {key} | {reason}" for key, reason in waiting.items())
+        lines.extend(f"  - COMPLETED: {key}" for key in order if key in completed)
+        for key, item in blockers.items():
+            lines.append(f"  - {key} | {item['blocker_type']} at {item['timestamp_utc']}"
+                         f" | tried: {item['last_attempt']} | observed: {item['actual_return']}"
+                         f" | resumes when: {item['resume_when']} | check next: {item['next_action']}"
+                         f" | evidence: {', '.join(item['evidence_refs'])}")
+    return (nodes[ready[0]]["action"] if ready else None), bool(waiting), lines
 
 
 def render_summary(plan, events, journal):
@@ -129,7 +205,15 @@ def render_summary(plan, events, journal):
     total = remaining(budget.get("max_new_solves"), budget.get("prior_solve_attempts"), len(reservations))
     phase_budget = remaining(phase.get("max_new_solves"), phase.get("prior_solve_attempts"),
                              sum(value == phase_id for value in reservations.values()))
-    if total in {"0", "UNKNOWN"} or phase_budget in {"0", "UNKNOWN"}:
+    can_submit = total not in {"0", "UNKNOWN"} and phase_budget not in {"0", "UNKNOWN"}
+    ready_action, work_waiting, progress_lines = work_progress(plan, events, pending, can_submit)
+    if ready_action:
+        next_action = ready_action
+        if pending:
+            next_action += " | Reconcile original jobs before any new submission."
+    elif work_waiting and not pending:
+        next_action = "Resolve the listed work dependencies or collect the next discriminating evidence."
+    if not can_submit:
         next_action += " New solves require a known, positive task and phase budget."
     last_decision = trials.get(last_attempt, {}).get("decision", "PENDING")
     lines = [f"# {plan['task_id']} — {plan['host']}",
@@ -151,6 +235,7 @@ def render_summary(plan, events, journal):
             lines.append("    - Source: " + ", ".join(trial["job_evidence"]))
     if not pending:
         lines.append("  - None in this journal. Verify live state before submitting.")
+    lines.extend(progress_lines)
     return "\n".join(lines) + "\n"
 
 
