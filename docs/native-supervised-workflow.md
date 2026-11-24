@@ -1,6 +1,6 @@
-# Native CFD workflow and single-agent supervision (0.4.5)
+# Native CFD workflow and supervision (shared 0.4.5 / 0.5.0 baseline)
 
-This release is the single-agent control baseline. The host agent executes this procedure through the existing configured MCP; no new GUI driver, daemon or provider. Native solver and live Desktop verification NOT_RUN. Read-only tasks stay read-only. Use one authorized solver/session, one writer, installed-version documentation and actual provider schemas.
+The native execution and acceptance rules are inherited from the single-agent control baseline. In 0.5.0 use the [multi-agent orchestration](multi-agent-orchestration.md) for read-only reasoning and independent review; the parent remains sole executor. The host agent executes this procedure through the existing configured MCP; no new GUI driver, daemon or provider. Native solver and live Desktop verification NOT_RUN. Read-only tasks stay read-only. Use one authorized solver/session, one writer, installed-version documentation and actual provider schemas.
 
 ## Native-first
 Execute supported typed MCP operations against editable native objects, not code blocks for the human to paste. Java/Python inside an authorized connector is an implementation detail; arbitrary operator code retains existing explicit opt-in. Preserve calls and Copy as Code for audit. No shell/GUI bypass.
@@ -25,7 +25,7 @@ Record task/case/run, input/spec/model revisions, native path, manual/build, exp
 
 Fixed source input is not a tuning knob. Low-Mach or symmetry simplification needs evidence and authorized reference comparison. Inconsistent initial state: inspect constraints first; continuation, initialization and time-step changes are bounded numerical trials, not silent changes of physics.
 
-## Event-driven single-agent supervision
+## Event-driven supervision
 For authorized unattended solves the host owns the next action without user re-asking. At every scheduled/resumed turn and between native operations reconcile task, original session/jobs/pending operation, elapsed cutoff and remaining budgets. Persist observation and next action in existing journal/resume.md. Ongoing polling requires active host or configured scheduler; otherwise monitoring is BLOCKED/NOT_RUN.
 
 OBSERVE → CLASSIFY → DIAGNOSE → PLAN → ADMIT → APPLY → READBACK → RETEST → KEEP/REVERT/HOLD → OBSERVE. Running jobs remain OBSERVE; no mutation while active. Use job metadata/log tail when JVM busy. Unknown submit must reconcile original operation, disconnect follows scheduled recovery including 502. Missing monitoring is not solver failure.
