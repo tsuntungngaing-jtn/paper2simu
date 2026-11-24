@@ -1,3 +1,9 @@
+# Paper2Simu v0.5.1 — Knowledge-guided fault-tolerant multi-agent preview
+
+[System requirements](docs/multi-agent-system-v0.5.1.md) · [Role registry](agent-knowledge/registry.json) · [Orchestration and deployment](docs/multi-agent-orchestration.md) · [F1–F7 fault protocol](docs/multi-agent-fault-recovery.md) · [Learning and benchmark](docs/multi-agent-learning-and-benchmark.md)
+
+Ten roles (host + nine specialists), separate Executor and supervisory veto, independent acceptance, knowledge receipts and deterministic offline admission checks. Actual Codex dispatch, MCP permission isolation, native solver and cross-machine recovery NOT_RUN. No new background daemon. Preserve [0.4.5 single-agent](https://github.com/tsuntungngaing-jtn/paper2simu/tree/release/paper2simu-0.4.5) and [0.5.0 multi-agent](https://github.com/tsuntungngaing-jtn/paper2simu/tree/release/paper2simu-0.5.0) as independent control groups. The following retained README contains historical instructions; current v0.5.1 contract takes precedence.
+
 # Paper2Simu — Paper-to-Simulation for COMSOL and Ansys Fluent
 
 **Current version: v0.5.0. Commercial-solver verification of this release remains NOT_RUN.**
@@ -10,7 +16,7 @@ Paper2Simu unifies the evidence-first COMSOL Automatic pipeline (up to v0.7.6) a
 
 **Installation:** Python project `paper2simu==0.5.0` retains `comsol-automatic` and `comsol-skill-mcp` command aliases for existing COMSOL setups; new aliases: `paper2simu`, `paper2simu-comsol-mcp`. These aliases start the **COMSOL MCP service**, not a Fluent solver. Install official [Ansys PyFluent MCP](https://github.com/ansys/pyfluent-mcp) separately with its documented Python environment and register a distinct host server ID. Do not assume a single shared virtualenv can satisfy both products.
 
-**Release migration:** `python scripts/release.py --output ../Paper2Simu-v0.5.0.zip` and `python scripts/install_skill.py` produce the new package/install name without overwriting an existing directory. Keep the old install until a complete rollback-tested integration is accepted. Never transfer COMSOL tokens or private solver artifacts into the public Git repository.
+**Release migration:** `python scripts/release.py --output ../Paper2Simu-v0.5.1.zip` and `python scripts/install_skill.py` produce the new package/install name without overwriting an existing directory. Keep the old install until a complete rollback-tested integration is accepted. Never transfer COMSOL tokens or private solver artifacts into the public Git repository.
 
 ## Execution/acceptance separation (v0.2.2+)
 

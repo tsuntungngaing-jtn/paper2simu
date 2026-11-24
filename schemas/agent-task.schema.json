@@ -38,11 +38,16 @@
     },
     "role": {
       "enum": [
+        "orchestrator",
         "paper_reader",
         "documentation_expert",
         "physics_reviewer",
+        "executor",
         "supervisor",
-        "recovery_agent"
+        "recovery_agent",
+        "acceptance_agent",
+        "recorder",
+        "experiment_designer"
       ]
     },
     "stage": {

@@ -1,0 +1,253 @@
+{
+  "version": "0.5.1",
+  "role_count": 10,
+  "roles": {
+    "orchestrator": {
+      "id": "A00",
+      "authority": "Dispatch, freeze specifications, manage budgets and resolve conflicts with evidence. No native model writes or overriding veto; no self-approval.",
+      "docs": [
+        "docs/multi-agent-orchestration.md",
+        "docs/research-plan-and-handoff.md",
+        "docs/dependency-scoped-progress.md",
+        "docs/job-deadline-contract.md"
+      ],
+      "refs": [
+        "https://arxiv.org/abs/2512.08296",
+        "https://arxiv.org/abs/2503.13657"
+      ],
+      "sop": [
+        "Load task card, resume record and capability evidence.",
+        "Assign immutable scoped tasks, check prerequisites and record dispatch.",
+        "Admit only current independent reviews and route execution through the single writer.",
+        "Reconcile unfinished operations and budgets before proceeding."
+      ],
+      "output": "dispatch_plan, evidence_conflicts, next_action, budget_snapshot",
+      "metric": "duplicate submissions, invalid dispatch, missed veto, time to recovery"
+    },
+    "paper_reader": {
+      "id": "A01",
+      "authority": "Extract and propose input ledger entries; no writes to canonical ledger, no invented missing input or calibration to match targets.",
+      "docs": [
+        "prompts/paper-input-reconstruction.md",
+        "docs/authoritative-source-precedence.md",
+        "docs/figure-evidence.md",
+        "docs/offline-input-intake.md"
+      ],
+      "refs": [
+        "https://github.com/jmiao24/Paper2Agent"
+      ],
+      "sop": [
+        "Read target paper, supplements and scoped source materials.",
+        "Extract value, unit, definition, location, uncertainty and conflict; explicit text/table before schematic estimate.",
+        "Mark fixed, tentative and unknown independently; return evidence references and missing data."
+      ],
+      "output": "input_candidates, source_locations, conflicts, uncertainties",
+      "metric": "extraction accuracy, unit accuracy, source traceability, unknown recall"
+    },
+    "documentation_expert": {
+      "id": "A02",
+      "authority": "Recommend supported version-specific operations and readbacks; no live solver access or mutation.",
+      "docs": [
+        "docs/connectors.md",
+        "docs/api-patterns.md",
+        "docs/version-compatibility.md",
+        "docs/comsol-observability-and-desktop.md",
+        "docs/fluent-licensing-preflight.md"
+      ],
+      "refs": [
+        "https://doc.comsol.com/",
+        "https://fluent.docs.pyansys.com/",
+        "https://ansyshelp.ansys.com/"
+      ],
+      "sop": [
+        "Identify exact installed build and supplied MCP schema.",
+        "Retrieve matching official manual sections; distinguish native APIs from exposed tools.",
+        "Return parameter path, supported types and verification readback; flag unexposed capabilities."
+      ],
+      "output": "build, documented_path, provider_tool, supported_values, readback, source_location",
+      "metric": "invented API rate, version match, citation accuracy"
+    },
+    "physics_reviewer": {
+      "id": "A03",
+      "authority": "Independent pre-solve physical/numerical review and blockers. No model writes, no tuning fixed facts.",
+      "docs": [
+        "docs/simulation-specification.md",
+        "docs/stage-contracts.md",
+        "docs/model-consistency.md",
+        "docs/cht-coupling-energy-gates.md",
+        "docs/grid-refinement-reporting.md",
+        "docs/scientific-validity-under-uncertainty.md"
+      ],
+      "refs": [
+        "Cengel & Cimbala: Fluid Mechanics: Fundamentals and Applications",
+        "Anderson: Computational Fluid Dynamics: The Basics with Applications",
+        "Versteeg & Malalasekera: An Introduction to Computational Fluid Dynamics",
+        "Incropera et al.: Fundamentals of Heat and Mass Transfer",
+        "https://doi.org/10.1115/1.2960953",
+        "ASME V&V 20"
+      ],
+      "sop": [
+        "Read frozen physical spec and native snapshot without executor verdict.",
+        "Independently reconstruct equations, units, domains, selections, BCs and material laws.",
+        "Check mesh/discretization, conservation expectations and assumptions; return blockers/falsifiers."
+      ],
+      "output": "equation_checks, boundary_checks, material_checks, mesh_checks, blockers",
+      "metric": "physical error detection, false clearance, unit error recall"
+    },
+    "executor": {
+      "id": "A04",
+      "authority": "Exclusive authorized native model mutation, solver submission, readback and save; cannot approve own review or change frozen criteria. No unverified runtime/admin access.",
+      "docs": [
+        "docs/native-supervised-workflow.md",
+        "docs/stage-contracts.md",
+        "docs/staged-solve-contract.md",
+        "docs/selection-contract.md",
+        "docs/portable-workflow-contract.md",
+        "docs/job-deadline-contract.md"
+      ],
+      "refs": [
+        "https://doc.comsol.com/",
+        "https://fluent.docs.pyansys.com/"
+      ],
+      "sop": [
+        "Require actual exclusive solver writer and current admission receipt before each scoped mutation/submission.",
+        "Record operation ID and charge before submission; use discovered typed MCP operations only.",
+        "Read back effective properties, save checkpoints, invalidate dependent reviews after change.",
+        "Return native observations and errors without declaring final PASS."
+      ],
+      "output": "operation_id, native_lineage, effective_readback, artifacts, terminal_state",
+      "metric": "native operation success, duplicate submissions, stale readback, editability"
+    },
+    "supervisor": {
+      "id": "A05",
+      "authority": "Independent stage veto, request rebuild or authorized stop. No direct model writes, no ability to override terminal uncertainty; review supplied observation snapshots.",
+      "docs": [
+        "docs/native-convergence-policy.md",
+        "docs/job-deadline-contract.md",
+        "docs/scheduled-connection-recovery.md",
+        "docs/staged-solve-contract.md",
+        "docs/agent-audit-trail.md"
+      ],
+      "refs": [
+        "https://arxiv.org/abs/2503.13657",
+        "https://doc.comsol.com/",
+        "https://fluent.docs.pyansys.com/"
+      ],
+      "sop": [
+        "Review identity, current stage, criteria, budget and observations independently.",
+        "Return ALLOW, BLOCK or REQUEST_STOP as evidence-backed recommendation; blockers bind the admission gate.",
+        "Distinguish transport, native state and scientific outcome; route anomalies to recovery.",
+        "Require new review on revision or invalidated evidence."
+      ],
+      "output": "stage_verdict, reason, blockers, requested_action",
+      "metric": "missed anomaly, false veto, detection latency, budget violations"
+    },
+    "recovery_agent": {
+      "id": "A06",
+      "authority": "Diagnose F1-F7 failures and propose bounded reversible repairs. No execution, self-approval, unauthorized environment changes or criteria changes.",
+      "docs": [
+        "docs/scheduled-connection-recovery.md",
+        "docs/operations-reliability-v0.7.7-rc1.md",
+        "docs/fluent-windows-mpi-preflight.md",
+        "docs/knowledge-guided-recovery.md",
+        "docs/physics-diagnostic-hypotheses.md",
+        "docs/nonlinear-solver-tuning.md",
+        "docs/repair-validation.md"
+      ],
+      "refs": [
+        "https://arxiv.org/abs/2509.18178",
+        "https://github.com/karpathy/autoresearch",
+        "https://doc.comsol.com/",
+        "https://fluent.docs.pyansys.com/"
+      ],
+      "sop": [
+        "Preserve original job, redacted error, last verified state and attempts.",
+        "Read matching official documentation before proposing repair; request Documentation Expert if unresolved.",
+        "Classify transport/runtime/model/numerical/physical/reproduction/coordination failure; competing hypotheses, cheapest falsifier, checkpoint and rollback.",
+        "Return scoped candidate and verification plan; never apply or infer terminal from disconnect."
+      ],
+      "output": "fault_class, official_reference, hypotheses, proposed_action, falsifier, rollback, cost",
+      "metric": "diagnostic accuracy, recovery success, repeated failure, native calls"
+    },
+    "acceptance_agent": {
+      "id": "A07",
+      "authority": "Independent scientific final verdict against frozen contract; can refuse PASS; no model writes or moving targets.",
+      "docs": [
+        "prompts/paper-reproduction-task.md",
+        "docs/claim-validation.md",
+        "docs/grid-refinement-reporting.md",
+        "docs/scientific-validity-under-uncertainty.md",
+        "docs/portable-workflow-contract.md",
+        "docs/execution-acceptance-separation.md"
+      ],
+      "refs": [
+        "https://doi.org/10.1115/1.2960953",
+        "ASME V&V 20"
+      ],
+      "sop": [
+        "Blind review of source contract and effective native evidence, independent of executor verdict.",
+        "Check input consistency, physics, numerical credibility, QoIs and required native replay/editability separately.",
+        "Require explicit status and evidence for each required gate; reject stale/absent evidence or unapproved not-applicable.",
+        "Return scientific verdict only for task scope; no execution-only reproduction PASS."
+      ],
+      "output": "gate_results, qoi_evidence, verdict, limitations",
+      "metric": "false acceptance, reproducibility, independent scoring accuracy"
+    },
+    "recorder": {
+      "id": "A08",
+      "authority": "Semantic summaries and candidate experience only; deterministic journal is canonical single-writer; no solver writes or automatic knowledge promotion.",
+      "docs": [
+        "docs/research-plan-and-handoff.md",
+        "docs/evidence-provenance.md",
+        "docs/agent-audit-trail.md",
+        "docs/context-retrieval-rsi-evaluation.md",
+        "docs/publishing.md"
+      ],
+      "refs": [
+        "https://github.com/karpathy/autoresearch",
+        "https://arxiv.org/abs/2407.01489"
+      ],
+      "sop": [
+        "Read append-only journal and immutable source refs; report gaps, never fabricate events.",
+        "Summarize failures, decisions and revisions; redact sensitive material.",
+        "Propose scoped knowledge candidate with negative evidence, validation and applicability.",
+        "Submit candidate for independent review; leave canonical writes to deterministic owner."
+      ],
+      "output": "summary, provenance, experience_candidate, missing_events",
+      "metric": "record completeness, provenance, secret leakage, false experience claims"
+    },
+    "experiment_designer": {
+      "id": "A09",
+      "authority": "Design authorized conditional experiments only. No writes, solve submissions, target changes or identification claims from fit alone.",
+      "docs": [
+        "prompts/conditional-calibration.md",
+        "docs/parameter-inference.md",
+        "docs/simulation-dataset-doe.md",
+        "docs/ai-experiment-design-research.md",
+        "docs/scientific-validity-under-uncertainty.md"
+      ],
+      "refs": [
+        "Montgomery: Design and Analysis of Experiments",
+        "https://doi.org/10.1080/00401706.1991.10484804",
+        "https://www.itl.nist.gov/div898/handbook/",
+        "https://github.com/karpathy/autoresearch"
+      ],
+      "sop": [
+        "Classify variables L0 locked, L1 numerical, L2 missing geometric/material, L3 alternative physics/BC interpretation.",
+        "Use authorized ranges, evidence, identifiability, cost and independent holdout; no L0 perturbation.",
+        "Propose predeclared response, falsifier, budget and criteria; compare against unchanged baseline.",
+        "Record conditional feasible sets, not unique author inputs; no acceptance from fitted targets alone."
+      ],
+      "output": "variable_classes, design_matrix, prediction, falsifier, holdout, budget",
+      "metric": "budgeted improvement, holdout error, identifiability, invalid parameter proposals"
+    }
+  },
+  "source_policy": {
+    "paper": "explicit text/table/supplements before figure estimate; conflicts recorded",
+    "implementation": "installed-build official documentation plus actual MCP schema",
+    "effective_state": "native readback and experiments",
+    "science": "applicable standards, theory and verified research",
+    "experience": "validated scoped entries only"
+  },
+  "external_source_status": "Reference index, not bundled full text or verified per-task access. Cite exact edition/build/section; retrieve only authorized sources; block dependent claims if inaccessible."
+}

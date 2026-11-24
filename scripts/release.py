@@ -13,7 +13,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 ROOT_FILES = {'SKILL.md','README.md','LICENSE','NOTICE.md','.gitignore','pyproject.toml','setup.py','MANIFEST.in','COMSOFLENT_SKILL.md'}
-DIRECTORIES = {'server','vendor','examples','docs','scripts','tests','schemas','benchmarks','tutorials','paper2simu','prompts','rsi','uncertainty','comsoflent','research_design'}
+DIRECTORIES = {'agent-knowledge','server','vendor','examples','docs','scripts','tests','schemas','benchmarks','tutorials','paper2simu','prompts','rsi','uncertainty','comsoflent','research_design'}
 EXTENSIONS = {'.py','.md','.toml','.json','.cff','.ps1'}
 SKIP_PARTS = {'.git','.venv','__pycache__','.pytest_cache','runs','runtime','dist','build'}
 FORBIDDEN_EXTENSIONS = {'.csv','.png','.mph','.mphbin','.log','.pdf','.step','.stp','.pem','.key','.pfx','.zip','.pyc','.pyo'}
@@ -42,7 +42,9 @@ def public_files(root=ROOT):
             if len(rel.parts) != 3 or rel.parts[1] != 'agents' or rel.name not in {
                 'paper2simu_paper_reader.toml', 'paper2simu_documentation_expert.toml',
                 'paper2simu_physics_reviewer.toml', 'paper2simu_supervisor.toml',
-                'paper2simu_recovery_agent.toml'}:
+                'paper2simu_recovery_agent.toml', 'paper2simu_executor.toml',
+                'paper2simu_acceptance_agent.toml', 'paper2simu_recorder.toml',
+                'paper2simu_experiment_designer.toml'}:
                 continue
         elif rel.parts[0] not in DIRECTORIES:
             continue
