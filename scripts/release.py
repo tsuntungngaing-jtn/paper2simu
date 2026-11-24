@@ -37,6 +37,13 @@ def public_files(root=ROOT):
         if len(rel.parts)==1:
             if p.name not in ROOT_FILES:
                 continue
+        elif rel.parts[0] == '.codex':
+            # Only the reviewed specialist role files; never package local config or secrets.
+            if len(rel.parts) != 3 or rel.parts[1] != 'agents' or rel.name not in {
+                'paper2simu_paper_reader.toml', 'paper2simu_documentation_expert.toml',
+                'paper2simu_physics_reviewer.toml', 'paper2simu_supervisor.toml',
+                'paper2simu_recovery_agent.toml'}:
+                continue
         elif rel.parts[0] not in DIRECTORIES:
             continue
         if p.suffix.lower() in FORBIDDEN_EXTENSIONS or p.name.startswith('.env'):

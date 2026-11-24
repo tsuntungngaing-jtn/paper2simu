@@ -4,7 +4,7 @@ description: Connect to COMSOL or Ansys Fluent through the configured MCP provid
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.4.5"
+  version: "0.5.0"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -28,9 +28,9 @@ Do **not** activate those prompts merely by loading this skill for a non-reprodu
 
 Older references describe optional validation/RSI workflows and historical policies. Reading an API reference does not activate its old acceptance gates. Use validation interfaces only when requested by the task. See [interface and migration notes](../docs/execution-acceptance-separation.md).
 
-## Native workflow and single-agent supervision
+## Native workflow and multi-agent supervision
 
-For new/edited CFD models and paper reproduction, load [native supervised workflow](../docs/native-supervised-workflow.md). This release uses one host agent for all reasoning and execution; do not spawn subagents. Execute supported native MCP operations and read back stages; do not hand users code to paste. For authorized unattended solves own the observe/diagnose/plan/admit/apply/readback/retest loop using existing journals, recovery and budgets. No user error question needed for routine authorized repair. Use the offline supervision decision helper as advisory, not authorization. Native state and Desktop display are separate; no GUI bypass or concurrent writers. Ongoing monitoring requires active host/scheduler. Read-only tasks gain no mutation/solve authority.
+For new/edited CFD models and paper reproduction, load [native supervised workflow](../docs/native-supervised-workflow.md). For eligible multi-stage tasks, load [multi-agent orchestration](../docs/multi-agent-orchestration.md) and use the host's real subagent interface to delegate independent evidence and review tasks. The parent is the sole executor and writer. Never fabricate a subagent run. If delegation or verified worker isolation is unavailable, explicitly record SINGLE_AGENT_FALLBACK and follow the same native workflow. Do not silently classify fallback as multi-agent. Execute supported native MCP operations and read back stages; do not hand users code to paste. For authorized unattended solves own the observe/diagnose/plan/admit/apply/readback/retest loop using existing journals, recovery and budgets. No user error question needed for routine authorized repair. Use the offline supervision decision helper as advisory, not authorization. Native state and Desktop display are separate; no GUI bypass or concurrent writers. Ongoing monitoring requires active host/scheduler. Read-only tasks gain no mutation/solve authority.
 
 ## Portable native workflows
 
