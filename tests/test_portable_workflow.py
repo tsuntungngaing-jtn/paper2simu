@@ -133,3 +133,48 @@ class PortableWorkflowTests(unittest.TestCase):
             report = check_workflow(self.record, root)
             self.assertEqual(report["bundle_check"], "FAIL")
             self.assertIn("symlinks", report["assets"][0]["reason"])
+
+    def test_legacy_without_desktop_check(self):
+        del self.record["checks"]["desktop_editability"]
+        self.assertEqual(check_workflow(self.record)["contract_status"], "PASS")
+
+    def desktop_fixture(self):
+        edit = dict(LINEAGE, input_revision="inputs-2", geometry_id="geom-2",
+                    mesh_id="mesh-2", solution_id=None, dataset_id=None)
+        self.record["states"]["edited"] = edit
+        artifact = {"id": "edited", "sha256": "b" * 64}
+        receipt = dict(actor="engineer", build="6.4", native_path="Geometry / width",
+                       layers=["setup", "geometry", "mesh"], expected="new width",
+                       actual="new width read back", source_artifact=REFERENCE,
+                       edited_artifact=artifact, reopen_artifact=artifact,
+                       source_state_id="baseline")
+        self.record["checks"]["desktop_editability"]["promised_layers"] = ["setup", "geometry", "mesh"]
+        self.declare_pass("desktop_editability", state_id="edited", lineage=edit,
+                          artifact=artifact, desktop_receipt=receipt)
+        return self.record["checks"]["desktop_editability"]["native_evidence"][0]
+
+    def test_desktop_unsolved_copy(self):
+        self.desktop_fixture()
+        result = check_workflow(self.record)
+        self.assertEqual(result["contract_status"], "PASS")
+        self.assertEqual(result["native_evidence_verification"], "NOT_RUN")
+
+    def test_desktop_missing_receipt_or_layer_fails(self):
+        item = self.desktop_fixture()
+        receipt = item.pop("desktop_receipt")
+        self.assertEqual(check_workflow(self.record)["contract_status"], "FAIL")
+        item["desktop_receipt"] = receipt
+        receipt["layers"] = ["setup"]
+        self.assertEqual(check_workflow(self.record)["contract_status"], "FAIL")
+
+    def test_desktop_stale_or_wrong_kind_fails(self):
+        item = self.desktop_fixture()
+        item["lineage"]["solution_id"] = LINEAGE["solution_id"]
+        self.assertEqual(check_workflow(self.record)["contract_status"], "FAIL")
+        item["lineage"]["solution_id"] = None
+        item["kind"] = "ARCHIVE_RESTORE"
+        self.assertEqual(check_workflow(self.record)["contract_status"], "FAIL")
+
+    def test_desktop_pass_without_evidence_fails(self):
+        self.record["checks"]["desktop_editability"]["status"] = "PASS"
+        self.assertEqual(check_workflow(self.record)["contract_status"], "FAIL")

@@ -39,6 +39,15 @@
       "criteria_ref": null,
       "observations": null,
       "native_evidence": []
+    },
+    "desktop_editability": {
+      "status": "NOT_RUN",
+      "criteria_ref": null,
+      "observations": null,
+      "native_evidence": [],
+      "promised_layers": [
+        "setup"
+      ]
     }
   },
   "note": "Planning template only; null means unfilled, not zero or verified. No solve authorized by this file.",

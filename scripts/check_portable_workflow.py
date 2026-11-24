@@ -84,6 +84,35 @@ def _check_evidence(record: dict, errors: list[str]) -> None:
             errors.append(f"{check_name}: record a reason or observation")
         if check_name == "scientific_validation" and status == "PASS" and not record["qoi_contract_ref"]:
             errors.append(f"{check_name}: PASS requires a frozen QoI contract reference")
+        if check_name == "desktop_editability" and status == "PASS":
+            covered = set()
+            for item in evidence:
+                receipt = item.get("desktop_receipt")
+                if not receipt:
+                    errors.append("desktop_editability: PASS requires desktop receipt")
+                    continue
+                covered.update(receipt["layers"])
+                source = record["states"].get(receipt["source_state_id"])
+                edited = item["lineage"]
+                if not source or receipt["source_state_id"] == item["state_id"]:
+                    errors.append("desktop_editability: distinct source and edited states required")
+                elif source["input_revision"] == edited["input_revision"]:
+                    errors.append("desktop_editability: input revision must change")
+                if source and "geometry" in receipt["layers"] and source["geometry_id"] == edited["geometry_id"]:
+                    errors.append("desktop_editability: geometry identity must change")
+                if "mesh" in receipt["layers"] and (not edited["mesh_id"] or (source and source["mesh_id"] == edited["mesh_id"])):
+                    errors.append("desktop_editability: rebuilt mesh identity required")
+                if source and any(edited[k] is not None and edited[k] == source[k] for k in ("solution_id", "dataset_id")):
+                    errors.append("desktop_editability: stale saved solution or dataset")
+                if receipt["source_artifact"]["sha256"] == receipt["edited_artifact"]["sha256"]:
+                    errors.append("desktop_editability: edited copy must differ from source")
+                if receipt["edited_artifact"]["sha256"] != item["artifact"]["sha256"]:
+                    errors.append("desktop_editability: artifact must identify edited copy")
+                recipe = next((r for r in record["native_recipes"] if r["recipe_id"] == item["recipe_id"]), None)
+                if recipe and receipt["build"] != recipe["build"]:
+                    errors.append("desktop_editability: receipt build differs from recipe")
+            if set(check["promised_layers"]) - covered:
+                errors.append("desktop_editability: promised layers lack receipt evidence")
         for item in evidence:
             if item["kind"] != check_name.upper():
                 errors.append(f"{check_name}: incompatible native evidence kind {item['kind']}")
@@ -93,7 +122,7 @@ def _check_evidence(record: dict, errors: list[str]) -> None:
                 errors.append(f"{check_name}: outdated workflow contract revision")
             if record["states"].get(item["state_id"]) != item["lineage"]:
                 errors.append(f"{check_name}: missing state or mismatched input/geometry/mesh/solution/dataset lineage")
-            if status == "PASS" and check_name != "archive_restore":
+            if status == "PASS" and check_name not in {"archive_restore", "desktop_editability"}:
                 if any(item["lineage"][key] is None for key in ("mesh_id", "solution_id", "dataset_id")):
                     errors.append(f"{check_name}: PASS requires mesh, solution and dataset identities")
             if check_name == SAVED_CHECK and (item.get("new_solves") != 0 or not item.get("source_run_id")):

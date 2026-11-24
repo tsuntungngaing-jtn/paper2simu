@@ -4,7 +4,7 @@ description: Connect to COMSOL or Ansys Fluent through the configured MCP provid
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.4.0"
+  version: "0.4.5"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -28,13 +28,17 @@ Do **not** activate those prompts merely by loading this skill for a non-reprodu
 
 Older references describe optional validation/RSI workflows and historical policies. Reading an API reference does not activate its old acceptance gates. Use validation interfaces only when requested by the task. See [interface and migration notes](../docs/execution-acceptance-separation.md).
 
+## Native workflow and single-agent supervision
+
+For new/edited CFD models and paper reproduction, load [native supervised workflow](../docs/native-supervised-workflow.md). This release uses one host agent for all reasoning and execution; do not spawn subagents. Execute supported native MCP operations and read back stages; do not hand users code to paste. For authorized unattended solves own the observe/diagnose/plan/admit/apply/readback/retest loop using existing journals, recovery and budgets. No user error question needed for routine authorized repair. Use the offline supervision decision helper as advisory, not authorization. Native state and Desktop display are separate; no GUI bypass or concurrent writers. Ongoing monitoring requires active host/scheduler. Read-only tasks gain no mutation/solve authority.
+
 ## Portable native workflows
 
 For packaging, restoring, replaying, or transferring an authorized native workflow, load [portable workflow task](../prompts/portable-workflow-task.md) and [workflow contract](../docs/portable-workflow-contract.md). Keep the existing task, input ledger, QoI contract and trial journal as authoritative records; reference their identities and revisions.
 
 Share physical definitions across solvers but maintain separate native recipes. Discover each stage's actual provider capabilities; a Fluent provider does not establish Workbench or SpaceClaim access. Rebuild semantic selections and verify effective geometry/mesh/physics bindings after parameter changes. Separate stage-transition criteria from final convergence.
 
-Report archive restore, saved-solution zero-iteration readback, fresh replay and scientific validation independently. Missing capabilities block dependent steps only. Native execution remains subject to the existing MCP route and task authorization. Use the [evidence map](../docs/paper-evidence-map-v0.3.8.md) for method provenance and the [CAND case card](../examples/cand-1114-005-portability.md) only for that case. Never promote its unresolved geometry assumptions to global defaults.
+Report archive restore, saved-solution zero-iteration readback, fresh replay, scientific validation and desktop editability independently. Missing capabilities block dependent steps only. Native execution remains subject to the existing MCP route and task authorization. Use the [evidence map](../docs/paper-evidence-map-v0.3.8.md) for method provenance and the [CAND case card](../examples/cand-1114-005-portability.md) only for that case. Never promote its unresolved geometry assumptions to global defaults.
 
 ## Optional Discovery and RSI
 

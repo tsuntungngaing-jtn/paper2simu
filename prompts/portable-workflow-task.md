@@ -29,3 +29,7 @@
 | scientific_validation | NOT_RUN | | | | |
 
 允許狀態：NOT_RUN、PASS、FAIL、BLOCKED、NOT_APPLICABLE。尚在執行的 job 另報其執行狀態，勿提前填 PASS。沒有判據則保留觀測並標 BLOCKED（無法判定），不把未知記成零。
+
+## 原生界面交接（0.4.5）
+- 依[原生監督流程](../docs/native-supervised-workflow.md)声明 setup/geometry/mesh。确认模型身份，在副本改参、读回、重建、另存重开；记录操作者、build、路径、预期/实际变化、原件和副本哈希及重开回执。无真实人工界面回执则 desktop_editability=NOT_RUN 或 BLOCKED；新求解独立记录。仅 Solver case 不代表几何可编辑。
+- 交付表增加 desktop_editability 一行，使用 portable schema 对应 receipt。

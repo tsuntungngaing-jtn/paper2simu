@@ -3,120 +3,484 @@
   "title": "Paper2Simu portable workflow evidence record",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "record_kind", "workflow_id", "contract_revision", "task_ref", "input_ledger_ref", "qoi_contract_ref", "journal_ref", "authorized_operations", "budgets", "native_recipes", "assets", "states", "checks"],
+  "required": [
+    "schema_version",
+    "record_kind",
+    "workflow_id",
+    "contract_revision",
+    "task_ref",
+    "input_ledger_ref",
+    "qoi_contract_ref",
+    "journal_ref",
+    "authorized_operations",
+    "budgets",
+    "native_recipes",
+    "assets",
+    "states",
+    "checks"
+  ],
   "properties": {
-    "schema_version": {"const": "portable-workflow/1"},
-    "record_kind": {"enum": ["PLAN_TEMPLATE", "WORKFLOW_RECORD"]},
-    "workflow_id": {"$ref": "#/$defs/optionalText"},
-    "contract_revision": {"$ref": "#/$defs/optionalText"},
-    "task_ref": {"$ref": "#/$defs/optionalRef"},
-    "input_ledger_ref": {"$ref": "#/$defs/optionalRef"},
-    "qoi_contract_ref": {"$ref": "#/$defs/optionalRef"},
-    "journal_ref": {"$ref": "#/$defs/optionalRef"},
-    "authorized_operations": {"$ref": "#/$defs/textList"},
+    "schema_version": {
+      "const": "portable-workflow/1"
+    },
+    "record_kind": {
+      "enum": [
+        "PLAN_TEMPLATE",
+        "WORKFLOW_RECORD"
+      ]
+    },
+    "workflow_id": {
+      "$ref": "#/$defs/optionalText"
+    },
+    "contract_revision": {
+      "$ref": "#/$defs/optionalText"
+    },
+    "task_ref": {
+      "$ref": "#/$defs/optionalRef"
+    },
+    "input_ledger_ref": {
+      "$ref": "#/$defs/optionalRef"
+    },
+    "qoi_contract_ref": {
+      "$ref": "#/$defs/optionalRef"
+    },
+    "journal_ref": {
+      "$ref": "#/$defs/optionalRef"
+    },
+    "authorized_operations": {
+      "$ref": "#/$defs/textList"
+    },
     "budgets": {
-      "type": "object", "additionalProperties": false,
-      "required": ["max_solves", "max_retries", "wall_time_seconds"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_solves",
+        "max_retries",
+        "wall_time_seconds"
+      ],
       "properties": {
-        "max_solves": {"type": "integer", "minimum": 0},
-        "max_retries": {"type": "integer", "minimum": 0},
-        "wall_time_seconds": {"type": "integer", "minimum": 0}
+        "max_solves": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_retries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "wall_time_seconds": {
+          "type": "integer",
+          "minimum": 0
+        }
       }
     },
-    "native_recipes": {"type": "array", "items": {"$ref": "#/$defs/recipe"}},
-    "assets": {"type": "array", "items": {"$ref": "#/$defs/asset"}},
-    "states": {"type": "object", "propertyNames": {"$ref": "#/$defs/text"}, "additionalProperties": {"$ref": "#/$defs/lineage"}},
+    "native_recipes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/recipe"
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/asset"
+      }
+    },
+    "states": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/text"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/lineage"
+      }
+    },
     "checks": {
-      "type": "object", "additionalProperties": false,
-      "required": ["archive_restore", "zero_iteration_readback", "fresh_parametric_replay", "scientific_validation"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "archive_restore",
+        "zero_iteration_readback",
+        "fresh_parametric_replay",
+        "scientific_validation"
+      ],
       "properties": {
-        "archive_restore": {"$ref": "#/$defs/check"},
-        "zero_iteration_readback": {"$ref": "#/$defs/check"},
-        "fresh_parametric_replay": {"$ref": "#/$defs/check"},
-        "scientific_validation": {"$ref": "#/$defs/check"}
+        "archive_restore": {
+          "$ref": "#/$defs/check"
+        },
+        "zero_iteration_readback": {
+          "$ref": "#/$defs/check"
+        },
+        "fresh_parametric_replay": {
+          "$ref": "#/$defs/check"
+        },
+        "scientific_validation": {
+          "$ref": "#/$defs/check"
+        },
+        "desktop_editability": {
+          "$ref": "#/$defs/desktopCheck"
+        }
       }
     },
-    "note": {"type": "string"}
+    "note": {
+      "type": "string"
+    }
   },
   "$defs": {
-    "text": {"type": "string", "pattern": "\\S"},
-    "textList": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
-    "optionalText": {"anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
-    "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$", "minLength": 64, "maxLength": 64},
-    "ref": {
-      "type": "object", "additionalProperties": false, "required": ["id", "sha256"],
-      "properties": {"id": {"$ref": "#/$defs/text"}, "sha256": {"$ref": "#/$defs/hash"}}
+    "text": {
+      "type": "string",
+      "pattern": "\\S"
     },
-    "optionalRef": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "textList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/text"
+      }
+    },
+    "optionalText": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/text"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "minLength": 64,
+      "maxLength": 64
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sha256"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/text"
+        },
+        "sha256": {
+          "$ref": "#/$defs/hash"
+        }
+      }
+    },
+    "optionalRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "recipe": {
       "type": "object",
-      "required": ["recipe_id", "solver", "build", "platform", "provider_namespace", "stages"],
+      "required": [
+        "recipe_id",
+        "solver",
+        "build",
+        "platform",
+        "provider_namespace",
+        "stages"
+      ],
       "properties": {
-        "recipe_id": {"$ref": "#/$defs/text"},
-        "solver": {"enum": ["COMSOL", "FLUENT"]},
-        "build": {"$ref": "#/$defs/text"},
-        "platform": {"$ref": "#/$defs/text"},
-        "provider_namespace": {"$ref": "#/$defs/text"},
-        "required_modules": {"$ref": "#/$defs/textList"},
+        "recipe_id": {
+          "$ref": "#/$defs/text"
+        },
+        "solver": {
+          "enum": [
+            "COMSOL",
+            "FLUENT"
+          ]
+        },
+        "build": {
+          "$ref": "#/$defs/text"
+        },
+        "platform": {
+          "$ref": "#/$defs/text"
+        },
+        "provider_namespace": {
+          "$ref": "#/$defs/text"
+        },
+        "required_modules": {
+          "$ref": "#/$defs/textList"
+        },
         "stages": {
-          "type": "array", "minItems": 1,
+          "type": "array",
+          "minItems": 1,
           "items": {
-            "type": "object", "required": ["stage_id", "capability_ref", "recipe_ref"],
+            "type": "object",
+            "required": [
+              "stage_id",
+              "capability_ref",
+              "recipe_ref"
+            ],
             "properties": {
-              "stage_id": {"$ref": "#/$defs/text"},
-              "capability_ref": {"$ref": "#/$defs/optionalRef"},
-              "recipe_ref": {"$ref": "#/$defs/ref"},
-              "depends_on": {"$ref": "#/$defs/textList"}
+              "stage_id": {
+                "$ref": "#/$defs/text"
+              },
+              "capability_ref": {
+                "$ref": "#/$defs/optionalRef"
+              },
+              "recipe_ref": {
+                "$ref": "#/$defs/ref"
+              },
+              "depends_on": {
+                "$ref": "#/$defs/textList"
+              }
             }
           }
         }
       }
     },
     "asset": {
-      "type": "object", "additionalProperties": false,
-      "required": ["relative_path", "sha256", "purpose", "required"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relative_path",
+        "sha256",
+        "purpose",
+        "required"
+      ],
       "properties": {
-        "relative_path": {"$ref": "#/$defs/text"},
-        "sha256": {"$ref": "#/$defs/hash"},
-        "purpose": {"$ref": "#/$defs/text"},
-        "required": {"type": "boolean"}
+        "relative_path": {
+          "$ref": "#/$defs/text"
+        },
+        "sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "purpose": {
+          "$ref": "#/$defs/text"
+        },
+        "required": {
+          "type": "boolean"
+        }
       }
     },
     "lineage": {
-      "type": "object", "additionalProperties": false,
-      "required": ["input_revision", "geometry_id", "mesh_id", "solution_id", "dataset_id"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_revision",
+        "geometry_id",
+        "mesh_id",
+        "solution_id",
+        "dataset_id"
+      ],
       "properties": {
-        "input_revision": {"$ref": "#/$defs/text"},
-        "geometry_id": {"$ref": "#/$defs/text"},
-        "mesh_id": {"$ref": "#/$defs/optionalText"},
-        "solution_id": {"$ref": "#/$defs/optionalText"},
-        "dataset_id": {"$ref": "#/$defs/optionalText"}
+        "input_revision": {
+          "$ref": "#/$defs/text"
+        },
+        "geometry_id": {
+          "$ref": "#/$defs/text"
+        },
+        "mesh_id": {
+          "$ref": "#/$defs/optionalText"
+        },
+        "solution_id": {
+          "$ref": "#/$defs/optionalText"
+        },
+        "dataset_id": {
+          "$ref": "#/$defs/optionalText"
+        }
       }
     },
     "nativeEvidence": {
-      "type": "object", "additionalProperties": false,
-      "required": ["kind", "contract_revision", "recipe_id", "run_id", "operation_id", "state_id", "lineage", "artifact"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "contract_revision",
+        "recipe_id",
+        "run_id",
+        "operation_id",
+        "state_id",
+        "lineage",
+        "artifact"
+      ],
       "properties": {
-        "kind": {"enum": ["ARCHIVE_RESTORE", "ZERO_ITERATION_READBACK", "FRESH_PARAMETRIC_REPLAY", "SCIENTIFIC_VALIDATION"]},
-        "contract_revision": {"$ref": "#/$defs/text"},
-        "recipe_id": {"$ref": "#/$defs/text"},
-        "run_id": {"$ref": "#/$defs/text"},
-        "operation_id": {"$ref": "#/$defs/text"},
-        "state_id": {"$ref": "#/$defs/text"},
-        "lineage": {"$ref": "#/$defs/lineage"},
-        "artifact": {"$ref": "#/$defs/ref"},
-        "source_run_id": {"$ref": "#/$defs/text"},
-        "new_solves": {"type": "integer", "minimum": 0}
+        "kind": {
+          "enum": [
+            "ARCHIVE_RESTORE",
+            "ZERO_ITERATION_READBACK",
+            "FRESH_PARAMETRIC_REPLAY",
+            "SCIENTIFIC_VALIDATION",
+            "DESKTOP_EDITABILITY"
+          ]
+        },
+        "contract_revision": {
+          "$ref": "#/$defs/text"
+        },
+        "recipe_id": {
+          "$ref": "#/$defs/text"
+        },
+        "run_id": {
+          "$ref": "#/$defs/text"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/text"
+        },
+        "state_id": {
+          "$ref": "#/$defs/text"
+        },
+        "lineage": {
+          "$ref": "#/$defs/lineage"
+        },
+        "artifact": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_run_id": {
+          "$ref": "#/$defs/text"
+        },
+        "new_solves": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "desktop_receipt": {
+          "$ref": "#/$defs/desktopReceipt"
+        }
       }
     },
     "check": {
-      "type": "object", "additionalProperties": false,
-      "required": ["status", "criteria_ref", "observations", "native_evidence"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "criteria_ref",
+        "observations",
+        "native_evidence"
+      ],
       "properties": {
-        "status": {"enum": ["NOT_RUN", "PASS", "FAIL", "BLOCKED", "NOT_APPLICABLE"]},
-        "criteria_ref": {"$ref": "#/$defs/optionalRef"},
-        "observations": {"$ref": "#/$defs/optionalText"},
-        "native_evidence": {"type": "array", "items": {"$ref": "#/$defs/nativeEvidence"}}
+        "status": {
+          "enum": [
+            "NOT_RUN",
+            "PASS",
+            "FAIL",
+            "BLOCKED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "criteria_ref": {
+          "$ref": "#/$defs/optionalRef"
+        },
+        "observations": {
+          "$ref": "#/$defs/optionalText"
+        },
+        "native_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nativeEvidence"
+          }
+        }
+      }
+    },
+    "desktopReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "actor",
+        "build",
+        "native_path",
+        "layers",
+        "expected",
+        "actual",
+        "source_artifact",
+        "edited_artifact",
+        "reopen_artifact",
+        "source_state_id"
+      ],
+      "properties": {
+        "actor": {
+          "$ref": "#/$defs/text"
+        },
+        "build": {
+          "$ref": "#/$defs/text"
+        },
+        "native_path": {
+          "$ref": "#/$defs/text"
+        },
+        "layers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "setup",
+              "geometry",
+              "mesh"
+            ]
+          }
+        },
+        "expected": {
+          "$ref": "#/$defs/text"
+        },
+        "actual": {
+          "$ref": "#/$defs/text"
+        },
+        "source_artifact": {
+          "$ref": "#/$defs/ref"
+        },
+        "edited_artifact": {
+          "$ref": "#/$defs/ref"
+        },
+        "reopen_artifact": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_state_id": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "desktopCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "criteria_ref",
+        "observations",
+        "native_evidence",
+        "promised_layers"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "NOT_RUN",
+            "PASS",
+            "FAIL",
+            "BLOCKED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "criteria_ref": {
+          "$ref": "#/$defs/optionalRef"
+        },
+        "observations": {
+          "$ref": "#/$defs/optionalText"
+        },
+        "native_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nativeEvidence"
+          }
+        },
+        "promised_layers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "setup",
+              "geometry",
+              "mesh"
+            ]
+          }
+        }
       }
     }
   }

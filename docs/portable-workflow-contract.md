@@ -46,3 +46,7 @@ python scripts/check_portable_workflow.py /path/to/workflow.json --bundle-root /
 公開 skill 交付通用 md/json/py 規格、測試及脫敏示例；私有工作流交付原生 .mph/.wbpz/case/data、CAD、UDF、物性與日誌。完整工程是否包含外部資產應實測，不從副檔名推論。相對路徑仍需安全解析，拒絕越界及符號鏈接/junction 逃逸。不要為包入求解結果而放寬現有 public release allowlist。
 
 官方參考（2026-11-21 檢視）：[COMSOL Named Selections](https://doc.comsol.com/6.4/doc/com.comsol.help.comsol/comsol_api_geom.48.032.html)、[PyFluent meshing workflows](https://fluent.docs.pyansys.com/version/stable/api/meshing/meshing_workflow.html)。實際設定仍以安裝版本 API 與 provider schema 為準；官方原生 API 存在不等於 MCP 已暴露。
+
+## 第五項獨立檢查（0.4.5）
+
+`desktop_editability` 為向後兼容選填 check，舊記錄缺失仍有效。`promised_layers` 指 setup/geometry/mesh；PASS 要有每層 `DESKTOP_EDITABILITY` evidence 的 `desktop_receipt`，actor/build/native_path、預期與實測、source_state_id、來源/改參副本/重開工件引用。副本使用新 input revision；承諾幾何或網格須有不同對應 identity；未求解允許 solution/dataset=null，禁止沿用基準解。離線 checker 僅查聲明，不能驗證工程師操作。按[原生監督流程](native-supervised-workflow.md)執行；fresh replay 另報。
