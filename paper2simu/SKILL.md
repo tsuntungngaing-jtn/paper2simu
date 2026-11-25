@@ -1,16 +1,22 @@
 ---
 name: paper2simu
-description: Connect to COMSOL or Ansys Fluent through the configured MCP provider, run and monitor authorized simulations including unattended and overnight tasks, recover connections to existing solver sessions, and save traceable results. Load packaged acceptance prompts for paper reproduction.
+description: Reproduce engineering papers, build reusable article knowledge packs, or create editable SolidWorks geometry and hand it to a solver. Run, recover, and monitor authorized COMSOL or Ansys Fluent simulations through configured MCP providers. Use packaged acceptance prompts for simulation reproduction.
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.5.1"
+  version: "0.5.2"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
 # Paper2Simu — solver execution
 
 This is the canonical skill entrypoint. Root and ComsoFlent entries route here without additional acceptance policy. Preserve original attribution in NOTICE.md and LICENSE. This external agent harness is not an official solver product and does not install a Fluent connector.
+
+## Route by deliverable
+
+- For an article knowledge base, use the [paper knowledge workflow](../docs/paper-knowledge-and-solidworks.md#article-knowledge-packs) with `textbook-to-skill` (repository `textbook2skill`). Extract reusable, source-linked facts, formulas and methods. Ordinary paper input reconstruction can use its existing ledger without creating a separate knowledge pack.
+- For editable SolidWorks geometry, use the [native CAD workflow](../docs/paper-knowledge-and-solidworks.md#native-solidworks-modeling). Reuse native modeling references from `solidworks-cad-modeling`. DFM/DFA and manufacturing optimization are outside this route. Use the same CAD route for a paper figure, a dimensioned brief or an existing SolidWorks model.
+- For a combined task, connect the paper evidence to CAD parameters, then verify the [CAD-to-solver handoff](../docs/paper-knowledge-and-solidworks.md#handoff-to-comsol-or-fluent) before assigning mesh and physics to imported geometry. Enter each stage only when the requested deliverable calls for it. Knowledge-only and CAD-only work can finish before solver connection. CAD-only paper reproduction uses its geometry criteria. The packaged simulation acceptance prompts apply when simulation reproduction is in scope.
 
 ## Responsibility boundary
 

@@ -1,6 +1,6 @@
 ---
 name: paper2simu
-description: Compatibility entrypoint for Paper2Simu COMSOL and Fluent connection, execution, and scheduled or overnight monitoring. Paper-reproduction acceptance uses packaged prompts.
+description: Paper2Simu entrypoint for engineering paper reproduction, reusable article knowledge packs, editable SolidWorks geometry, and COMSOL or Ansys Fluent simulation and monitoring through MCP.
 license: MIT
 ---
 

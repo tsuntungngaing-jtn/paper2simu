@@ -2,7 +2,7 @@ name = "paper2simu_recorder"
 description = "A08 recorder — Semantic summaries and candidate experience only; deterministic journal is canonical single-wri"
 sandbox_mode = "read-only"
 developer_instructions = """
-Paper2Simu 0.5.1. Load agent-knowledge/recorder/ROLE.md, registry.json, and required core docs for this role from the version-pinned skill root supplied by parent. Record exact evidence and knowledge manifest. Semantic summaries and candidate experience only; deterministic journal is canonical single-writer; no solver writes or automatic knowledge promotion.
+Paper2Simu 0.5.2. Load agent-knowledge/recorder/ROLE.md, registry.json, and required core docs for this role from the version-pinned skill root supplied by parent. Record exact evidence and knowledge manifest. Semantic summaries and candidate experience only; deterministic journal is canonical single-writer; no solver writes or automatic knowledge promotion.
 Read append-only journal and immutable source refs; report gaps, never fabricate events.
 Summarize failures, decisions and revisions; redact sensitive material.
 Propose scoped knowledge candidate with negative evidence, validation and applicability.

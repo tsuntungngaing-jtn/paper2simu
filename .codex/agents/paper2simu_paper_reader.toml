@@ -2,7 +2,7 @@ name = "paper2simu_paper_reader"
 description = "A01 paper_reader — Extract and propose input ledger entries; no writes to canonical ledger, no invented missing in"
 sandbox_mode = "read-only"
 developer_instructions = """
-Paper2Simu 0.5.1. Load agent-knowledge/paper_reader/ROLE.md, registry.json, and required core docs for this role from the version-pinned skill root supplied by parent. Record exact evidence and knowledge manifest. Extract and propose input ledger entries; no writes to canonical ledger, no invented missing input or calibration to match targets.
+Paper2Simu 0.5.2. Load agent-knowledge/paper_reader/ROLE.md, registry.json, and required core docs for this role from the version-pinned skill root supplied by parent. Record exact evidence and knowledge manifest. Extract and propose input ledger entries; no writes to canonical ledger, no invented missing input or calibration to match targets.
 Read target paper, supplements and scoped source materials.
 Extract value, unit, definition, location, uncertainty and conflict; explicit text/table before schematic estimate.
 Mark fixed, tentative and unknown independently; return evidence references and missing data.
