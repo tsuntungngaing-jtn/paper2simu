@@ -10,6 +10,7 @@ dependencies = ["mcp>=1.29.0,<2", "mph>=1.4.0,<2", "numpy>=1.24", "uvicorn>=0.31
 
 [project.optional-dependencies]
 test = ["pytest>=8", "httpx>=0.27", "hypothesis>=6,<7"]
+isolated = ["pywin32>=306; sys_platform == 'win32'"]
 pdf-search = ["pymupdf>=1.24", "chromadb>=0.4", "sentence-transformers>=2.2"]
 figure-analysis = ["pillow>=10", "numpy>=1.24", "pymupdf>=1.24", "pytesseract>=0.3"]
 
@@ -24,7 +25,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["server", "uncertainty", "rsi", "research_design"]
+packages = ["server", "uncertainty", "rsi", "research_design", "scripts"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

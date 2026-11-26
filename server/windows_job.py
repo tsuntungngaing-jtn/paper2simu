@@ -1,16 +1,31 @@
 """Owned Windows process trees; handles, never PID-name based termination."""
+from contextlib import contextmanager
 import subprocess
 import ctypes as ct
 from ctypes import wintypes as wt
-from uuid import uuid4
 
 import win32api
 import win32con
 import win32event
+import win32file
 import win32job
 import win32process
+import pywintypes
 
 ATOMIC_JOB_ASSIGNMENT = True
+
+
+@contextmanager
+def lock_input(path):
+    """Keep the reviewed snapshot readable while denying write and replacement."""
+    handle = win32file.CreateFile(
+        str(path), win32con.GENERIC_READ, win32con.FILE_SHARE_READ, None,
+        win32con.OPEN_EXISTING, win32con.FILE_ATTRIBUTE_NORMAL, None,
+    )
+    try:
+        yield
+    finally:
+        handle.Close()
 
 
 def create_in_job(command, cwd, job):
@@ -46,8 +61,8 @@ def create_in_job(command, cwd, job):
         si=SX();si.si.cb=ct.sizeof(SX);si.attrs=ct.cast(attrs,ct.c_void_p)
         pi=PI()
         cmd=ct.create_unicode_buffer(subprocess.list2cmdline(command))
-        if not create(None,cmd,None,None,False,
-                      win32con.CREATE_SUSPENDED|win32con.CREATE_NO_WINDOW|0x00080000,
+        if not create(command[0],cmd,None,None,False,
+                      win32con.CREATE_SUSPENDED|subprocess.CREATE_NO_WINDOW|0x00080000,
                       None,str(cwd),ct.byref(si),ct.byref(pi)):
             raise ct.WinError(ct.get_last_error())
         return pi.process,pi.thread,pi.pid,pi.tid
@@ -56,26 +71,34 @@ def create_in_job(command, cwd, job):
 
 
 def process_identity(pid):
+    """Return the live process birth time, with absence distinct from probe error."""
     try:
-        handle = win32api.OpenProcess(win32con.PROCESS_QUERY_INFORMATION, False, pid)
-        try:
-            if win32process.GetExitCodeProcess(handle) != 259:
-                return None
-            return win32process.GetProcessTimes(handle)['CreationTime'].timestamp()
-        finally:
-            handle.Close()
-    except Exception:
-        return None
+        handle = win32api.OpenProcess(
+            win32con.PROCESS_QUERY_INFORMATION | win32con.SYNCHRONIZE, False, pid,
+        )
+    except pywintypes.error as exc:
+        if exc.winerror == 87:  # ERROR_INVALID_PARAMETER for a missing process
+            return None
+        raise OSError("Unable to open supervisor process") from exc
+    try:
+        if win32event.WaitForSingleObject(handle, 0) == win32event.WAIT_OBJECT_0:
+            return None
+        return win32process.GetProcessTimes(handle)["CreationTime"].timestamp()
+    except pywintypes.error as exc:
+        raise OSError("Unable to query supervisor process") from exc
+    finally:
+        handle.Close()
 
 
 class OwnedJob:
-    def __init__(self, command, cwd):
-        self.job = win32job.CreateJobObject(None, 'Local\\Paper2Simu-'+uuid4().hex)
+    def __init__(self, command, cwd, *, before_create):
+        self.job = win32job.CreateJobObject(None, None)
         self.process = self.thread = None
-        info = win32job.QueryInformationJobObject(self.job, win32job.JobObjectExtendedLimitInformation)
-        info['BasicLimitInformation']['LimitFlags'] = win32job.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
-        win32job.SetInformationJobObject(self.job, win32job.JobObjectExtendedLimitInformation, info)
         try:
+            info = win32job.QueryInformationJobObject(self.job, win32job.JobObjectExtendedLimitInformation)
+            info['BasicLimitInformation']['LimitFlags'] = win32job.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+            win32job.SetInformationJobObject(self.job, win32job.JobObjectExtendedLimitInformation, info)
+            before_create()
             self.process, self.thread, self.pid, _ = create_in_job(command, cwd, self.job)
             self.created_at = win32process.GetProcessTimes(self.process)['CreationTime'].timestamp()
         except BaseException:
@@ -83,7 +106,8 @@ class OwnedJob:
             raise
 
     def resume(self):
-        win32process.ResumeThread(self.thread)
+        if win32process.ResumeThread(self.thread) != 1:
+            raise RuntimeError("Unexpected native process suspend count")
         win32api.CloseHandle(self.thread)
         self.thread = None
 
@@ -98,8 +122,16 @@ class OwnedJob:
 
     def close(self):
         # Job handle is non-inheritable; a supervisor crash closes its sole handle.
+        first_error = None
         for name in ('job', 'thread', 'process'):
             handle = getattr(self, name, None)
             if handle is not None:
-                win32api.CloseHandle(handle)
-                setattr(self, name, None)
+                try:
+                    win32api.CloseHandle(handle)
+                except Exception as exc:
+                    if first_error is None:
+                        first_error = exc
+                else:
+                    setattr(self, name, None)
+        if first_error is not None:
+            raise first_error
