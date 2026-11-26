@@ -252,14 +252,6 @@ class Runtime:
             if self.journal_errors:
                 return {'success': False, 'status': 'BLOCKED', 'error': 'OPERATION_JOURNAL_UNCERTAIN',
                         'operation_id': operation_id, 'next_step': 'Reconcile the unreadable job manifests first.'}
-            pending = [j['job_id'] for j in self.jobs.values() if j['status'] == 'recovery_pending']
-            if pending:
-                return {'success': False, 'status': 'BLOCKED', 'error': 'UNRESOLVED_RECOVERY_JOBS',
-                        'recovery_pending': pending, 'next_step': 'Reconcile original native jobs with the authorized local operator before new work.'}
-            if self.case_clock_required or self.case_clock_path.exists():
-                gate = case_clock_admission(self.case_clock_path, job.get('task_case_id'))
-                if not gate['allowed']:
-                    return dict(gate, success=False, status='BLOCKED')
             budget = self._submission_budget(len(self._active_jobs()))
             if not budget['can_submit']:
                 reasons = budget['block_reasons']
@@ -274,6 +266,14 @@ class Runtime:
                         'reason': reasons[0], 'submission_budget': budget, 'runtime_id': self.runtime_id,
                         'retryable': reasons == ['ACTIVE_JOB_LIMIT_REACHED'], 'inflight_cancelled': False,
                         'next_step': ' '.join(actions[reason] for reason in reasons)}
+            pending = [j['job_id'] for j in self.jobs.values() if j['status'] == 'recovery_pending']
+            if pending:
+                return {'success': False, 'status': 'BLOCKED', 'error': 'UNRESOLVED_RECOVERY_JOBS',
+                        'recovery_pending': pending, 'next_step': 'Reconcile original native jobs with the authorized local operator before new work.'}
+            if self.case_clock_required or self.case_clock_path.exists():
+                gate = case_clock_admission(self.case_clock_path, job.get('task_case_id'))
+                if not gate['allowed']:
+                    return dict(gate, success=False, status='BLOCKED')
             self.jobs[job_id] = job
             try:
                 self._persist(job_id)
