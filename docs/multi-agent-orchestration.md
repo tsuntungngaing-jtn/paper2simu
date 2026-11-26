@@ -13,3 +13,7 @@ Dispatch intake Paper Reader + Documentation Expert, Physics Reviewer and Superv
 ## Research
 Compare fixed v0.4.5/v0.5.0/v0.5.1 with identical task card, native build, case time/solve budget, scorer and recorded token budget. Use matched cases and held-out papers, report fallback, failures, cost and false accept. See [benchmark and knowledge promotion](multi-agent-learning-and-benchmark.md).
 Design references: https://arxiv.org/abs/2512.08296 ; https://arxiv.org/abs/2503.13657 ; https://arxiv.org/abs/2509.18178 ; https://arxiv.org/abs/2407.01489 . These inform design, not validation of this system.
+
+## Optional P2S-TRACE-1.0 execution record
+
+When requested, apply [the execution trace companion](../paper2simu-execution-trace/SKILL.md) before dispatch. Freeze applicable roles, components and dependencies; capture actual host worker identities, invocation events, input/output hashes and downstream dispositions. Record conditional non-applicability, independent review and missing evidence separately. The existing handoff and verification guards remain authoritative; trace records neither confer authority nor authenticate worker identity by themselves. Do not force irrelevant roles or bypass vetoes.
