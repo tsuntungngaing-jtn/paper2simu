@@ -394,3 +394,19 @@ def test_expiry_after_last_database_read_is_checked(tmp_path, monkeypatch):
     monkeypatch.setattr(isolated_runtime,'datetime',Clock)
     with pytest.raises(ValueError, match='REVIEW_REQUIRED'):
         isolated_runtime.verify_launch(envelope,folder)
+
+
+def test_case_closed_during_evidence_verification_never_admits_resume(tmp_path, monkeypatch):
+    from server import isolated_runtime
+    from server.case_clock import CaseClock
+    runtime, c, source, deadline, req, launch = approved(tmp_path, monkeypatch)
+    assert runtime.submit_isolated(str(source), 'std1', 'op', deadline, 'c', req)['success']
+    folder, envelope = launch.call_args.args
+    original = isolated_runtime.review
+    def close_during_review(*args):
+        expires = original(*args)
+        CaseClock(runtime.case_clock_path).close('c','operator case exit')
+        return expires
+    monkeypatch.setattr(isolated_runtime,'review',close_during_review)
+    with pytest.raises(ValueError,match='CASE_CLOCK_EXIT'):
+        isolated_runtime.verify_launch(envelope,folder)

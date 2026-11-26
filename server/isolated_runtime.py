@@ -92,14 +92,15 @@ def verify_launch(request, folder):
     for source in (Path(request['source_file']), folder/'input.mph'):
         if hashlib.sha256(source.read_bytes()).hexdigest() != request['input_sha256']:
             raise ValueError('REVIEW_REQUIRED: model changed after review')
-    clock = check_clock(request['case_clock_path'], request['case_id'], request['deadline_at_unix'],
-                {'deadline_at_unix': request['case_deadline_at_unix'],
-                 'new_work_cutoff_unix': request['new_work_cutoff_unix']})
     bound = c.case(request['case_id'])
     if not bound or Path(bound['clock_path']) != Path(request['case_clock_path']).resolve():
         raise ValueError('CASE_CLOCK_RESOURCE_BINDING_REQUIRED')
-    # Complete all potentially blocking I/O before the final time-only checks.
+    # Validate evidence first, then read the live case so a close during slow
+    # hashing takes effect. Retain expiry for a final check after all DB I/O.
     expires = review(request['verification'], stored['output_root'], binding)
+    clock = check_clock(request['case_clock_path'], request['case_id'], request['deadline_at_unix'],
+                {'deadline_at_unix': request['case_deadline_at_unix'],
+                 'new_work_cutoff_unix': request['new_work_cutoff_unix']})
     cutoff = min(expires, request['deadline_at_unix'], clock['new_work_cutoff_unix'],
                  clock['last_verified_progress_at_unix']+clock['stall_seconds'])
     if not clock['last_seen_at_unix'] <= time.time() < cutoff:
