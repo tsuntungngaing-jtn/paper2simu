@@ -180,6 +180,8 @@ class Runtime:
             'running_stop': ('unsupported', 'No independent running-stop path in this MCP'),
             'deadline_enforcement': ('unsupported', 'Shared JVM worker has no isolated deadline controller'),
             'desktop_identity': ('unsupported', 'Desktop display identity needs operator confirmation'),
+            'historical_resource_reconciliation': (
+                'implemented_offline', 'Local administration only. Requires an enrolled domain and signed historical evidence.'),
         }
         for name in ('read_model', 'build_model', 'verify_effective_settings', 'solve',
                      'native_log', 'checkpoint_reopen'):
@@ -212,7 +214,7 @@ class Runtime:
         return await loop.run_in_executor(self.executor,
             functools.partial(shared_guard.invoke, self, function, *args, **kwargs))
 
-    def _submission_budget(self, active: int, coordinated_jobs=None) -> dict:
+    def _submission_budget(self, active: int, coordinated_jobs=None, receipts=None) -> dict:
         # Call with self.lock held so status and admission use a consistent job count.
         limits = {}
         invalid = []
@@ -230,10 +232,17 @@ class Runtime:
                 invalid.append(variable)
 
         total = len(self.jobs) + len(self.journal_errors)
-        if self.coordination_path or self.resource_id:
+        if self.coordination_path or self.resource_id or self.reconciliation_trust:
             try:
-                rows = (shared_guard.coordinator(self).inspect()
-                        if coordinated_jobs is None else coordinated_jobs)
+                if coordinated_jobs is None:
+                    c = shared_guard.coordinator(self, required=True)
+                    with c.history_snapshot() as (roots, rows):
+                        receipts = shared_guard.history_receipts(self, c, roots)
+                else:
+                    rows = coordinated_jobs
+                if receipts:
+                    local_paths = {self.output_root / 'job-manifests' / (jid + '.json') for jid in self.jobs}
+                    total += len(receipts.keys() - local_paths)
                 rows = [r for r in rows if r['kind'] in {'shared_job', 'isolated'}]
                 represented = {j.get('coordination_job_id') for j in self.jobs.values()}
                 total += sum(r['job_id'] not in represented for r in rows)
@@ -300,6 +309,16 @@ class Runtime:
                         'retryable': reasons == ['ACTIVE_JOB_LIMIT_REACHED'], 'inflight_cancelled': False,
                         'next_step': ' '.join(actions[reason] for reason in reasons)}
             pending = [j['job_id'] for j in self.jobs.values() if j['status'] == 'recovery_pending']
+            if pending and self.reconciliation_trust:
+                try:
+                    from .historical_ledger import verified_history
+                    c = shared_guard.coordinator(self, required=True)
+                    with c.history_snapshot() as (roots, _jobs):
+                        receipts = verified_history(c, roots, self.reconciliation_trust)
+                    pending = [jid for jid in pending if not self.jobs[jid].get('historical')
+                               or self.output_root / 'job-manifests' / (jid + '.json') not in receipts]
+                except (ValueError, OSError) as error:
+                    return shared_guard.blocked(error)
             if pending:
                 return {'success': False, 'status': 'BLOCKED', 'error': 'UNRESOLVED_RECOVERY_JOBS',
                         'recovery_pending': pending, 'next_step': 'Reconcile original native jobs with the authorized local operator before new work.'}

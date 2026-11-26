@@ -13,7 +13,10 @@ REQUIRED = {
     'tests/test_isolated_integration.py', 'tests/test_isolated_release.py',
     'scripts/check_multi_agent_v051.py', 'scripts/verification_gate.py',
     'scripts/recovery_memory.py', 'scripts/check_isolated_release.py',
-    'references/recovery-history.json',
+    'references/recovery-history.json', 'benchmarks/runtime-capability-contract.json',
+    'server/historical_evidence.py', 'server/historical_ledger.py',
+    'tests/test_historical_evidence.py', 'tests/test_historical_ledger.py',
+    'docs/historical-ledger.md', 'docs/historical-evidence.md', 'tests/test_historical_recovery.py', 'paper2simu/SKILL.md', 'pyproject.toml',
 }
 
 

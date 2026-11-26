@@ -5,6 +5,8 @@ from pathlib import Path
 import re
 import sqlite3
 import hashlib
+import os
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SEED = json.loads((ROOT / "references/recovery-history.json").read_text(encoding="utf8"))
@@ -20,6 +22,18 @@ def tokens(text):
     return words
 
 def run(a):
+    if a.command == "historical-status":
+        if __package__ in {None, ""}:
+            sys.path.insert(0, str(ROOT))
+        from server.coordination import Coordinator
+        from server.historical_ledger import lookup
+
+        coordinator = Coordinator(os.environ["PAPER2SIMU_COORDINATION_DB"],
+                                  os.environ["PAPER2SIMU_RESOURCE_ID"])
+        statement = lookup(coordinator, a.manifest, os.environ["PAPER2SIMU_RECONCILIATION_TRUST"])
+        return {"historical_statement": statement, "advisory_only": True}
+    if a.db is None:
+        raise ValueError("--db is required for recovery memory operations")
     if not all(v.strip() for k,v in vars(a).items() if isinstance(v,str) and k!="evidence"):
         raise ValueError("Nonempty identifiers required")
     db_path = a.db.resolve()
@@ -72,8 +86,10 @@ if __name__=="__main__":
     import sys
     sys.stdout.reconfigure(encoding='utf-8')
     p=argparse.ArgumentParser()
-    p.add_argument("--db",type=Path,required=True)
+    p.add_argument("--db",type=Path)
     sub=p.add_subparsers(dest="command",required=True)
+    historical = sub.add_parser("historical-status")
+    historical.add_argument("manifest", type=Path)
     q=sub.add_parser("lookup"); q.add_argument("query"); q.add_argument("--cards",type=Path)
     r=sub.add_parser("reserve")
     for field in ("case","build","revision","action","symptom"): r.add_argument("--"+field,required=True)

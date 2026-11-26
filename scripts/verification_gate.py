@@ -113,6 +113,16 @@ def verify(request, workspace, now=None):
         result['reason']=str(exc); return result
 
 
+def verify_historical_release(packet, manifest_path, resource_id, trust_path):
+    """Verify historical resource evidence; callers still enforce ledger membership.
+
+    This policy has no authority over native claims, scientific acceptance, or
+    case clocks. Trust anchors come only from the installed resource policy.
+    """
+    from server.historical_evidence import verify as verify_evidence
+    return verify_evidence(packet, manifest_path, resource_id, trust_path)
+
+
 def validate_map(root=ROOT):
     root=Path(root).resolve(); payload=json.loads((root/'benchmarks/agent-feature-map.json').read_text(encoding='utf-8'))
     ids=set()

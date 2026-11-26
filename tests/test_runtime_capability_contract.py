@@ -26,6 +26,7 @@ class CapabilityContractTests(unittest.TestCase):
             rt=Runtime(output_root=Path(tmp))
             try:
                 cap=rt.execution_capabilities()
+                self.assertEqual(cap["historical_resource_reconciliation"]["state"], "implemented_offline")
                 self.assertEqual(cap["running_stop"]["state"],"unsupported")
                 self.assertEqual(cap["deadline_enforcement"]["state"],"unsupported")
                 self.assertEqual(rt.submit_study(None,None,require_hard_deadline=True)["error"],"HARD_DEADLINE_UNSUPPORTED")

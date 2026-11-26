@@ -1,5 +1,5 @@
 {
-  "version": "0.6.1",
+  "version": "0.6.2",
   "scope": "canonical COMSOL shared-JVM and opt-in Windows isolated connector; not a native validation certificate",
   "required_tools": [
     "comsol_queue_status",
@@ -24,7 +24,9 @@
     "server/isolated_runtime.py",
     "server/isolated_batch.py",
     "server/isolated_worker.py",
-    "server/windows_job.py"
+    "server/windows_job.py",
+    "server/historical_evidence.py",
+    "server/historical_ledger.py"
   ],
   "capabilities": [
     {
@@ -73,6 +75,13 @@
       "id": "isolated_launch_evidence_binding",
       "state": "implemented_offline",
       "test": "tests/test_isolated_executor.py"
+    },
+    {
+      "id": "historical_resource_reconciliation",
+      "state": "implemented_offline",
+      "test": "tests/test_historical_ledger.py",
+      "access": "local_administration_only",
+      "native_validation": "NOT_RUN"
     }
   ],
   "native_validation": "NOT_RUN",

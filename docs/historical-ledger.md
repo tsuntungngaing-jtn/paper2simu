@@ -1,0 +1,23 @@
+# Historical job reconciliation ledger
+
+A clearance covers one unresolved, uncoordinated legacy manifest in one enrolled output root. It can lift that manifest’s resource block while the original job remains historical. The original submission counts once toward the cumulative submission cap in every participating output root. Clearance consumes no active job slot. A coordinated claim, an ambiguous operation, another unresolved job, Case Clock, native solve status and scientific acceptance retain their own checks.
+
+## Local administration
+
+Use the existing v0.6.1 coordination database on its original host and filesystem. Stop new submissions during the configuration change. Inventory every participating client and root, and back up the original database and evidence through the deployment’s supported procedure. Enroll authorized roots using the existing coordination provisioning procedure. Unregistered clients require separate isolation.
+
+1. Configure the same absolute `PAPER2SIMU_COORDINATION_DB` and the same `PAPER2SIMU_RESOURCE_ID` for all participants. Configure `PAPER2SIMU_RECONCILIATION_TRUST` with the absolute canonical path to the local authority policy. Keep the canonical policy path, coordination database and sibling receipt database outside every enrolled writable output root. Initialization, append and admission check this separation, including roots enrolled after initialization, and reject files with multiple hard links. Before deployment inspect the effective Windows ACLs or POSIX ownership and permissions on these files and all parent directories. Only authorized deployment identities may replace, rename, or relink protected files. Give participating service identities the database access required by coordination and read-only access to the policy and receipts. Pin these assignments in the deployment configuration. Path checks alone cannot validate inherited ACLs or protect a process running with administrator privileges. Runtime service accounts require read access to the policy, receipts, manifests and original evidence. Protect evidence against concurrent external modification.
+2. Run `python -m server.historical_ledger init` once from the authorized local administration environment. Initialization validates the original database and creates a sibling file ending in `.historical.sqlite3` with exclusive creation. It binds the canonical coordination path, device/file identity, local host, resource ID and trust-policy path. A moved or replaced database requires a separate reviewed migration.
+3. Obtain the independent review and resource administrator signatures over the supported statement and the exact review. Keep private signing keys outside both Runtime and MCP. Run `python -m server.historical_ledger append ABSOLUTE_MANIFEST_PATH PACKET_JSON` locally. The packet must verify against the deployment policy. Replaying the exact receipt returns its original digest. A conflicting receipt for the same manifest or job blocks.
+4. Configure participating v0.6.2 Runtime processes with the same trust path and reload them through their supported lifecycle. Every new reservation verifies the stored packets, original files, current signer authorizations and all enrolled histories under the coordination lock. An unreadable sidecar or revoked key blocks admission. A claim already held by a coordinated job still requires the original native-stop proof. MCP has no historical clearance command.
+
+## Rollback and limitations
+
+For an advisory Recovery Memory readback, use the same deployment environment and run
+`python -m scripts.recovery_memory historical-status ABSOLUTE_MANIFEST_PATH`.
+A null statement means there is no matching verified receipt. An invalid store or
+changed evidence causes the command to fail. This diagnostic does not grant admission.
+
+For a configuration rollback remove the trust setting from participating Runtimes and reload them after accounting for any active jobs. v0.6.1 can reopen its original database without conversion. The legacy historical manifest again blocks admission. Preserve the sidecar with both approvals and the original source evidence. Re-enabling the same sidecar requires all evidence, its original database identity and the configured trust policy to validate again.
+
+SQL triggers reject updates and deletes. SQLite and local administrator-controlled ACLs are part of the trusted computing base. A local privileged administrator can alter files, so retain protected independent backups. Local boot evidence applies only to a proved local process and the specified boot boundary. Remote jobs, uncertain placement and missing approvals remain blocked.

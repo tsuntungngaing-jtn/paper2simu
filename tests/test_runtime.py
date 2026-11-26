@@ -383,7 +383,7 @@ class RuntimeTests(unittest.TestCase):
                     assert "Disabled" in denied.content[0].text
                     capabilities = await session.call_tool("comsol_execution_capabilities", {})
                     report = capabilities.structuredContent
-                    self.assertEqual(report["paper2simu_version"], "0.6.1")
+                    self.assertEqual(report["paper2simu_version"], "0.6.2")
                     self.assertEqual(report["transport"], "stdio")
                     self.assertRegex(report["runtime_source_sha256"], "^[a-f0-9]{64}$")
                     self.assertEqual(report["capabilities"]["deadline_enforcement"]["state"], "unsupported")
