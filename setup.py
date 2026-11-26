@@ -18,5 +18,15 @@ class BuildWithResources(build_py):
                 target = dest/source.relative_to(root)
                 target.parent.mkdir(parents=True, exist_ok=True)
                 copy2(source,target)
+        # Policy modules locate these immutable resources relative to scripts/.
+        for folder in ['references', 'agent-knowledge']:
+            for source in (root / folder).rglob('*'):
+                if not source.is_file() or source.suffix not in {'.json', '.md', '.jsonl'}:
+                    continue
+                if folder == 'references' and source.name != 'recovery-history.json':
+                    continue
+                target = Path(self.build_lib) / source.relative_to(root)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                copy2(source, target)
 
 setup(cmdclass={'build_py':BuildWithResources})

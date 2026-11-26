@@ -68,6 +68,9 @@ def run(a):
         return dict(id=a.id,status=a.status)
 
 if __name__=="__main__":
+    # JSON IPC has a fixed encoding, independent of the Windows console locale.
+    import sys
+    sys.stdout.reconfigure(encoding='utf-8')
     p=argparse.ArgumentParser()
     p.add_argument("--db",type=Path,required=True)
     sub=p.add_subparsers(dest="command",required=True)

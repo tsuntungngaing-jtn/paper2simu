@@ -21,3 +21,7 @@ recursive-include agent-knowledge *.md *.json *.jsonl
 include references/recovery-history.json
 include scripts/recovery_memory.py scripts/verification_gate.py scripts/verification_state.py scripts/verification_eval.py scripts/verification_mutations.py scripts/verification_release_gate.py
 include docs/formal/Coordination.tla docs/formal/Coordination.cfg
+recursive-include scripts *.py
+recursive-include server *.py
+recursive-include tests *.py
+include .github/workflows/isolated-executor.yml

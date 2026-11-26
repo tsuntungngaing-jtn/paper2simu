@@ -147,6 +147,18 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
                                                       require_hard_deadline, task_case_id))
 
     @mcp.tool()
+    async def comsol_isolated_batch_submit(input_file: str, study_tag: str, operation_id: str,
+            deadline_at_unix: float, task_case_id: str, verification: dict, cores: int = 4) -> dict:
+        """Submit an owned Windows batch after durable resource, clock and evidence admission. Native validation is separate."""
+        return runtime.submit_isolated(input_file, study_tag, operation_id, deadline_at_unix,
+                                       task_case_id, verification, cores)
+
+    @mcp.tool()
+    async def comsol_isolated_batch_status(operation_id: str) -> dict:
+        """Read original durable isolated state; unknown receipts never authorize relaunch."""
+        return runtime.isolated_status(operation_id=operation_id)
+
+    @mcp.tool()
     async def comsol_job_status(job_id: str | None = None, operation_id: str | None = None) -> dict[str, Any]:
         """Read one original job by job_id or operation_id without waiting for COMSOL. A missing operation is unknown."""
         return runtime.job_status(job_id, operation_id)
@@ -242,7 +254,7 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
         raise ValueError('COMSOL_TOOL_ROLE must be operator or reviewer')
     if role == 'reviewer':
         # Explicit allowlist; no arbitrary code, mutation, result export or resources.
-        allowed = {'comsol_queue_status','comsol_job_status','study_get_progress','comsol_execution_capabilities',
+        allowed = {'comsol_queue_status','comsol_job_status','study_get_progress','comsol_execution_capabilities','comsol_isolated_batch_status',
                    'simulation_spec_validate','simulation_task_admit','validation_gate',
                    'workflow_status', 'paper_figure_analyze', 'paper_figure_route', 'mesh_native_analyze', 'simulation_dataset_plan', 'simulation_dataset_record', 'physics_diagnostic_plan', 'physics_diagnostic_record', 'recovery_contract_freeze', 'recovery_commission', 'recovery_propose', 'recovery_assess', 'source_precedence_review', 'solver_route_plan', 'native_convergence_review'}
         for name in list(mcp._tool_manager._tools):

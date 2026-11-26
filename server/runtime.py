@@ -28,6 +28,8 @@ from uuid import uuid4
 from . import __version__
 from .submission_window import latest_renewal
 from .case_clock import CaseClock, admission as case_clock_admission
+from . import shared_guard
+from .shared_guard import native_entry
 
 _RESOURCES = Path(__file__).resolve().parent / 'resources'
 ROOT = _RESOURCES if (_RESOURCES / 'vendor').is_dir() else Path(__file__).resolve().parents[1]
@@ -93,6 +95,17 @@ class Runtime:
         self.case_clock_path = self.output_root / 'case-clock.sqlite3'
         # A deployed task may require the clock even before a case is created.
         self.case_clock_required = os.getenv('PAPER2SIMU_REQUIRE_CASE_CLOCK') == '1'
+        shared_guard.configure(self)
+
+    def submit_isolated(self, input_file, study_tag, operation_id, deadline_at_unix,
+                        task_case_id, verification, cores=4):
+        from .isolated_runtime import submit
+        return submit(self, input_file, study_tag, operation_id, deadline_at_unix,
+                      task_case_id, verification, cores)
+
+    def isolated_status(self, operation_id=None, job_id=None):
+        from .isolated_runtime import status
+        return status(self, operation_id=operation_id, job_id=job_id)
 
     def _restore_jobs(self):
         for path in (self.output_root / 'job-manifests').glob('*.json'):
@@ -126,6 +139,11 @@ class Runtime:
     def _finished(self, job_id):
         with self.lock:
             try:
+                job = self.jobs[job_id]
+                if self.futures.get(job_id) and self.futures[job_id].cancelled() and job.get('coordination_job_id'):
+                    c = shared_guard.coordinator(self)
+                    c.release(job['coordination_job_id'], self.runtime_id,
+                              {'never_started': True, 'evidence': 'Future cancelled before worker entry'})
                 self._persist(job_id)
             except Exception as error:
                 self.jobs[job_id]['persistence_error'] = str(error)
@@ -173,6 +191,8 @@ class Runtime:
         }
 
     def _submission_request_error(self, operation_id, require_hard_deadline):
+        if self.tool_role != 'operator':
+            return shared_guard.blocked('ROLE_FORBIDDEN')
         if operation_id is not None and not re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", operation_id):
             return {'success': False, 'status': 'BLOCKED', 'error': 'INVALID_OPERATION_ID'}
         if require_hard_deadline:
@@ -182,14 +202,17 @@ class Runtime:
         return None
 
     async def call(self, function, *args, **kwargs):
+        if self.tool_role != 'operator':
+            return shared_guard.blocked('ROLE_FORBIDDEN')
         with self.lock:
             if self._active_jobs():
                 return {'success':False, 'status':'BLOCKED', 'error':'JVM_BUSY',
                         'retryable':True, 'next_step':'Poll job metadata; do not queue repair calls behind a solve.'}
         loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(self.executor, functools.partial(function, *args, **kwargs))
+        return await loop.run_in_executor(self.executor,
+            functools.partial(shared_guard.invoke, self, function, *args, **kwargs))
 
-    def _submission_budget(self, active: int) -> dict:
+    def _submission_budget(self, active: int, coordinated_jobs=None) -> dict:
         # Call with self.lock held so status and admission use a consistent job count.
         limits = {}
         invalid = []
@@ -207,6 +230,16 @@ class Runtime:
                 invalid.append(variable)
 
         total = len(self.jobs) + len(self.journal_errors)
+        if self.coordination_path or self.resource_id:
+            try:
+                rows = (shared_guard.coordinator(self).inspect()
+                        if coordinated_jobs is None else coordinated_jobs)
+                rows = [r for r in rows if r['kind'] in {'shared_job', 'isolated'}]
+                represented = {j.get('coordination_job_id') for j in self.jobs.values()}
+                total += sum(r['job_id'] not in represented for r in rows)
+                active = max(active, sum(not r['released'] for r in rows))
+            except (ValueError, OSError):
+                invalid.append('PAPER2SIMU_COORDINATION_DB')
         budget = {'can_submit': False, 'active_jobs': {'used': active}, 'submissions': {'used': total},
                   'invalid_settings': invalid, 'block_reasons': []}
         if invalid:
@@ -270,10 +303,32 @@ class Runtime:
             if pending:
                 return {'success': False, 'status': 'BLOCKED', 'error': 'UNRESOLVED_RECOVERY_JOBS',
                         'recovery_pending': pending, 'next_step': 'Reconcile original native jobs with the authorized local operator before new work.'}
-            if self.case_clock_required or self.case_clock_path.exists():
-                gate = case_clock_admission(self.case_clock_path, job.get('task_case_id'))
+            try:
+                gate = shared_guard.case_admission(self, job.get('task_case_id'))
                 if not gate['allowed']:
                     return dict(gate, success=False, status='BLOCKED')
+            except (ValueError, OSError) as error:
+                return shared_guard.blocked(error)
+            try:
+                request = {'request': job.get('request'), 'task_case_id': job.get('task_case_id'),
+                           'output_root': str(self.output_root), 'native_job_id': job_id}
+                c = shared_guard.coordinator(self)
+                prior = c.get(operation_id=operation_id) if c and operation_id else None
+                if prior:
+                    if prior['kind'] != 'shared_job' or any(prior['request'].get(k) != request[k]
+                        for k in ('request', 'task_case_id', 'output_root')):
+                        return shared_guard.blocked('OPERATION_ID_CONFLICT')
+                    return {'success':True, 'job_id':prior['request']['native_job_id'],
+                            'status':prior['state'], 'existing_job':True, 'poll_tool':'comsol_job_status'}
+                claim = shared_guard.reserve(self, operation_id or 'job-'+job_id, request, 'shared_job')
+                if claim and claim.get('existing'):
+                    return {'success': True, 'job_id': claim['job_id'], 'status': claim['state'],
+                            'operation_id': operation_id, 'existing_job': True,
+                            'poll_tool': 'comsol_job_status'}
+                if claim:
+                    job['coordination_job_id'] = claim['job_id']
+            except (OSError, ValueError) as error:
+                return shared_guard.blocked(error)
             self.jobs[job_id] = job
             try:
                 self._persist(job_id)
@@ -284,7 +339,20 @@ class Runtime:
             if operation_id:
                 self.operations[operation_id] = job_id
             try:
-                future = self.executor.submit(run, *args)
+                def coordinated_run():
+                    def execute():
+                        gate = shared_guard.case_admission(self, job.get('task_case_id'))
+                        if not gate['allowed']:
+                            with self.lock:
+                                self.jobs[job_id].update(status='recovery_pending', clock_error=gate)
+                            return {'success': False}
+                        run(*args)
+                        return {'success': self.jobs[job_id]['status'] == 'completed'}
+                    result = shared_guard.invoke(self, execute, claim=claim)
+                    if isinstance(result, dict) and result.get('status') == 'BLOCKED':
+                        with self.lock:
+                            self.jobs[job_id].update(status='recovery_pending', coordination_error=result)
+                future = self.executor.submit(coordinated_run)
             except RuntimeError as error:
                 job.update(status='failed', error={'type': type(error).__name__, 'message': str(error)},
                            completed_at=time.time())
@@ -408,6 +476,7 @@ class Runtime:
             return state, str(error)
         return 'connected', None
 
+    @native_entry
     def prepare_stdio_client(self):
         """Initialize only the JVM before MCP starts its blocking stdin reader.
 
@@ -444,6 +513,7 @@ class Runtime:
         except Exception:
             pass  # Older releases may lack the busy-handler overload.
 
+    @native_entry
     def start(self, cores=None, version=None, products=None) -> dict:
         if self.manager.is_connected or self.connection_lost:
             status = self.status()
@@ -470,6 +540,7 @@ class Runtime:
         except Exception as error:
             return {"success": False, "error": str(error)}
 
+    @native_entry
     def connect(self, port: int, host: str = "localhost") -> dict:
         if self.manager.is_connected:
             status = self.status()
@@ -486,6 +557,7 @@ class Runtime:
         except Exception as error:
             return {"success": False, "error": str(error)}
 
+    @native_entry
     def disconnect(self) -> dict:
         if not self.manager.is_connected:
             return {"success": True, "message": "Already disconnected; models preserved."}
@@ -501,6 +573,7 @@ class Runtime:
                 return {"success": True, "connection_state": state, "warning": str(error)}
             return {"success": False, "connection_state": state, "error": str(error)}
 
+    @native_entry
     def status(self) -> dict:
         state, error = self._connection_probe()
         connected = None if state in {'busy', 'unknown'} else state == 'connected'
@@ -516,6 +589,7 @@ class Runtime:
                           note="Lists only this MCP session's tracked models; other desktop models are untouched.")
         return result
 
+    @native_entry
     def open_desktop(self) -> dict:
         if not self.manager.is_connected:
             started = self.start()
@@ -669,6 +743,11 @@ class Runtime:
     def job_status(self, job_id: str | None = None, operation_id: str | None = None) -> dict:
         if (job_id is None) == (operation_id is None):
             return {"success": False, "error": "Specify exactly one job_id or operation_id."}
+        if self.coordination_path or self.resource_id:
+            from .isolated_runtime import coordinated_status
+            result = coordinated_status(self, operation_id=operation_id, job_id=job_id)
+            if result is not None:
+                return result
         with self.lock:
             if operation_id is not None:
                 if operation_id in self.ambiguous_operations:
@@ -746,6 +825,7 @@ class Runtime:
                 "cancellation":"cancel_not_supported", "status":self.job_status(job_id)['status'],
                 "error": "Running Java calls cannot be safely interrupted from another Python thread. If needed, ask the USER to manually press COMSOL Desktop's Stop control; the agent must not use screen recognition or UI automation."}
 
+    @native_entry
     def execute_code(self, model_name: str, code: str) -> dict:
         if os.getenv("COMSOL_ALLOW_CODE") != "1":
             return {"success": False, "error": "Disabled. A trusted local operator must set COMSOL_ALLOW_CODE=1 and restart the server. This executes arbitrary Python and is not sandboxed."}
