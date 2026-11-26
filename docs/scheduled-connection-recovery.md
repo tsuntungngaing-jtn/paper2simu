@@ -44,3 +44,7 @@ Use this check only when the registered HTTP MCP URL points to `127.0.0.1`, `loc
 3. Verify a closed submission window still allows status checks, an active job can still be monitored, and the schedule entry survives after cutoff. Validate the first real cutoff/cross-midnight handoff per host. Keep live rollout pending until these observations are recorded.
 
 A skill-content update can be applied with the existing compatible MCP runtime. When upgrading the connector runtime too, use the [connector migration instructions](connectors.md#submission-window-and-recovery) and its version-matched launcher configuration.
+
+## v0.6.1 scheduled checks
+
+Apply [runtime reliability](runtime-reliability-v0.6.1.md) to the actual scheduled execution context, not a separate successful CLI session. The direct loopback probe is deliberately credential-free and does not perform MCP initialization. Do not reset the case clock at reconnect. Runtime rejects new queued jobs while historical recovery records or unreadable journals remain unresolved.

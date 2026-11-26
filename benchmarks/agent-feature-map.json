@@ -1,12 +1,165 @@
-{"version":"0.6.0","status":"PROTOCOL_NOT_NATIVE_VERIFIED","features":[
-{"id":"provider_identity","owner":"documentation_expert","contract":"docs/connectors.md","test":"tests/test_solver_router.py","failure_route":"docs/scheduled-connection-recovery.md","observations":["provider and build","actual session and native job identity"]},
-{"id":"source_inputs","owner":"paper_reader","contract":"docs/authoritative-source-precedence.md","test":"tests/test_source_precedence.py","failure_route":"docs/multi-agent-fault-recovery.md","observations":["paper locator","value unit scope and source hash"]},
-{"id":"geometry","owner":"executor","contract":"docs/geometry-workflow.md","test":"tests/test_geometry_contracts.py","failure_route":"docs/multi-agent-fault-recovery.md","observations":["domains and semantic boundary binding","actual dimensions and topology"]},
-{"id":"mesh","owner":"physics_reviewer","contract":"docs/grid-refinement-reporting.md","test":"tests/test_mesh_native.py","failure_route":"docs/multi-agent-fault-recovery.md","observations":["mesh revision quality and spatial convergence","local resolution"]},
-{"id":"physics","owner":"physics_reviewer","contract":"docs/model-consistency.md","test":"tests/test_physics_diagnostics.py","failure_route":"docs/multi-agent-fault-recovery.md","observations":["effective equations and material properties","BC and unit readback"]},
-{"id":"admission","owner":"supervisor","contract":"docs/multi-agent-orchestration.md","test":"tests/test_verification_gate.py","failure_route":"docs/multi-agent-fault-recovery.md","observations":["independent current reviews","writer isolation","job and deadline recheck"]},
-{"id":"recovery","owner":"recovery_agent","contract":"docs/recovery-memory.md","test":"tests/test_recovery_memory.py","failure_route":"docs/scheduled-connection-recovery.md","observations":["original job state","new evidence","reservation outcome"]},
-{"id":"acceptance","owner":"acceptance_agent","contract":"docs/stage-contracts.md","test":"tests/test_verification_gate.py","failure_route":"docs/multi-agent-fault-recovery.md","observations":["G1-G4 and scoped G5 evidence","frozen QoI comparisons","independent review"]},
-{"id":"persistence","owner":"recorder","contract":"docs/portable-workflow-contract.md","test":"tests/test_portable_workflow.py","failure_route":"docs/research-plan-and-handoff.md","observations":["saved artifact hash","independent reopen and readback"]},
-{"id":"release","owner":"orchestrator","contract":"docs/publishing.md","test":"tests/test_release.py","failure_route":"docs/verification-driven-v0.6.0.md","observations":["regression results","distribution manifest and hashes"]}
-]}
+{
+  "version": "0.6.1",
+  "status": "PROTOCOL_NOT_NATIVE_VERIFIED",
+  "features": [
+    {
+      "id": "provider_identity",
+      "owner": "documentation_expert",
+      "contract": "docs/connectors.md",
+      "test": "tests/test_solver_router.py",
+      "failure_route": "docs/scheduled-connection-recovery.md",
+      "observations": [
+        "provider and build",
+        "actual session and native job identity"
+      ]
+    },
+    {
+      "id": "source_inputs",
+      "owner": "paper_reader",
+      "contract": "docs/authoritative-source-precedence.md",
+      "test": "tests/test_source_precedence.py",
+      "failure_route": "docs/multi-agent-fault-recovery.md",
+      "observations": [
+        "paper locator",
+        "value unit scope and source hash"
+      ]
+    },
+    {
+      "id": "geometry",
+      "owner": "executor",
+      "contract": "docs/geometry-workflow.md",
+      "test": "tests/test_geometry_contracts.py",
+      "failure_route": "docs/multi-agent-fault-recovery.md",
+      "observations": [
+        "domains and semantic boundary binding",
+        "actual dimensions and topology"
+      ]
+    },
+    {
+      "id": "mesh",
+      "owner": "physics_reviewer",
+      "contract": "docs/grid-refinement-reporting.md",
+      "test": "tests/test_mesh_native.py",
+      "failure_route": "docs/multi-agent-fault-recovery.md",
+      "observations": [
+        "mesh revision quality and spatial convergence",
+        "local resolution"
+      ]
+    },
+    {
+      "id": "physics",
+      "owner": "physics_reviewer",
+      "contract": "docs/model-consistency.md",
+      "test": "tests/test_physics_diagnostics.py",
+      "failure_route": "docs/multi-agent-fault-recovery.md",
+      "observations": [
+        "effective equations and material properties",
+        "BC and unit readback"
+      ]
+    },
+    {
+      "id": "admission",
+      "owner": "supervisor",
+      "contract": "docs/multi-agent-orchestration.md",
+      "test": "tests/test_verification_gate.py",
+      "failure_route": "docs/multi-agent-fault-recovery.md",
+      "observations": [
+        "independent current reviews",
+        "writer isolation",
+        "job and deadline recheck"
+      ]
+    },
+    {
+      "id": "recovery",
+      "owner": "recovery_agent",
+      "contract": "docs/recovery-memory.md",
+      "test": "tests/test_recovery_memory.py",
+      "failure_route": "docs/scheduled-connection-recovery.md",
+      "observations": [
+        "original job state",
+        "new evidence",
+        "reservation outcome"
+      ]
+    },
+    {
+      "id": "acceptance",
+      "owner": "acceptance_agent",
+      "contract": "docs/stage-contracts.md",
+      "test": "tests/test_verification_gate.py",
+      "failure_route": "docs/multi-agent-fault-recovery.md",
+      "observations": [
+        "G1-G4 and scoped G5 evidence",
+        "frozen QoI comparisons",
+        "independent review"
+      ]
+    },
+    {
+      "id": "persistence",
+      "owner": "recorder",
+      "contract": "docs/portable-workflow-contract.md",
+      "test": "tests/test_portable_workflow.py",
+      "failure_route": "docs/research-plan-and-handoff.md",
+      "observations": [
+        "saved artifact hash",
+        "independent reopen and readback"
+      ]
+    },
+    {
+      "id": "release",
+      "owner": "orchestrator",
+      "contract": "docs/publishing.md",
+      "test": "tests/test_release.py",
+      "failure_route": "docs/verification-driven-v0.6.0.md",
+      "observations": [
+        "regression results",
+        "distribution manifest and hashes"
+      ]
+    },
+    {
+      "id": "runtime_fingerprint",
+      "owner": "documentation_expert",
+      "contract": "docs/runtime-reliability-v0.6.1.md",
+      "test": "tests/test_runtime_reliability.py",
+      "failure_route": "docs/scheduled-connection-recovery.md",
+      "observations": [
+        "actual scheduled context",
+        "runtime version and source hash",
+        "native identity"
+      ]
+    },
+    {
+      "id": "persistent_case_clock",
+      "owner": "supervisor",
+      "contract": "docs/runtime-reliability-v0.6.1.md",
+      "test": "tests/test_runtime_reliability.py",
+      "failure_route": "docs/scheduled-connection-recovery.md",
+      "observations": [
+        "immutable case budget",
+        "new progress evidence",
+        "clock exit not native stop"
+      ]
+    },
+    {
+      "id": "job_reconciliation",
+      "owner": "recovery_agent",
+      "contract": "docs/runtime-reliability-v0.6.1.md",
+      "test": "tests/test_runtime_recovery_gate.py",
+      "failure_route": "docs/scheduled-connection-recovery.md",
+      "observations": [
+        "original operation receipt",
+        "unresolved journal blocks"
+      ]
+    },
+    {
+      "id": "capability_regression",
+      "owner": "orchestrator",
+      "contract": "docs/runtime-reliability-v0.6.1.md",
+      "test": "tests/test_runtime_capability_contract.py",
+      "failure_route": "docs/scheduled-connection-recovery.md",
+      "observations": [
+        "required tool registration",
+        "missing isolated executor explicitly blocked"
+      ]
+    }
+  ]
+}

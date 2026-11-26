@@ -27,6 +27,7 @@ from uuid import uuid4
 
 from . import __version__
 from .submission_window import latest_renewal
+from .case_clock import CaseClock, admission as case_clock_admission
 
 _RESOURCES = Path(__file__).resolve().parent / 'resources'
 ROOT = _RESOURCES if (_RESOURCES / 'vendor').is_dir() else Path(__file__).resolve().parents[1]
@@ -89,6 +90,9 @@ class Runtime:
             digest.update(source.name.encode() + b"\0" + source.read_bytes() + b"\0")
         self.runtime_source_sha256 = digest.hexdigest()
         self._restore_jobs()
+        self.case_clock_path = self.output_root / 'case-clock.sqlite3'
+        # A deployed task may require the clock even before a case is created.
+        self.case_clock_required = os.getenv('PAPER2SIMU_REQUIRE_CASE_CLOCK') == '1'
 
     def _restore_jobs(self):
         for path in (self.output_root / 'job-manifests').glob('*.json'):
@@ -129,8 +133,10 @@ class Runtime:
     def queue_status(self):
         with self.lock:
             active = self._active_jobs()
+            clock_required = self.case_clock_required or self.case_clock_path.exists()
             return {'success':True, 'busy':bool(active), 'active_jobs':active,
                     'metadata_nonblocking':True, 'java_reads_require_idle':True,
+                    'case_clock_required':clock_required,
                     'recovery_pending':[j['job_id'] for j in self.jobs.values() if j['status']=='recovery_pending'],
                     'journal_errors':list(self.journal_errors),
                     'submission_budget':self._submission_budget(len(active)), **self.runtime_info()}
@@ -238,14 +244,22 @@ class Runtime:
                         'operation_id': operation_id}
             if operation_id and operation_id in self.operations:
                 original = self.jobs[self.operations[operation_id]]
-                if original.get('request') != job.get('request'):
+                if original.get('request') != job.get('request') or original.get('task_case_id') != job.get('task_case_id'):
                     return {'success': False, 'status': 'BLOCKED', 'error': 'OPERATION_ID_CONFLICT',
                             'job_id': original['job_id'], 'operation_id': operation_id}
                 return {'success': True, 'job_id': original['job_id'], 'status': original['status'],
                         'operation_id': operation_id, 'existing_job': True, 'poll_tool': 'comsol_job_status'}
-            if operation_id and self.journal_errors:
+            if self.journal_errors:
                 return {'success': False, 'status': 'BLOCKED', 'error': 'OPERATION_JOURNAL_UNCERTAIN',
                         'operation_id': operation_id, 'next_step': 'Reconcile the unreadable job manifests first.'}
+            pending = [j['job_id'] for j in self.jobs.values() if j['status'] == 'recovery_pending']
+            if pending:
+                return {'success': False, 'status': 'BLOCKED', 'error': 'UNRESOLVED_RECOVERY_JOBS',
+                        'recovery_pending': pending, 'next_step': 'Reconcile original native jobs with the authorized local operator before new work.'}
+            if self.case_clock_required or self.case_clock_path.exists():
+                gate = case_clock_admission(self.case_clock_path, job.get('task_case_id'))
+                if not gate['allowed']:
+                    return dict(gate, success=False, status='BLOCKED')
             budget = self._submission_budget(len(self._active_jobs()))
             if not budget['can_submit']:
                 reasons = budget['block_reasons']
@@ -560,7 +574,7 @@ class Runtime:
 
     def submit_case(self, case_id: str, solve: bool = False, study: str | None = None,
                     show_desktop: bool = True, operation_id: str | None = None,
-                    require_hard_deadline: bool = False) -> dict:
+                    require_hard_deadline: bool = False, task_case_id: str | None = None) -> dict:
         error = self._submission_request_error(operation_id, require_hard_deadline)
         if error:
             return error
@@ -573,7 +587,7 @@ class Runtime:
         directory = inside(self.output_root, job_id + "_" + case_id)
         job = {"job_id": job_id, "case_id": case_id, "status": "queued", "events": [],
                "output_dir": str(directory), "submitted_at": time.time(), "runtime_id": self.runtime_id,
-               "operation_id": operation_id,
+               "operation_id": operation_id, "task_case_id": task_case_id,
                "request": {"kind": "case", "case_id": case_id, "solve": solve, "study": study,
                            "show_desktop": show_desktop}}
         return self._queue_job(job, self._run_case, job_id, entry, directory, solve, study, show_desktop)
@@ -669,7 +683,7 @@ class Runtime:
             return json.loads(json.dumps(dict(success=True, **self.jobs[job_id]), default=str))
 
     def submit_study(self, study_name: str | None, model_name: str | None,
-                     operation_id: str | None = None, require_hard_deadline: bool = False) -> dict:
+                     operation_id: str | None = None, require_hard_deadline: bool = False, task_case_id: str | None = None) -> dict:
         error = self._submission_request_error(operation_id, require_hard_deadline)
         if error:
             return error
@@ -678,7 +692,7 @@ class Runtime:
         job_id = uuid4().hex
         job = {"job_id": job_id, "kind": "study", "status": "queued", "events": [],
                "model_name": model_name, "study_name": study_name, "submitted_at": time.time(),
-               "runtime_id": self.runtime_id, "operation_id": operation_id,
+               "runtime_id": self.runtime_id, "operation_id": operation_id, "task_case_id": task_case_id,
                "request": {"kind": "study", "model_name": requested_model, "study_name": study_name}}
 
         def solve():

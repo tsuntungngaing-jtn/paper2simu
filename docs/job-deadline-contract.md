@@ -28,3 +28,7 @@ COMSOL batch stop/cancel、Fluent 受支持 interrupt/checkpoint 都需验证真
 先用 mock/受控测试 worker 验证长调用阻塞、命令队列占用、控制器退出、监督者重启、PID 复用及误伤防护。故障注入不得直接用于真实生产任务。
 真实软件仅在已有许可与授权范围验证最小案例；区分“正常迭代停止实测通过”和“卡死条件有界终止经过验证”。模拟通过不能证明商业软件集成通过。
 到点已发请求但仍在计算记 deadline_missed，不假记 cancelled。检查点必须重开读取目标解/数据集才算恢复验证。
+
+## v0.6.1 clock enforcement
+
+See [runtime reliability](runtime-reliability-v0.6.1.md). With local clock enforcement, queue submissions must carry the current `task_case_id`. A hard-required case is blocked on this shared JVM regardless of the caller's individual flag. A persistent clock can latch EXIT independently of Codex but does not stop active native jobs; report native stop as unverified. The single-solve cap is a task-level limit pending verified native enforcement.

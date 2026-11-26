@@ -1,6 +1,6 @@
 [project]
 name = "paper2simu"
-version = "0.6.0"
+version = "0.6.1"
 description = "Research paper-to-simulation workflow for COMSOL and Ansys Fluent, with isolated MCP routing, evidence review, and native scientific validation; derivative of COMSOL Automatic by Mengzhu Guohe (Douyin)."
 authors = [{name = "Mengzhu Guohe (Douyin)"}]
 maintainers = [{name = "tsuntungngaing-jtn"}]
@@ -9,7 +9,7 @@ requires-python = ">=3.10"
 dependencies = ["mcp>=1.29.0,<2", "mph>=1.4.0,<2", "numpy>=1.24", "uvicorn>=0.31", "jsonschema>=4.21,<5"]
 
 [project.optional-dependencies]
-test = ["pytest>=8", "httpx>=0.27"]
+test = ["pytest>=8", "httpx>=0.27", "hypothesis>=6,<7"]
 pdf-search = ["pymupdf>=1.24", "chromadb>=0.4", "sentence-transformers>=2.2"]
 figure-analysis = ["pillow>=10", "numpy>=1.24", "pymupdf>=1.24", "pytesseract>=0.3"]
 

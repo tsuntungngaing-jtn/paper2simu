@@ -4,7 +4,7 @@ description: Reproduce engineering papers, build reusable article knowledge pack
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.6.0"
+  version: "0.6.1"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -108,3 +108,7 @@ For source-grounded solver and research knowledge follow [knowledge pack routing
 For multi-agent native operations and reproduction acceptance follow [verification-driven gate](../docs/verification-driven-v0.6.0.md). Run the existing v051 policy and the evidence-bound checker; a non-candidate result blocks the proposed action. Live provider permission, actual worker isolation, current native state and independent reviews remain mandatory. Use the feature map and bounded checks; offline validation does not prove native success. Single-agent fallback follows its existing separate baseline and is explicitly labeled.
 
 Before first fault diagnosis and each proposed repeat repair the Orchestrator consults [persistent recovery memory](../docs/recovery-memory.md), with private per-host SQLite state. Reserve only within authorization and budget, reconcile original job and matching evidence; NEW is not permission, HOLD blocks the proposed repeat. The Executor returns native observations, Recorder prepares evidence, and Orchestrator records the actual outcome. Never use the packaged JSON seed as a database or publish runtime memory. Keep canonical rules and skill modifications independently reviewed.
+
+## v0.6.1 runtime reliability (mandatory for scheduled reproduction)
+
+Read [runtime reliability](../docs/runtime-reliability-v0.6.1.md) before starting or resuming a scheduled task. Compare live connector fingerprint and actual stop capability; tool discovery alone is insufficient. Use a private persistent case clock and task_case_id for clock-enforced submissions; activate enforcement locally before starting the connector. Reconcile unresolved historical jobs before new submissions. Separate clock exit, native stop, and scientific acceptance. The shared JVM still cannot enforce a hard running-job deadline: block such solves, continue independent work, and do not silently fall back to soft deadlines. The bounded local clock observer is not a native watchdog. No proxy/security setting changes or process restarts without operator authorization. Retain all v0.6.0 admission and evidence checks.

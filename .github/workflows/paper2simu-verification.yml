@@ -22,6 +22,6 @@ jobs:
           curl --fail --location --retry 2 https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar -o "$RUNNER_TEMP/tla2tools.jar"
           echo "bee4a54f3ee3d4afc347c3240ec2d9e93b075104  $RUNNER_TEMP/tla2tools.jar" | sha1sum -c -
       - name: Verification and distribution checks
-        run: python scripts/verification_release_gate.py --output "$RUNNER_TEMP/Paper2Simu-v0.6.0.zip" --require-hypothesis --tlc-jar "$RUNNER_TEMP/tla2tools.jar" --require-tlc
+        run: python scripts/verification_release_gate.py --output "$RUNNER_TEMP/Paper2Simu-v0.6.1.zip" --require-hypothesis --tlc-jar "$RUNNER_TEMP/tla2tools.jar" --require-tlc
       - name: Full offline regression
         run: python -m pytest -q tests

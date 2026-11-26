@@ -2,7 +2,7 @@
 import argparse, hashlib, importlib.util, json, subprocess, sys, tempfile, zipfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-TESTS=['test_recovery_memory.py','test_release.py','test_multi_agent_v051.py','test_agent_coordination.py','test_supervision_decision.py','test_portable_workflow.py','test_verification_gate.py','test_verification_properties.py']
+TESTS=['test_recovery_memory.py','test_release.py','test_multi_agent_v051.py','test_agent_coordination.py','test_supervision_decision.py','test_portable_workflow.py','test_verification_gate.py','test_verification_properties.py','test_runtime_reliability.py','test_runtime_recovery_gate.py','test_runtime_capability_contract.py']
 
 
 def invoke(args,cwd=ROOT,timeout=240):
@@ -33,6 +33,7 @@ def run(output,require_hypothesis=False,tlc_jar=None,require_tlc=False):
         m=json.loads(z.read('paper2simu/RELEASE_MANIFEST.json'))
         names={r['path'] for r in m['files']}
         required={'scripts/verification_gate.py','scripts/verification_state.py','scripts/verification_eval.py','scripts/verification_release_gate.py','scripts/verification_mutations.py','docs/formal/Coordination.tla','docs/formal/Coordination.cfg','benchmarks/agent-feature-map.json','schemas/verification-receipt.schema.json','references/recovery-history.json'}
+        required.update({'server/case_clock.py','server/reliability.py','benchmarks/runtime-capability-contract.json','docs/runtime-reliability-v0.6.1.md','tests/test_runtime_capability_contract.py'})
         required.update(p.relative_to(ROOT).as_posix() for p in (ROOT/'agent-knowledge/packs').rglob('*') if p.is_file())
         if required-names: raise ValueError('Missing release artifacts: '+str(required-names))
         for r in m['files']:

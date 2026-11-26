@@ -1,0 +1,61 @@
+{
+  "version": "0.6.1",
+  "scope": "canonical COMSOL shared-JVM connector; not a native validation certificate",
+  "required_tools": [
+    "comsol_queue_status",
+    "comsol_job_status",
+    "comsol_execution_capabilities",
+    "study_solve",
+    "study_solve_async",
+    "comsol_run_case",
+    "study_cancel"
+  ],
+  "required_modules": [
+    "server/runtime.py",
+    "server/main.py",
+    "server/case_clock.py",
+    "server/reliability.py",
+    "scripts/verification_gate.py",
+    "scripts/recovery_memory.py"
+  ],
+  "capabilities": [
+    {
+      "id": "poll_metadata",
+      "state": "supported",
+      "test": "tests/test_runtime.py"
+    },
+    {
+      "id": "queued_cancel",
+      "state": "supported",
+      "test": "tests/test_runtime.py"
+    },
+    {
+      "id": "persistent_case_clock",
+      "state": "implemented_offline",
+      "test": "tests/test_runtime_reliability.py"
+    },
+    {
+      "id": "unresolved_job_admission",
+      "state": "implemented_offline",
+      "test": "tests/test_runtime_recovery_gate.py"
+    },
+    {
+      "id": "isolated_native_executor",
+      "state": "MISSING_LOCAL_PATCH",
+      "test": null,
+      "required_for_hard_deadline": true
+    },
+    {
+      "id": "running_stop",
+      "state": "unsupported",
+      "test": "tests/test_runtime_capability_contract.py"
+    },
+    {
+      "id": "deadline_enforcement",
+      "state": "unsupported",
+      "test": "tests/test_runtime_capability_contract.py"
+    }
+  ],
+  "native_validation": "NOT_RUN",
+  "release_policy": "Offline source checks permit a limited release; hard-deadline production readiness requires independently reviewed isolated executor source, registered tools, mutual exclusion and native stop evidence. Never change unsupported to supported based on version or a clock observer."
+}

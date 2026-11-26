@@ -141,10 +141,10 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
     @mcp.tool()
     async def comsol_run_case(case_id: str, solve: bool = False, study: str | None = None,
                               show_desktop: bool = True, operation_id: str | None = None,
-                              require_hard_deadline: bool = False) -> Annotated[CallToolResult, dict[str, Any]]:
+                              require_hard_deadline: bool = False, task_case_id: str | None = None) -> Annotated[CallToolResult, dict[str, Any]]:
         """Queue a library load or original build and return a job ID. solve=False never solves; solve=True computes the selected study or all studies. Pass a stable operation_id to reconcile a lost receipt. A required hard deadline blocks submission on this backend. The USER manually imports the named model via File > COMSOL Multiphysics Server > Import App from Server."""
         return submission_result(runtime.submit_case(case_id, solve, study, show_desktop, operation_id,
-                                                      require_hard_deadline))
+                                                      require_hard_deadline, task_case_id))
 
     @mcp.tool()
     async def comsol_job_status(job_id: str | None = None, operation_id: str | None = None) -> dict[str, Any]:
@@ -159,18 +159,18 @@ def create_server(runtime: Runtime | None = None, host="127.0.0.1", port=8765, p
     @mcp.tool()
     async def study_solve(study_name: str | None = None, model_name: str | None = None,
                           wait: bool = True, timeout: float | None = None, operation_id: str | None = None,
-                          require_hard_deadline: bool = False) -> Annotated[CallToolResult, dict[str, Any]]:
+                          require_hard_deadline: bool = False, task_case_id: str | None = None) -> Annotated[CallToolResult, dict[str, Any]]:
         """Solve on the one JVM thread. wait=True waits at most 30 seconds without stopping the job. Pass a stable operation_id for reconciliation. A required hard deadline blocks submission on this backend."""
-        job = runtime.submit_study(study_name, model_name, operation_id, require_hard_deadline)
+        job = runtime.submit_study(study_name, model_name, operation_id, require_hard_deadline, task_case_id)
         result = await runtime.wait_job(job["job_id"], timeout) if wait and job.get("success") else job
         return submission_result(result)
 
     @mcp.tool()
     async def study_solve_async(study_name: str | None = None, model_name: str | None = None,
                                 operation_id: str | None = None,
-                                require_hard_deadline: bool = False) -> Annotated[CallToolResult, dict[str, Any]]:
+                                require_hard_deadline: bool = False, task_case_id: str | None = None) -> Annotated[CallToolResult, dict[str, Any]]:
         """Queue a study on the JVM thread. Pass a stable operation_id for reconciliation. A required hard deadline blocks submission on this backend."""
-        return submission_result(runtime.submit_study(study_name, model_name, operation_id, require_hard_deadline))
+        return submission_result(runtime.submit_study(study_name, model_name, operation_id, require_hard_deadline, task_case_id))
 
     @mcp.tool()
     async def study_get_progress(job_id: str | None = None) -> dict:
