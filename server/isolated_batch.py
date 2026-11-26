@@ -1,5 +1,6 @@
 """Private launch transport for Runtime-admitted isolated jobs."""
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -56,18 +57,24 @@ def _supervisor_liveness(result):
     pid = result.get("supervisor_pid")
     created = result.get("supervisor_created_at")
     result["supervisor_liveness"] = "UNVERIFIED"
-    if type(pid) is not int or pid <= 0 or type(created) not in (int, float):
-        return
-    try:
-        observed = process_identity(pid)
-    except (ImportError, NotImplementedError, OSError):
-        return
-    if observed == created:
-        result["supervisor_liveness"] = "OBSERVED"
-    else:
+    if type(pid) is int and pid > 0 and type(created) in (int, float) and math.isfinite(created):
+        try:
+            observed = process_identity(pid)
+        except (ImportError, NotImplementedError, OSError):
+            pass
+        else:
+            if observed == created:
+                result["supervisor_liveness"] = "OBSERVED"
+            else:
+                result.update(
+                    previous_status=result["status"], status="unknown_supervisor_lost",
+                    supervisor_liveness="LOST", native_status="UNKNOWN", native_stop_verified=False,
+                )
+            return
+    if result["status"] != "unknown_starting":
         result.update(
-            previous_status=result["status"], status="unknown_supervisor_lost",
-            supervisor_liveness="LOST", native_status="UNKNOWN", native_stop_verified=False,
+            previous_status=result["status"], status="unknown_supervisor_liveness",
+            native_status="UNKNOWN", native_stop_verified=False,
         )
 
 

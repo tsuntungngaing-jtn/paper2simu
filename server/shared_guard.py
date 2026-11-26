@@ -26,16 +26,34 @@ def configure(runtime):
     runtime._native_context = threading.local()
 
 
-def coordinator(runtime, required=False):
+def coordinator(runtime, required=False, enroll=False):
     if not runtime.coordination_path and not runtime.resource_id and not required:
         return None
     if not runtime.coordination_path or not runtime.resource_id:
         raise CoordinationError('COORDINATION_CONFIGURATION_REQUIRED')
+    if not Path(runtime.coordination_path).is_absolute():
+        raise CoordinationError('ABSOLUTE_COORDINATION_PATH_REQUIRED')
     c = Coordinator(runtime.coordination_path, runtime.resource_id)
-    if runtime.tool_role == 'operator':
+    if enroll and runtime.tool_role == 'operator':
+        if runtime.output_root in c.roots() and not runtime.output_root.is_dir():
+            raise CoordinationError('HISTORY_ROOT_UNAVAILABLE: '+str(runtime.output_root))
         runtime.output_root.mkdir(parents=True, exist_ok=True)
         c.register_root(runtime.output_root)
     return c
+
+
+def case_admission(runtime, case_id):
+    """Use the resource's original clock even from a root without a local clock."""
+    from .case_clock import admission
+    c = coordinator(runtime)
+    bound = c.case(case_id) if c and case_id else None
+    path = Path(bound['clock_path']) if bound else runtime.case_clock_path
+    if bound or runtime.case_clock_required or path.exists():
+        gate = admission(path, case_id)
+        if gate['allowed'] and c:
+            c.bind_case(case_id, path, gate['clock'])
+        return gate
+    return {'allowed': True}
 
 
 def check_history(roots, jobs, operation_id=None):
@@ -94,7 +112,7 @@ def check_history(roots, jobs, operation_id=None):
 def reserve(runtime, operation_id, request, kind):
     if runtime.tool_role != 'operator':
         raise CoordinationError('ROLE_FORBIDDEN')
-    c = coordinator(runtime)
+    c = coordinator(runtime, enroll=True)
     if c is None:
         return None
     def admission(roots, jobs):

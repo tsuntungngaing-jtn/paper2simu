@@ -303,15 +303,12 @@ class Runtime:
             if pending:
                 return {'success': False, 'status': 'BLOCKED', 'error': 'UNRESOLVED_RECOVERY_JOBS',
                         'recovery_pending': pending, 'next_step': 'Reconcile original native jobs with the authorized local operator before new work.'}
-            if self.case_clock_required or self.case_clock_path.exists():
-                gate = case_clock_admission(self.case_clock_path, job.get('task_case_id'))
+            try:
+                gate = shared_guard.case_admission(self, job.get('task_case_id'))
                 if not gate['allowed']:
                     return dict(gate, success=False, status='BLOCKED')
-                if self.coordination_path or self.resource_id:
-                    try:
-                        shared_guard.coordinator(self).bind_case(job.get('task_case_id'), self.case_clock_path, gate['clock'])
-                    except (ValueError, OSError) as error:
-                        return shared_guard.blocked(error)
+            except (ValueError, OSError) as error:
+                return shared_guard.blocked(error)
             try:
                 request = {'request': job.get('request'), 'task_case_id': job.get('task_case_id'),
                            'output_root': str(self.output_root), 'native_job_id': job_id}
@@ -344,6 +341,11 @@ class Runtime:
             try:
                 def coordinated_run():
                     def execute():
+                        gate = shared_guard.case_admission(self, job.get('task_case_id'))
+                        if not gate['allowed']:
+                            with self.lock:
+                                self.jobs[job_id].update(status='recovery_pending', clock_error=gate)
+                            return {'success': False}
                         run(*args)
                         return {'success': self.jobs[job_id]['status'] == 'completed'}
                     result = shared_guard.invoke(self, execute, claim=claim)

@@ -32,6 +32,28 @@ def test_running_status_checks_supervisor_birth_identity(tmp_path, monkeypatch, 
     assert json.loads(path.read_text()) == state
 
 
+@pytest.mark.parametrize("birth_identity", [None, 100])
+def test_running_receipt_is_not_current_when_supervisor_liveness_unverified(
+    tmp_path, monkeypatch, birth_identity
+):
+    request = {"operation_id": "operation", "job_id": "job", "deadline_at_unix": 150}
+    (tmp_path / "request.json").write_text(json.dumps(request), encoding="utf-8")
+    state = dict(request, status="running", native_status="RUNNING", supervisor_pid=123,
+                 supervisor_created_at=birth_identity)
+    (tmp_path / "state.json").write_text(json.dumps(state), encoding="utf-8")
+
+    def unavailable(pid):
+        raise OSError("process query unavailable")
+
+    monkeypatch.setattr(isolated_batch, "process_identity", unavailable)
+    result = isolated_batch.status(tmp_path)
+    assert result["status"] == "unknown_supervisor_liveness"
+    assert result["previous_status"] == "running"
+    assert result["supervisor_liveness"] == "UNVERIFIED"
+    assert result["native_status"] == "UNKNOWN"
+    assert result["native_stop_verified"] is False
+
+
 def test_uncertain_spawn_retains_manifest_and_is_never_retried(tmp_path, monkeypatch):
     monkeypatch.setattr(isolated_batch, "platform_check", lambda: None, raising=False)
     calls = []

@@ -48,6 +48,7 @@ def review(verification, workspace, binding):
             raise ValueError('REVIEW_REQUIRED: receipt not bound to actual launch')
     if datetime.now(timezone.utc) >= min(expiries):
         raise ValueError('REVIEW_REQUIRED: evidence expired during verification')
+    return min(expiries).timestamp()
 
 
 def check_clock(path, case_id, deadline, frozen=None):
@@ -91,14 +92,18 @@ def verify_launch(request, folder):
     for source in (Path(request['source_file']), folder/'input.mph'):
         if hashlib.sha256(source.read_bytes()).hexdigest() != request['input_sha256']:
             raise ValueError('REVIEW_REQUIRED: model changed after review')
-    check_clock(request['case_clock_path'], request['case_id'], request['deadline_at_unix'],
+    clock = check_clock(request['case_clock_path'], request['case_id'], request['deadline_at_unix'],
                 {'deadline_at_unix': request['case_deadline_at_unix'],
                  'new_work_cutoff_unix': request['new_work_cutoff_unix']})
-    review(request['verification'], stored['output_root'], binding)
-    check_clock(request['case_clock_path'], request['case_id'], request['deadline_at_unix'])
     bound = c.case(request['case_id'])
     if not bound or Path(bound['clock_path']) != Path(request['case_clock_path']).resolve():
         raise ValueError('CASE_CLOCK_RESOURCE_BINDING_REQUIRED')
+    # Complete all potentially blocking I/O before the final time-only checks.
+    expires = review(request['verification'], stored['output_root'], binding)
+    cutoff = min(expires, request['deadline_at_unix'], clock['new_work_cutoff_unix'],
+                 clock['last_verified_progress_at_unix']+clock['stall_seconds'])
+    if not clock['last_seen_at_unix'] <= time.time() < cutoff:
+        raise ValueError('REVIEW_REQUIRED: clock or evidence expired before execution')
 
 
 def record_failure(output_root, row, observation):
@@ -217,7 +222,7 @@ def coordinated_status(runtime, *, operation_id=None, job_id=None):
                           resource_retained=not row['released'], coordination_state=row['state'],
                           deadline_at_unix=row['request']['deadline_at_unix'])
             if runtime.tool_role == 'operator' and (result.get('stop_reason') or result['status'] in {
-                    'process_failed', 'unknown_supervisor_lost', 'unknown_launch',
+                    'process_failed', 'unknown_supervisor_lost', 'unknown_supervisor_liveness', 'unknown_launch',
                     'unknown_stop_unconfirmed', 'launch_rejected', 'unknown_corrupt_state'}):
                 try:
                     record_failure(row['request']['output_root'], row, json.dumps(result, sort_keys=True))

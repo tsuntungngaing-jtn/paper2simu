@@ -333,3 +333,64 @@ def test_recovery_reserved_write_resumes_after_interruption(tmp_path, monkeypatc
     runtime.isolated_status(operation_id='op')
     with sqlite3.connect(tmp_path/'recovery-memory.sqlite3') as db:
         assert db.execute('SELECT count(*) FROM attempts').fetchone()[0] == 1
+
+
+def test_registered_missing_root_is_not_recreated(tmp_path, monkeypatch):
+    c = domain(tmp_path, monkeypatch)
+    root = tmp_path/'old'
+    root.mkdir()
+    c.register_root(root)
+    root.rename(tmp_path/'renamed-with-unresolved-history')
+    runtime = Runtime(output_root=root)
+    result = asyncio.run(runtime.call(lambda: {'success':True}))
+    assert result['status'] == 'BLOCKED'
+    assert not root.exists()
+
+
+@pytest.mark.parametrize('expired', [False, True])
+def test_shared_uses_global_case_clock_from_other_output_root(tmp_path, monkeypatch, expired):
+    from server.case_clock import CaseClock
+    c = domain(tmp_path, monkeypatch)
+    path = tmp_path/'old'/'case-clock.sqlite3'
+    clock = CaseClock(path)
+    snapshot = clock.start('c',14400,1800,9000,900,hard=True)
+    c.bind_case('c',path,snapshot)
+    if expired:
+        clock.close('c','budget reached')
+    runtime = Runtime(output_root=tmp_path/'new')
+    result = runtime.submit_study('std1','m','attempt',task_case_id='c')
+    assert result['status'] == 'BLOCKED'
+    assert result['error'] == ('CASE_CLOCK_EXIT' if expired else 'HARD_DEADLINE_UNSUPPORTED')
+    assert c.get(operation_id='attempt') is None
+
+
+def test_relative_coordination_config_blocks(tmp_path, monkeypatch):
+    domain(tmp_path,monkeypatch)
+    monkeypatch.setenv('PAPER2SIMU_COORDINATION_DB','domain.sqlite3')
+    runtime = Runtime(output_root=tmp_path/'out')
+    result = asyncio.run(runtime.call(lambda: True))
+    assert result['status'] == 'BLOCKED'
+    assert result['error'] == 'ABSOLUTE_COORDINATION_PATH_REQUIRED'
+
+
+def test_expiry_after_last_database_read_is_checked(tmp_path, monkeypatch):
+    from datetime import datetime, timezone
+    from server import isolated_runtime
+    from server.coordination import Coordinator
+    runtime, c, source, deadline, req, launch = approved(tmp_path, monkeypatch)
+    assert runtime.submit_isolated(str(source), 'std1', 'op', deadline, 'c', req)['success']
+    folder, envelope = launch.call_args.args
+    original = Coordinator.case
+    delayed = [False]
+    class Clock:
+        @staticmethod
+        def now(tz):
+            return datetime(2100,1,1,tzinfo=timezone.utc) if delayed[0] else datetime.now(tz)
+    def late_read(self, case_id):
+        result = original(self,case_id)
+        delayed[0] = True
+        return result
+    monkeypatch.setattr(Coordinator,'case',late_read)
+    monkeypatch.setattr(isolated_runtime,'datetime',Clock)
+    with pytest.raises(ValueError, match='REVIEW_REQUIRED'):
+        isolated_runtime.verify_launch(envelope,folder)

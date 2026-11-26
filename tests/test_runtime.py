@@ -25,7 +25,8 @@ class RuntimeTests(unittest.TestCase):
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
-        self.tmp_path = Path(temporary.name)
+        # Windows runners may supply a DOS short path; match inside()'s canonical root.
+        self.tmp_path = Path(temporary.name).resolve()
 
     def test_token_required_and_paths_confined(self):
         tmp_path = self.tmp_path
