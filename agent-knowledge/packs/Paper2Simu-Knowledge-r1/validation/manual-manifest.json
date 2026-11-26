@@ -1,0 +1,208 @@
+[
+  {
+    "id": "COMSOL63-SELECT",
+    "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_visualizationselection.22.08.html",
+    "status": "acquired",
+    "sha256": "885612e83e917256231beb54b4d616f84606d96086dfbee9660bc05002e992b5",
+    "file_type": "html"
+  },
+  {
+    "id": "COMSOL63-ASSOC",
+    "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_geometry.23.005.html",
+    "status": "acquired",
+    "sha256": "456441d95452cb490d2b0247b740695736824515e8628250e34a0665bbb238f0",
+    "file_type": "html"
+  },
+  {
+    "id": "COMSOL63-PRESSURE",
+    "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_fluidflow.29.39.html",
+    "status": "acquired",
+    "sha256": "89507f491d7babb069d53175d730ee027b958953bd68480bb79a1d3a71810a34",
+    "file_type": "html"
+  },
+  {
+    "id": "COMSOL63-API-SELECT",
+    "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_api_general.47.11.html",
+    "status": "acquired",
+    "sha256": "61a2f18c97f857436952ac9925e1a4cb48b8b1ecf3ba45f33f90731930af893c",
+    "file_type": "html"
+  },
+  {
+    "id": "COMSOL64-API-SELECT",
+    "url": "https://doc.comsol.com/6.4/doc/com.comsol.help.comsol/comsol_api_general.47.11.html",
+    "status": "acquired",
+    "sha256": "e83f428fe1baed130a0a275f814660110cfc1fc5149418500ff3e7641ca78a2b",
+    "file_type": "html"
+  },
+  {
+    "id": "COMSOL64-INFLOW",
+    "url": "https://doc.comsol.com/6.4/doc/com.comsol.help.heat/heat_ug_ht_features.09.070.html",
+    "status": "acquired",
+    "sha256": "b9f61029771444cb7aad35f064b665e758c6a303df962818274ca4ac075120d5",
+    "file_type": "html"
+  },
+  {
+    "id": "COMSOL64-HEATSINK",
+    "url": "https://doc.comsol.com/6.4/doc/com.comsol.help.models.heat.heat_sink/heat_sink.html",
+    "status": "acquired",
+    "sha256": "ede3852fa582ec502af213a97419e82333ec3425f4c4a99e0d8f86174012158a",
+    "file_type": "html"
+  },
+  {
+    "id": "FLUENT242-MATERIAL",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/flu_ug/flu_ug_sec_props_overview.html",
+    "status": "acquired",
+    "sha256": "e180231bd20d1fd7833a012ae495667b660bc29db107bd477193fb5721f3625b",
+    "file_type": "html"
+  },
+  {
+    "id": "FLUENT242-TABLE",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/flu_ug/flu_ug_sec_material_functions.html",
+    "status": "acquired",
+    "sha256": "2c9acd03335c67518b9e4929f9d0a3799eceda03f5e52ad02bfa22588a71e359",
+    "file_type": "html"
+  },
+  {
+    "id": "FLUENT242-SURFACE",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/flu_th/flu_th_SurfaceIntegration.html",
+    "status": "acquired",
+    "sha256": "11a3578310cda314fa2393cea061ab0b513d527b44871279c96989ee42eac2f3",
+    "file_type": "html"
+  },
+  {
+    "id": "FLUENT242-MONITOR",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/flu_ug/flu_ug_reporting_sec_monitoring_solution.html",
+    "status": "acquired",
+    "sha256": "a8924bf121a1b9c50d9e032cbf4169a9ea5f1b55b0b0e317ddffe41d42dbdd3e",
+    "file_type": "html"
+  },
+  {
+    "id": "FLUENT242-AXIS-UDF",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/flu_udf/flu_udf_DataAccessMacros.html",
+    "status": "acquired",
+    "sha256": "509edb8fb5ea2f5599385b124ba6663d416e75759a06a5acf241cd97a8e0f669",
+    "file_type": "html"
+  },
+  {
+    "id": "COMSOL63-REFERENCE-INDEX",
+    "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_introduction.17.11.html",
+    "status": "acquired",
+    "sha256": "150456892548d9005ee45f6ee91eada5e717d9ddd0eec698ffd8b846bec46562",
+    "file_type": "html"
+  },
+  {
+    "id": "COMSOL64-REFERENCE-INDEX",
+    "url": "https://doc.comsol.com/6.4/doc/com.comsol.help.comsol/html_COMSOL_ReferenceManual.html",
+    "status": "blocked",
+    "sha256": "f02e44033028b3da749e14399d7be26219d1b737f81f56801ae72d2d31b60b63",
+    "file_type": "html",
+    "error": "ValueError: Returned material did not contain the expected manual content"
+  },
+  {
+    "id": "FLUENT231-USER",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v231/en/flu_ug/flu_ug.html",
+    "status": "blocked",
+    "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+    "id": "FLUENT231-THEORY",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v231/en/flu_th/flu_th.html",
+    "status": "blocked",
+    "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+    "id": "FLUENT231-SURFACE",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v231/en/flu_th/flu_th_SurfaceIntegration.html",
+    "status": "blocked",
+    "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+    "id": "FLUENT231-DOWNLOAD-INDEX",
+    "url": "https://storage.ansys.com/staticfiles/cp/Readme/release2023R1/info_combined.pdf",
+    "status": "acquired",
+    "sha256": "bb93121e30788f67c14fed5b4cb41e7a7fa8dae7d4734e9f6c4c0dfa19dee8e5",
+    "file_type": "pdf"
+  },
+  {
+    "id": "COMSOL63-CFD-PDF",
+    "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.cfd/CFDModuleUsersGuide.pdf",
+    "status": "acquired",
+    "sha256": "ae33f6c321c0cca064b7fd2052a6a4ed2451865282a4b8107412cae07907f08c",
+    "pages": 1120
+  },
+  {
+    "id": "COMSOL63-HEAT-PDF",
+    "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.heat/HeatTransferModuleUsersGuide.pdf",
+    "status": "acquired",
+    "sha256": "63d1ff068cf3a981f65ec4aee516dde60d22da70cce5c42b5ead711eb0b4c464",
+    "pages": 1034
+  },
+  {
+    "id": "COMSOL63-PROGRAMMING-PDF",
+    "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/COMSOL_ProgrammingReferenceManual.pdf",
+    "status": "acquired",
+    "sha256": "0f3dbaae1311ebe27e36158036aa93508dc2e5691218e95452355367145e8d9e",
+    "pages": 1234
+  },
+  {
+    "id": "COMSOL64-CFD-PDF",
+    "url": "https://doc.comsol.com/6.4/doc/com.comsol.help.cfd/CFDModuleUsersGuide.pdf",
+    "status": "acquired",
+    "sha256": "b14a6e5ca73a95fc23dee2d264607b0ebe130ec534d5ece6ebdbb79d0840b043",
+    "pages": 1164
+  },
+  {
+    "id": "COMSOL64-HEAT-PDF",
+    "url": "https://doc.comsol.com/6.4/doc/com.comsol.help.heat/HeatTransferModuleUsersGuide.pdf",
+    "status": "acquired",
+    "sha256": "02a3c08221ee293d7b1915b52faadfa72b2942890f64a184655e81ec043a0094",
+    "pages": 1068
+  },
+  {
+    "id": "COMSOL64-PROGRAMMING-PDF",
+    "url": "https://doc.comsol.com/6.4/doc/com.comsol.help.comsol/COMSOL_ProgrammingReferenceManual.pdf",
+    "status": "acquired",
+    "sha256": "f1d63c6858efea4eaf9cf83fcb0c4b7f0a5e3d73ad6acc28b84665b9468baa39",
+    "pages": 1290
+  },
+  {
+    "id": "FLUENT231-THEORY-PDF",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v231/en/pdf/Ansys_Fluent_Theory_Guide.pdf",
+    "status": "blocked",
+    "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+    "id": "FLUENT231-USER-PDF",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v231/en/pdf/Ansys_Fluent_Users_Guide.pdf",
+    "status": "blocked",
+    "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+    "id": "FLUENT242-THEORY-PDF",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/pdf/Ansys_Fluent_Theory_Guide.pdf",
+    "status": "acquired",
+    "sha256": "bd0866257fed56caeb79fe9e483fbe3829d4ed68f039b75a35f1d84078af8404",
+    "pages": 1148
+  },
+  {
+    "id": "FLUENT242-USER-PDF",
+    "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/pdf/Ansys_Fluent_Users_Guide.pdf",
+    "status": "acquired",
+    "sha256": "98e16bbf5a59e1e3ecbb8ad585575a3acf4cb8c26ac3911fff25d120c6e9a023",
+    "pages": 5758
+  },
+  {
+    "id": "COMSOL63-REFERENCE-PDF",
+    "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/COMSOL_ReferenceManual.pdf",
+    "status": "acquired",
+    "sha256": "c53cae288c3f6a66969c6b6818b2d4a85e3dac6b38b58a1f784d3cc3b616cfde",
+    "pages": 2334
+  },
+  {
+    "id": "COMSOL64-REFERENCE-PDF",
+    "url": "https://doc.comsol.com/6.4/doc/com.comsol.help.comsol/COMSOL_ReferenceManual.pdf",
+    "status": "acquired",
+    "sha256": "cac9c12e6569b2dc493a953c1807f7bdf75f04c2359affc9e2d40dccd530d509",
+    "pages": 2416
+  }
+]

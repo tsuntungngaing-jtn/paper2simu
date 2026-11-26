@@ -1,5 +1,5 @@
 {
-  "version": "0.5.2",
+  "version": "0.6.0",
   "role_count": 10,
   "roles": {
     "orchestrator": {
@@ -9,7 +9,10 @@
         "docs/multi-agent-orchestration.md",
         "docs/research-plan-and-handoff.md",
         "docs/dependency-scoped-progress.md",
-        "docs/job-deadline-contract.md"
+        "docs/job-deadline-contract.md",
+        "docs/knowledge-packs-v0.6.0.md",
+        "docs/verification-driven-v0.6.0.md",
+        "docs/recovery-memory.md"
       ],
       "refs": [
         "https://arxiv.org/abs/2512.08296",
@@ -32,7 +35,9 @@
         "docs/authoritative-source-precedence.md",
         "docs/figure-evidence.md",
         "docs/offline-input-intake.md",
-        "docs/paper-knowledge-and-solidworks.md"
+        "docs/paper-knowledge-and-solidworks.md",
+        "docs/knowledge-packs-v0.6.0.md",
+        "docs/verification-driven-v0.6.0.md"
       ],
       "refs": [
         "https://github.com/jmiao24/Paper2Agent"
@@ -54,7 +59,9 @@
         "docs/version-compatibility.md",
         "docs/comsol-observability-and-desktop.md",
         "docs/fluent-licensing-preflight.md",
-        "docs/paper-knowledge-and-solidworks.md"
+        "docs/paper-knowledge-and-solidworks.md",
+        "docs/knowledge-packs-v0.6.0.md",
+        "docs/verification-driven-v0.6.0.md"
       ],
       "refs": [
         "https://doc.comsol.com/",
@@ -79,7 +86,9 @@
         "docs/cht-coupling-energy-gates.md",
         "docs/grid-refinement-reporting.md",
         "docs/scientific-validity-under-uncertainty.md",
-        "docs/paper-knowledge-and-solidworks.md"
+        "docs/paper-knowledge-and-solidworks.md",
+        "docs/knowledge-packs-v0.6.0.md",
+        "docs/verification-driven-v0.6.0.md"
       ],
       "refs": [
         "Cengel & Cimbala: Fluid Mechanics: Fundamentals and Applications",
@@ -107,7 +116,10 @@
         "docs/selection-contract.md",
         "docs/portable-workflow-contract.md",
         "docs/job-deadline-contract.md",
-        "docs/paper-knowledge-and-solidworks.md"
+        "docs/paper-knowledge-and-solidworks.md",
+        "docs/knowledge-packs-v0.6.0.md",
+        "docs/verification-driven-v0.6.0.md",
+        "docs/recovery-memory.md"
       ],
       "refs": [
         "https://doc.comsol.com/",
@@ -130,7 +142,10 @@
         "docs/job-deadline-contract.md",
         "docs/scheduled-connection-recovery.md",
         "docs/staged-solve-contract.md",
-        "docs/agent-audit-trail.md"
+        "docs/agent-audit-trail.md",
+        "docs/knowledge-packs-v0.6.0.md",
+        "docs/verification-driven-v0.6.0.md",
+        "docs/recovery-memory.md"
       ],
       "refs": [
         "https://arxiv.org/abs/2503.13657",
@@ -156,7 +171,10 @@
         "docs/knowledge-guided-recovery.md",
         "docs/physics-diagnostic-hypotheses.md",
         "docs/nonlinear-solver-tuning.md",
-        "docs/repair-validation.md"
+        "docs/repair-validation.md",
+        "docs/knowledge-packs-v0.6.0.md",
+        "docs/verification-driven-v0.6.0.md",
+        "docs/recovery-memory.md"
       ],
       "refs": [
         "https://arxiv.org/abs/2509.18178",
@@ -183,7 +201,9 @@
         "docs/scientific-validity-under-uncertainty.md",
         "docs/portable-workflow-contract.md",
         "docs/execution-acceptance-separation.md",
-        "docs/paper-knowledge-and-solidworks.md"
+        "docs/paper-knowledge-and-solidworks.md",
+        "docs/knowledge-packs-v0.6.0.md",
+        "docs/verification-driven-v0.6.0.md"
       ],
       "refs": [
         "https://doi.org/10.1115/1.2960953",
@@ -207,7 +227,10 @@
         "docs/agent-audit-trail.md",
         "docs/context-retrieval-rsi-evaluation.md",
         "docs/publishing.md",
-        "docs/paper-knowledge-and-solidworks.md"
+        "docs/paper-knowledge-and-solidworks.md",
+        "docs/knowledge-packs-v0.6.0.md",
+        "docs/verification-driven-v0.6.0.md",
+        "docs/recovery-memory.md"
       ],
       "refs": [
         "https://github.com/karpathy/autoresearch",
@@ -230,7 +253,9 @@
         "docs/parameter-inference.md",
         "docs/simulation-dataset-doe.md",
         "docs/ai-experiment-design-research.md",
-        "docs/scientific-validity-under-uncertainty.md"
+        "docs/scientific-validity-under-uncertainty.md",
+        "docs/knowledge-packs-v0.6.0.md",
+        "docs/verification-driven-v0.6.0.md"
       ],
       "refs": [
         "Montgomery: Design and Analysis of Experiments",

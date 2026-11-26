@@ -1,0 +1,2 @@
+# Keep knowledge pack bytes identical to original manifests across platforms
+agent-knowledge/packs/** -text

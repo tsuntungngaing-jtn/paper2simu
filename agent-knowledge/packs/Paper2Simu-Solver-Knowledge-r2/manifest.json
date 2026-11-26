@@ -1,0 +1,28 @@
+{
+  "name": "Paper2Simu-Solver-Knowledge-r2",
+  "format": "textbook2skill knowledge-pack",
+  "revision": "r2",
+  "files": {
+    "batch-ledger.json": "1038b0c3263bc7391615a441af0729f99055b90f3ebadc4068681a4d385cbccc",
+    "checks.json": "9c0af3775e3182874e67c2e151f22bd508d8aa7560ffba3e85bf9ea9d3f5fb9c",
+    "concepts.jsonl": "31287cfdca87b62ecb98c9a64414dd36e2ff80fd9520eefd36b3112e7c6db98b",
+    "coverage.json": "431869b21eea4bdcc34f24c4939bee316e2d3a26d46d0db5d538dcba069f28a6",
+    "formula-index.jsonl": "9a2dfd0f30371c169efe30bc094494c9bd97c21133a858c1f817ac4c6252b59f",
+    "integration.md": "5e711bdfce6a84802aaf050270b2dbba07bc65232226fcca66865b5bb1aa7308",
+    "knowledge-graph.json": "926848e15fba18bddc9f931b7f177df43a98693ef7e285eb228ed93992e7a0f2",
+    "README.md": "4818908c0964ef18ba5d320d03e693cdeebdf5081ffab6f2bc33c7239a25af9b",
+    "review.json": "8e0e19bbd0ab2b46f4abf059d9d62edab98dc173a8d355faaf1bcff7d5e863da",
+    "routes.json": "c74fa706f3f14e6c2534b12fae4ef84d9c2e625ec64e0a21fceb35f7d259e479",
+    "rules.jsonl": "0759792e4bb147d46ce5bf9d490386e0bd574c253aeaee2fdb164a77f5e94179",
+    "source-index.json": "da9acd744ca90f6eb37ba9bc1eb935cfb275d4c0dd504063449ccc1cf66729e0",
+    "validation-report.md": "70ad3291206a8f43527a4a67ebf8911b07bfadeccef66e8671596d0e3c826d94",
+    "workflows.md": "d99943d39e25973e760ecfa5046d1e91d40d6bb717e3db00e38fecef316ba721",
+    "topics/geometry.md": "612526ce015e9380e9c307d472c5157f2450117cb00e955df0899a81596c25e8",
+    "topics/mesh.md": "16bddc3d0ea3e128c7ca951a074f1e90a7f0333a7d5ad5f3730c4043b545ce68",
+    "topics/multiphase.md": "9bd0e4307309e67dddcb73fe4f226d778ddeb54bf450aba574427069dec6ddb8",
+    "topics/operations.md": "1302e4631779a8a3615d65b2f315b5b06243b9a7fbe3be11f0bf505a45c442f7",
+    "topics/post.md": "71d5153aca66ece41dbd820b9410a20c5ab7b97387fd72f6118d5e35809741f3",
+    "topics/solver.md": "8749fbff638a0fb9967aaaad0e3ad527ca7da273c8c45bb12c15f6bc0aecd3a8",
+    "topics/thermal.md": "594f74b46add2244985506b05e4cddcdc26f0bdb451676a71d824bfec1901e00"
+  }
+}

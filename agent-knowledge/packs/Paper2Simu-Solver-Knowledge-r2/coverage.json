@@ -1,0 +1,3308 @@
+{
+  "sections": [
+    {
+      "source_id": "COMSOL63-SELECT",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "COMSOL63-ASSOC",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "COMSOL63-PRESSURE",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "COMSOL63-API-SELECT",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "COMSOL64-API-SELECT",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "COMSOL64-INFLOW",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "COMSOL64-HEATSINK",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "FLUENT242-MATERIAL",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "FLUENT242-TABLE",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "FLUENT242-SURFACE",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "FLUENT242-MONITOR",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "FLUENT242-AXIS-UDF",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "COMSOL63-REFERENCE-INDEX",
+      "locator": "document",
+      "status": "out_of_scope",
+      "notes": "只用于导航或版本识别；不产生技术规则。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "COMSOL64-REFERENCE-INDEX",
+      "locator": "document",
+      "status": "out_of_scope",
+      "notes": "只用于导航或版本识别；不产生技术规则。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "FLUENT231-DOWNLOAD-INDEX",
+      "locator": "PDF pp. 1–202",
+      "status": "out_of_scope",
+      "notes": "只用于导航或版本识别；不产生技术规则。",
+      "units_scanned": 202,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "COMSOL63-CFD-PDF",
+      "locator": "PDF pp. 1–1120",
+      "status": "parsed",
+      "notes": "全卷逐页建立私有文本索引；引用点单列。其余页未逐页审读。",
+      "units_scanned": 1120,
+      "text_sparse_units": 5
+    },
+    {
+      "source_id": "COMSOL63-HEAT-PDF",
+      "locator": "PDF pp. 1–1034",
+      "status": "parsed",
+      "notes": "全卷逐页建立私有文本索引；引用点单列。其余页未逐页审读。",
+      "units_scanned": 1034,
+      "text_sparse_units": 2
+    },
+    {
+      "source_id": "COMSOL63-PROGRAMMING-PDF",
+      "locator": "PDF pp. 1–1234",
+      "status": "parsed",
+      "notes": "全卷逐页建立私有文本索引；引用点单列。其余页未逐页审读。",
+      "units_scanned": 1234,
+      "text_sparse_units": 5
+    },
+    {
+      "source_id": "COMSOL64-CFD-PDF",
+      "locator": "PDF pp. 1–1164",
+      "status": "parsed",
+      "notes": "全卷逐页建立私有文本索引；引用点单列。其余页未逐页审读。",
+      "units_scanned": 1164,
+      "text_sparse_units": 6
+    },
+    {
+      "source_id": "COMSOL64-HEAT-PDF",
+      "locator": "PDF pp. 1–1068",
+      "status": "parsed",
+      "notes": "全卷逐页建立私有文本索引；引用点单列。其余页未逐页审读。",
+      "units_scanned": 1068,
+      "text_sparse_units": 3
+    },
+    {
+      "source_id": "COMSOL64-PROGRAMMING-PDF",
+      "locator": "PDF pp. 1–1290",
+      "status": "parsed",
+      "notes": "全卷逐页建立私有文本索引；引用点单列。其余页未逐页审读。",
+      "units_scanned": 1290,
+      "text_sparse_units": 3
+    },
+    {
+      "source_id": "FLUENT242-THEORY-PDF",
+      "locator": "PDF pp. 1–1148",
+      "status": "parsed",
+      "notes": "全卷逐页建立私有文本索引；引用点单列。其余页未逐页审读。",
+      "units_scanned": 1148,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "FLUENT242-USER-PDF",
+      "locator": "PDF pp. 1–5758",
+      "status": "parsed",
+      "notes": "全卷逐页建立私有文本索引；引用点单列。其余页未逐页审读。",
+      "units_scanned": 5758,
+      "text_sparse_units": 2
+    },
+    {
+      "source_id": "COMSOL63-REFERENCE-PDF",
+      "locator": "PDF pp. 1–2334",
+      "status": "parsed",
+      "notes": "全卷逐页建立私有文本索引；引用点单列。其余页未逐页审读。",
+      "units_scanned": 2334,
+      "text_sparse_units": 2
+    },
+    {
+      "source_id": "COMSOL64-REFERENCE-PDF",
+      "locator": "PDF pp. 1–2416",
+      "status": "parsed",
+      "notes": "全卷逐页建立私有文本索引；引用点单列。其余页未逐页审读。",
+      "units_scanned": 2416,
+      "text_sparse_units": 7
+    },
+    {
+      "source_id": "COMSOL60-PROGRAMMING",
+      "locator": "PDF pp. 1–1094",
+      "status": "parsed",
+      "notes": "全卷逐页建立私有文本索引；引用点单列。其余页未逐页审读。",
+      "units_scanned": 1094,
+      "text_sparse_units": 4
+    },
+    {
+      "source_id": "src-60e98536344bbf96",
+      "locator": "PDF pp. 1–42",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 42,
+      "text_sparse_units": [
+        "PDF p. 40",
+        "PDF p. 41"
+      ]
+    },
+    {
+      "source_id": "src-b1ccce81caa63433",
+      "locator": "PDF pp. 1–52",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 52,
+      "text_sparse_units": [
+        "PDF p. 51"
+      ]
+    },
+    {
+      "source_id": "src-210c7f01383f7fbb",
+      "locator": "PDF pp. 1–37",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 37,
+      "text_sparse_units": [
+        "PDF p. 36"
+      ]
+    },
+    {
+      "source_id": "src-243f06402b095e66",
+      "locator": "PDF pp. 1–23",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 23,
+      "text_sparse_units": [
+        "PDF p. 20",
+        "PDF p. 22"
+      ]
+    },
+    {
+      "source_id": "src-37923befea4d0a21",
+      "locator": "PDF pp. 1–20",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 20,
+      "text_sparse_units": [
+        "PDF p. 18",
+        "PDF p. 19"
+      ]
+    },
+    {
+      "source_id": "src-c8139cc0ab687bae",
+      "locator": "PDF pp. 1–16",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 16,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-e16e6ae7b74f11d0",
+      "locator": "PDF pp. 1–12",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 12,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-a3376486d960930d",
+      "locator": "PDF pp. 1–11",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 11,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-4cb3c0f70abf3ee7",
+      "locator": "PDF pp. 1–14",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 14,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-b6991b26653116a7",
+      "locator": "PDF pp. 1–11",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 11,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-9433e7c63fa17786",
+      "locator": "PDF pp. 1–14",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 14,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-b7fcfd05d3e1d1ba",
+      "locator": "PDF pp. 1–29",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 29,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-3a9cf8f0429193fe",
+      "locator": "PDF pp. 1–17",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 17,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-7aace50a4614e34e",
+      "locator": "PDF pp. 1–12",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 12,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-5b04a65070cb276a",
+      "locator": "PDF pp. 1–19",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 19,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-53e635f848f883c2",
+      "locator": "PDF pp. 1–14",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 14,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-910c57fd1f7ff75c",
+      "locator": "PDF pp. 1–18",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 18,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-78e6233ee9cc8ebd",
+      "locator": "PDF pp. 1–16",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 16,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-568f0dc2df9afabe",
+      "locator": "PDF pp. 1–13",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 13,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-10da57c44b3d3e7b",
+      "locator": "PDF pp. 1–10",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 10,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-7ccc48e431ee2dc8",
+      "locator": "PDF pp. 1–37",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 37,
+      "text_sparse_units": [
+        "PDF p. 37"
+      ]
+    },
+    {
+      "source_id": "src-80dc00c76a506baa",
+      "locator": "PDF pp. 1–37",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 37,
+      "text_sparse_units": [
+        "PDF p. 37"
+      ]
+    },
+    {
+      "source_id": "src-d5c41cd411c24dd0",
+      "locator": "PDF pp. 1–25",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 25,
+      "text_sparse_units": [
+        "PDF p. 25"
+      ]
+    },
+    {
+      "source_id": "src-ac3eedd502ab8012",
+      "locator": "PDF pp. 1–41",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 41,
+      "text_sparse_units": [
+        "PDF p. 41"
+      ]
+    },
+    {
+      "source_id": "src-e478da9cd788d7dc",
+      "locator": "PDF pp. 1–33",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 33,
+      "text_sparse_units": [
+        "PDF p. 33"
+      ]
+    },
+    {
+      "source_id": "src-856e10a8aafe89e4",
+      "locator": "PDF pp. 1–13",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 13,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-1259f7a9ca3fe904",
+      "locator": "PDF pp. 1–8",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 8,
+      "text_sparse_units": [
+        "PDF p. 8"
+      ]
+    },
+    {
+      "source_id": "src-130f1d19af3c09c2",
+      "locator": "PDF pp. 1–29",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 29,
+      "text_sparse_units": [
+        "PDF p. 26"
+      ]
+    },
+    {
+      "source_id": "src-e8902e9070d84e42",
+      "locator": "PDF pp. 1–14",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 14,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-12aa76c26dc11eff",
+      "locator": "PDF pp. 1–22",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 22,
+      "text_sparse_units": [
+        "PDF p. 1"
+      ]
+    },
+    {
+      "source_id": "src-eb1a343ac9985e26",
+      "locator": "PDF pp. 1–22",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 22,
+      "text_sparse_units": [
+        "PDF p. 1"
+      ]
+    },
+    {
+      "source_id": "src-52e016007fb8e14d",
+      "locator": "PDF pp. 1–17",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 17,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-ce3eec896a95d917",
+      "locator": "PDF pp. 1–22",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 22,
+      "text_sparse_units": [
+        "PDF p. 1",
+        "PDF p. 19"
+      ]
+    },
+    {
+      "source_id": "src-0d8a671699481839",
+      "locator": "PDF pp. 1–57",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 57,
+      "text_sparse_units": [
+        "PDF p. 57"
+      ]
+    },
+    {
+      "source_id": "src-28341a206ac50804",
+      "locator": "PDF pp. 1–48",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 48,
+      "text_sparse_units": [
+        "PDF p. 46",
+        "PDF p. 48"
+      ]
+    },
+    {
+      "source_id": "src-df4a9e27a7a6b9e8",
+      "locator": "PDF pp. 1–48",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 48,
+      "text_sparse_units": [
+        "PDF p. 46",
+        "PDF p. 48"
+      ]
+    },
+    {
+      "source_id": "src-b4615d12bb74dbf6",
+      "locator": "PDF pp. 1–70",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 70,
+      "text_sparse_units": [
+        "PDF p. 50",
+        "PDF p. 70"
+      ]
+    },
+    {
+      "source_id": "src-b993fcca9e1b8f5f",
+      "locator": "PDF pp. 1–54",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 54,
+      "text_sparse_units": [
+        "PDF p. 51",
+        "PDF p. 54"
+      ]
+    },
+    {
+      "source_id": "src-c14a7d055f138656",
+      "locator": "PDF pp. 1–4",
+      "status": "out_of_scope",
+      "notes": "只用于导航或版本识别；不产生技术规则。",
+      "units_scanned": 4,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-e8815c34ee3dbe25",
+      "locator": "PDF pp. 1–3",
+      "status": "out_of_scope",
+      "notes": "只用于导航或版本识别；不产生技术规则。",
+      "units_scanned": 3,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-f6d101962053404f",
+      "locator": "PDF pp. 1–8",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 8,
+      "text_sparse_units": [
+        "PDF p. 8"
+      ]
+    },
+    {
+      "source_id": "src-208d967c56b40424",
+      "locator": "PDF pp. 1–32",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 32,
+      "text_sparse_units": [
+        "PDF p. 32"
+      ]
+    },
+    {
+      "source_id": "src-4f6ca0df0471f295",
+      "locator": "PDF pp. 1–38",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 38,
+      "text_sparse_units": [
+        "PDF p. 38"
+      ]
+    },
+    {
+      "source_id": "src-7b4a276a5ea152eb",
+      "locator": "PDF pp. 1–12",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 12,
+      "text_sparse_units": [
+        "PDF p. 12"
+      ]
+    },
+    {
+      "source_id": "src-e2fa966a5f4fea8c",
+      "locator": "PDF pp. 1–16",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 16,
+      "text_sparse_units": [
+        "PDF p. 16"
+      ]
+    },
+    {
+      "source_id": "src-7f6699545fc56a2b",
+      "locator": "PDF pp. 1–25",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 25,
+      "text_sparse_units": [
+        "PDF p. 25"
+      ]
+    },
+    {
+      "source_id": "src-349d07bc02c32977",
+      "locator": "PDF pp. 1–14",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 14,
+      "text_sparse_units": [
+        "PDF p. 14"
+      ]
+    },
+    {
+      "source_id": "src-43dae986b9473a93",
+      "locator": "PDF pp. 1–18",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 18,
+      "text_sparse_units": [
+        "PDF p. 18"
+      ]
+    },
+    {
+      "source_id": "src-c825db2d1a869ad1",
+      "locator": "PDF pp. 1–4",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 4,
+      "text_sparse_units": [
+        "PDF p. 4"
+      ]
+    },
+    {
+      "source_id": "src-5ad33be825f8843b",
+      "locator": "PDF pp. 1–68",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 68,
+      "text_sparse_units": [
+        "PDF p. 62",
+        "PDF p. 68"
+      ]
+    },
+    {
+      "source_id": "src-e38aac3894a8f288",
+      "locator": "PDF pp. 1–12",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 12,
+      "text_sparse_units": [
+        "PDF p. 12"
+      ]
+    },
+    {
+      "source_id": "src-40c34032980f1d8a",
+      "locator": "PDF pp. 1–55",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 55,
+      "text_sparse_units": [
+        "PDF p. 52",
+        "PDF p. 55"
+      ]
+    },
+    {
+      "source_id": "src-84e3684edf602cbe",
+      "locator": "PDF pp. 1–15",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 15,
+      "text_sparse_units": [
+        "PDF p. 15"
+      ]
+    },
+    {
+      "source_id": "src-4a5188785a14bf92",
+      "locator": "PDF pp. 1–15",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 15,
+      "text_sparse_units": [
+        "PDF p. 15"
+      ]
+    },
+    {
+      "source_id": "src-9f01d7790355eb97",
+      "locator": "PDF pp. 1–14",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 14,
+      "text_sparse_units": [
+        "PDF p. 14"
+      ]
+    },
+    {
+      "source_id": "src-909d91d15468ce7a",
+      "locator": "PDF pp. 1–35",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 35,
+      "text_sparse_units": [
+        "PDF p. 35"
+      ]
+    },
+    {
+      "source_id": "src-a9586dd0517e692f",
+      "locator": "PDF pp. 1–19",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 19,
+      "text_sparse_units": [
+        "PDF p. 19"
+      ]
+    },
+    {
+      "source_id": "src-445e08614f98975c",
+      "locator": "PDF pp. 1–32",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 32,
+      "text_sparse_units": [
+        "PDF p. 32"
+      ]
+    },
+    {
+      "source_id": "src-8f4082e6a9929f89",
+      "locator": "PDF pp. 1–54",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 54,
+      "text_sparse_units": [
+        "PDF p. 53"
+      ]
+    },
+    {
+      "source_id": "src-73db8a9374dc4acc",
+      "locator": "PDF pp. 1–24",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 24,
+      "text_sparse_units": [
+        "PDF p. 24"
+      ]
+    },
+    {
+      "source_id": "src-4666497a9c463eb9",
+      "locator": "PDF pp. 1–35",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 35,
+      "text_sparse_units": [
+        "PDF p. 5",
+        "PDF p. 22",
+        "PDF p. 35"
+      ]
+    },
+    {
+      "source_id": "src-96476ef97c4e6c45",
+      "locator": "PDF pp. 1–25",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 25,
+      "text_sparse_units": [
+        "PDF p. 24",
+        "PDF p. 25"
+      ]
+    },
+    {
+      "source_id": "src-8ea10782fb572eca",
+      "locator": "PDF pp. 1–38",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 38,
+      "text_sparse_units": [
+        "PDF p. 38"
+      ]
+    },
+    {
+      "source_id": "src-50c9d528fbd380b0",
+      "locator": "PDF pp. 1–24",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 24,
+      "text_sparse_units": [
+        "PDF p. 24"
+      ]
+    },
+    {
+      "source_id": "src-a418724f2c74aace",
+      "locator": "PDF pp. 1–43",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 43,
+      "text_sparse_units": [
+        "PDF p. 43"
+      ]
+    },
+    {
+      "source_id": "src-aba88872a907bade",
+      "locator": "PDF pp. 1–18",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 18,
+      "text_sparse_units": [
+        "PDF p. 18"
+      ]
+    },
+    {
+      "source_id": "src-9c3596455d29210f",
+      "locator": "PDF pp. 1–20",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 20,
+      "text_sparse_units": [
+        "PDF p. 20"
+      ]
+    },
+    {
+      "source_id": "src-33248bd8edea4f73",
+      "locator": "PDF pp. 1–48",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 48,
+      "text_sparse_units": [
+        "PDF p. 48"
+      ]
+    },
+    {
+      "source_id": "src-ca93b5983dc72028",
+      "locator": "PDF pp. 1–13",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 13,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-f0bf9bc357a2008a",
+      "locator": "PDF pp. 1–12",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 12,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-18500dd62b0693fc",
+      "locator": "PDF pp. 1–13",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 13,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-e02792da5ed08187",
+      "locator": "PDF pp. 1–13",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 13,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-c8f5da5d61bae04a",
+      "locator": "PDF pp. 1–9",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 9,
+      "text_sparse_units": [
+        "PDF p. 1"
+      ]
+    },
+    {
+      "source_id": "src-6755132be8a0dbde",
+      "locator": "PDF pp. 1–21",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 21,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-b075081d52dbf53f",
+      "locator": "PDF pp. 1–28",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 28,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-789f6092140693ff",
+      "locator": "PDF pp. 1–29",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 29,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-94774d70917b5f92",
+      "locator": "PDF pp. 1–31",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 31,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-cbddd6352371a868",
+      "locator": "PDF pp. 1–33",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 33,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-3b3629fd050fb9ae",
+      "locator": "PDF pp. 1–34",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 34,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-a3f73293a4d8cf4f",
+      "locator": "PDF pp. 1–31",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 31,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-091652f3101da963",
+      "locator": "PDF pp. 1–16",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 16,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-d67879038726fe8d",
+      "locator": "PDF pp. 1–36",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 36,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-59ed4bffbe07ab74",
+      "locator": "PDF pp. 1–1",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 1,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-5392e2ad482af6e6",
+      "locator": "PDF pp. 1–45",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 45,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-32c6318be74245dd",
+      "locator": "PDF pp. 1–40",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 40,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-ca35c3b78baed425",
+      "locator": "PDF pp. 1–21",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 21,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-fb7cd688ab3b11cc",
+      "locator": "PDF pp. 1–38",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 38,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-6ac8c4084f88d0ab",
+      "locator": "PDF pp. 1–60",
+      "status": "parsed",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。",
+      "units_scanned": 60,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-b246ff73e1ad908a",
+      "locator": "PDF pp. 1–30",
+      "status": "partial",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。 全页本地 Windows OCR 为未校对候选，具体引用页作目视核查。",
+      "units_scanned": 30,
+      "text_sparse_units": [
+        "PDF p. 1",
+        "PDF p. 2",
+        "PDF p. 3",
+        "PDF p. 4",
+        "PDF p. 5",
+        "PDF p. 6",
+        "PDF p. 7",
+        "PDF p. 8",
+        "PDF p. 9",
+        "PDF p. 10",
+        "PDF p. 11",
+        "PDF p. 12",
+        "PDF p. 13",
+        "PDF p. 14",
+        "PDF p. 15",
+        "PDF p. 16",
+        "PDF p. 17",
+        "PDF p. 18",
+        "PDF p. 19",
+        "PDF p. 20",
+        "PDF p. 21",
+        "PDF p. 22",
+        "PDF p. 23",
+        "PDF p. 24",
+        "PDF p. 25",
+        "PDF p. 26",
+        "PDF p. 27",
+        "PDF p. 28",
+        "PDF p. 29",
+        "PDF p. 30"
+      ]
+    },
+    {
+      "source_id": "src-0c5f093967aa524a",
+      "locator": "PDF pp. 1–59",
+      "status": "partial",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。 全页本地 Windows OCR 为未校对候选，具体引用页作目视核查。 OCR 无文本页：page-1。本次目读确认《Fluent-湍流模拟》第 1 页是课程封面。",
+      "units_scanned": 59,
+      "text_sparse_units": [
+        "PDF p. 1",
+        "PDF p. 2",
+        "PDF p. 3",
+        "PDF p. 4",
+        "PDF p. 5",
+        "PDF p. 6",
+        "PDF p. 7",
+        "PDF p. 8",
+        "PDF p. 9",
+        "PDF p. 10",
+        "PDF p. 11",
+        "PDF p. 12",
+        "PDF p. 13",
+        "PDF p. 14",
+        "PDF p. 15",
+        "PDF p. 16",
+        "PDF p. 17",
+        "PDF p. 18",
+        "PDF p. 19",
+        "PDF p. 20",
+        "PDF p. 21",
+        "PDF p. 22",
+        "PDF p. 23",
+        "PDF p. 24",
+        "PDF p. 25",
+        "PDF p. 26",
+        "PDF p. 27",
+        "PDF p. 28",
+        "PDF p. 29",
+        "PDF p. 30",
+        "PDF p. 31",
+        "PDF p. 32",
+        "PDF p. 33",
+        "PDF p. 34",
+        "PDF p. 35",
+        "PDF p. 36",
+        "PDF p. 37",
+        "PDF p. 38",
+        "PDF p. 39",
+        "PDF p. 40",
+        "PDF p. 41",
+        "PDF p. 42",
+        "PDF p. 43",
+        "PDF p. 44",
+        "PDF p. 45",
+        "PDF p. 46",
+        "PDF p. 47",
+        "PDF p. 48",
+        "PDF p. 49",
+        "PDF p. 50",
+        "PDF p. 51",
+        "PDF p. 52",
+        "PDF p. 53",
+        "PDF p. 54",
+        "PDF p. 55",
+        "PDF p. 56",
+        "PDF p. 57",
+        "PDF p. 58",
+        "PDF p. 59"
+      ]
+    },
+    {
+      "source_id": "src-ddc6cde233c479de",
+      "locator": "PDF pp. 1–67",
+      "status": "partial",
+      "notes": "以 textbook2skill native 逐页提取原生文本、页面坐标与图像渲染。 全页本地 Windows OCR 为未校对候选，具体引用页作目视核查。",
+      "units_scanned": 67,
+      "text_sparse_units": [
+        "PDF p. 1",
+        "PDF p. 2",
+        "PDF p. 3",
+        "PDF p. 4",
+        "PDF p. 5",
+        "PDF p. 6",
+        "PDF p. 7",
+        "PDF p. 8",
+        "PDF p. 9",
+        "PDF p. 10",
+        "PDF p. 11",
+        "PDF p. 12",
+        "PDF p. 13",
+        "PDF p. 14",
+        "PDF p. 15",
+        "PDF p. 16",
+        "PDF p. 17",
+        "PDF p. 18",
+        "PDF p. 19",
+        "PDF p. 20",
+        "PDF p. 21",
+        "PDF p. 22",
+        "PDF p. 23",
+        "PDF p. 24",
+        "PDF p. 25",
+        "PDF p. 26",
+        "PDF p. 27",
+        "PDF p. 28",
+        "PDF p. 29",
+        "PDF p. 30",
+        "PDF p. 31",
+        "PDF p. 32",
+        "PDF p. 33",
+        "PDF p. 34",
+        "PDF p. 35",
+        "PDF p. 36",
+        "PDF p. 37",
+        "PDF p. 38",
+        "PDF p. 39",
+        "PDF p. 40",
+        "PDF p. 41",
+        "PDF p. 42",
+        "PDF p. 43",
+        "PDF p. 44",
+        "PDF p. 45",
+        "PDF p. 46",
+        "PDF p. 47",
+        "PDF p. 48",
+        "PDF p. 49",
+        "PDF p. 50",
+        "PDF p. 51",
+        "PDF p. 52",
+        "PDF p. 53",
+        "PDF p. 54",
+        "PDF p. 55",
+        "PDF p. 56",
+        "PDF p. 57",
+        "PDF p. 58",
+        "PDF p. 59",
+        "PDF p. 60",
+        "PDF p. 61",
+        "PDF p. 62",
+        "PDF p. 63",
+        "PDF p. 64",
+        "PDF p. 65",
+        "PDF p. 66",
+        "PDF p. 67"
+      ]
+    },
+    {
+      "source_id": "src-fa6b535c64d79b3d",
+      "locator": "slides 1–48",
+      "status": "parsed",
+      "notes": "按演示顺序解析 OOXML 文本和页号。图片内容须回到原幻灯片复查。",
+      "units_scanned": 48,
+      "text_sparse_units": [
+        "slide 5",
+        "slide 21"
+      ]
+    },
+    {
+      "source_id": "src-958b4ad6fce2090d",
+      "locator": "slides 1–67",
+      "status": "parsed",
+      "notes": "按演示顺序解析 OOXML 文本和页号。图片内容须回到原幻灯片复查。",
+      "units_scanned": 67,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-d3bd5f4cc77e00a4",
+      "locator": "slides 1–39",
+      "status": "parsed",
+      "notes": "按演示顺序解析 OOXML 文本和页号。图片内容须回到原幻灯片复查。",
+      "units_scanned": 39,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-be4fa1145545bd09",
+      "locator": "slides 1–9",
+      "status": "parsed",
+      "notes": "按演示顺序解析 OOXML 文本和页号。图片内容须回到原幻灯片复查。",
+      "units_scanned": 9,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-e515d4e4d966dd92",
+      "locator": "slides 1–27",
+      "status": "parsed",
+      "notes": "按演示顺序解析 OOXML 文本和页号。图片内容须回到原幻灯片复查。",
+      "units_scanned": 27,
+      "text_sparse_units": [
+        "slide 4"
+      ]
+    },
+    {
+      "source_id": "src-bd10ab4ad07d7fc3",
+      "locator": "slides 1–10",
+      "status": "parsed",
+      "notes": "按演示顺序解析 OOXML 文本和页号。图片内容须回到原幻灯片复查。",
+      "units_scanned": 10,
+      "text_sparse_units": [
+        "slide 10"
+      ]
+    },
+    {
+      "source_id": "src-82fd8be48dfe8af3",
+      "locator": "slides 1–18",
+      "status": "parsed",
+      "notes": "按演示顺序解析 OOXML 文本和页号。图片内容须回到原幻灯片复查。",
+      "units_scanned": 18,
+      "text_sparse_units": []
+    },
+    {
+      "source_id": "src-c91606d1f843d8d0",
+      "locator": "slides 1–56",
+      "status": "parsed",
+      "notes": "按演示顺序解析 OOXML 文本和页号。图片内容须回到原幻灯片复查。",
+      "units_scanned": 56,
+      "text_sparse_units": [
+        "slide 24",
+        "slide 42"
+      ]
+    },
+    {
+      "source_id": "src-6e26acb18a89e91c",
+      "locator": "slides 1–46",
+      "status": "parsed",
+      "notes": "按演示顺序解析 OOXML 文本和页号。图片内容须回到原幻灯片复查。",
+      "units_scanned": 46,
+      "text_sparse_units": [
+        "slide 2",
+        "slide 10",
+        "slide 16",
+        "slide 21"
+      ]
+    },
+    {
+      "source_id": "src-b811ca1cdc5700b7",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-97a825e54bdaad1a",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-7ae7c7f9307028cf",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-2b174d5e686d3f12",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-a6e3536594d5e151",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-452b00d1885884b8",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-4a708e8914bdb734",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-4fd78e25cb6a1db5",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-fe2275dcf285d6f6",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-29e41f0e607e2681",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-bcfa81651395912f",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-0e1eac17ada03101",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-ba9b2d68ec797c90",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-e0dadaf01330705d",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-677864e4a33c079d",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-6de1c335a8043248",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-57899eb34decaabe",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-4183c40acbc17ef4",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-cc324b677242b28b",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-09440e7d47085f70",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-520a7a834a8a849a",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-91f186886d6b7bc5",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-195f0a5cb1c9d444",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-e0fe986bbe016fbc",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-372b324b8313a104",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-3d47a868e093e9ae",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-7cc5bd4be54b8ae6",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-938b5203a3071ad6",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-82166b30b6896ce1",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-7f468e60dc467640",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-39663cbd8e2fabe1",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-a2e99ffc1fa0ac6a",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-9b594492ca6de9c6",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-057c1cba87272279",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-7e8d89cdbaeb350f",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-68414424d4a1b189",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-15deca0d9fd1d5ab",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-de39b03dc959542b",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-c801dbcc01c70598",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-99c4c33e642a5e7d",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-fb935b7f0b0bcae5",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-41f87fb814e1b604",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-d5797504c4e856e4",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-7959c091be421452",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-a723a36a78931e52",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-e46446b5855e99e1",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-98050a7e1c17d0d9",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-fbddb9c91bc7743a",
+      "locator": "document",
+      "status": "parsed",
+      "notes": "全文本按原件读取。下列单独定位表示用于知识卡的证据。",
+      "units_scanned": 1,
+      "text_sparse_units": 0
+    },
+    {
+      "source_id": "src-60e98536344bbf96",
+      "locator": "PDF p. 21",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G01 所用来源定位。"
+    },
+    {
+      "source_id": "src-fa6b535c64d79b3d",
+      "locator": "slide 24",
+      "status": "reviewed",
+      "notes": "G01 所用来源定位。"
+    },
+    {
+      "source_id": "src-b1ccce81caa63433",
+      "locator": "PDF p. 9",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G02 所用来源定位。"
+    },
+    {
+      "source_id": "src-210c7f01383f7fbb",
+      "locator": "PDF p. 18",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G03 所用来源定位。"
+    },
+    {
+      "source_id": "src-5b04a65070cb276a",
+      "locator": "PDF p. 15",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G03 所用来源定位。"
+    },
+    {
+      "source_id": "src-d3bd5f4cc77e00a4",
+      "locator": "slide 6",
+      "status": "reviewed",
+      "notes": "G03 所用来源定位。"
+    },
+    {
+      "source_id": "src-243f06402b095e66",
+      "locator": "PDF p. 11",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G04 所用来源定位。"
+    },
+    {
+      "source_id": "src-37923befea4d0a21",
+      "locator": "PDF p. 10",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G05 所用来源定位。"
+    },
+    {
+      "source_id": "src-208d967c56b40424",
+      "locator": "PDF p. 16",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G05 所用来源定位。"
+    },
+    {
+      "source_id": "src-c8139cc0ab687bae",
+      "locator": "PDF p. 8",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G06 所用来源定位。"
+    },
+    {
+      "source_id": "src-c8139cc0ab687bae",
+      "locator": "PDF p. 12",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G06 所用来源定位。"
+    },
+    {
+      "source_id": "src-b6991b26653116a7",
+      "locator": "PDF p. 8",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G06 所用来源定位。"
+    },
+    {
+      "source_id": "src-e16e6ae7b74f11d0",
+      "locator": "PDF p. 6",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G07 所用来源定位。"
+    },
+    {
+      "source_id": "src-7aace50a4614e34e",
+      "locator": "PDF p. 9",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G07 所用来源定位。"
+    },
+    {
+      "source_id": "src-53e635f848f883c2",
+      "locator": "PDF p. 8",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G07 所用来源定位。"
+    },
+    {
+      "source_id": "src-7b4a276a5ea152eb",
+      "locator": "PDF p. 9",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G07 所用来源定位。"
+    },
+    {
+      "source_id": "src-e2fa966a5f4fea8c",
+      "locator": "PDF p. 8",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G07 所用来源定位。"
+    },
+    {
+      "source_id": "src-a3376486d960930d",
+      "locator": "PDF p. 5",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G08 所用来源定位。"
+    },
+    {
+      "source_id": "src-4f6ca0df0471f295",
+      "locator": "PDF p. 19",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G08 所用来源定位。"
+    },
+    {
+      "source_id": "src-fa6b535c64d79b3d",
+      "locator": "slide 38",
+      "status": "reviewed",
+      "notes": "G08 所用来源定位。"
+    },
+    {
+      "source_id": "src-4cb3c0f70abf3ee7",
+      "locator": "PDF p. 7",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G09 所用来源定位。"
+    },
+    {
+      "source_id": "src-7f6699545fc56a2b",
+      "locator": "PDF p. 22",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G09 所用来源定位。"
+    },
+    {
+      "source_id": "src-9433e7c63fa17786",
+      "locator": "PDF p. 10",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G10 所用来源定位。"
+    },
+    {
+      "source_id": "src-b7fcfd05d3e1d1ba",
+      "locator": "PDF p. 14",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G10 所用来源定位。"
+    },
+    {
+      "source_id": "src-3a9cf8f0429193fe",
+      "locator": "PDF p. 12",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G10 所用来源定位。"
+    },
+    {
+      "source_id": "src-b7fcfd05d3e1d1ba",
+      "locator": "PDF p. 23",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G11 所用来源定位。"
+    },
+    {
+      "source_id": "src-958b4ad6fce2090d",
+      "locator": "slide 48",
+      "status": "reviewed",
+      "notes": "G11 所用来源定位。"
+    },
+    {
+      "source_id": "src-910c57fd1f7ff75c",
+      "locator": "PDF p. 9",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G12 所用来源定位。"
+    },
+    {
+      "source_id": "src-78e6233ee9cc8ebd",
+      "locator": "PDF p. 8",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G12 所用来源定位。"
+    },
+    {
+      "source_id": "src-568f0dc2df9afabe",
+      "locator": "PDF p. 12",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G13 所用来源定位。"
+    },
+    {
+      "source_id": "src-10da57c44b3d3e7b",
+      "locator": "PDF p. 5",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G13 所用来源定位。"
+    },
+    {
+      "source_id": "src-349d07bc02c32977",
+      "locator": "PDF p. 7",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G14 所用来源定位。"
+    },
+    {
+      "source_id": "src-6755132be8a0dbde",
+      "locator": "PDF p. 10",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G14 所用来源定位。"
+    },
+    {
+      "source_id": "src-ca93b5983dc72028",
+      "locator": "PDF p. 10",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G14 所用来源定位。"
+    },
+    {
+      "source_id": "src-84e3684edf602cbe",
+      "locator": "PDF p. 4",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G14 所用来源定位。"
+    },
+    {
+      "source_id": "src-d3bd5f4cc77e00a4",
+      "locator": "slide 19",
+      "status": "reviewed",
+      "notes": "G15 所用来源定位。"
+    },
+    {
+      "source_id": "src-5ad33be825f8843b",
+      "locator": "PDF p. 34",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G16 所用来源定位。"
+    },
+    {
+      "source_id": "src-e38aac3894a8f288",
+      "locator": "PDF p. 6",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G17 所用来源定位。"
+    },
+    {
+      "source_id": "src-789f6092140693ff",
+      "locator": "PDF p. 14",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G17 所用来源定位。"
+    },
+    {
+      "source_id": "src-94774d70917b5f92",
+      "locator": "PDF p. 15",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G17 所用来源定位。"
+    },
+    {
+      "source_id": "src-40c34032980f1d8a",
+      "locator": "PDF p. 39",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G18 所用来源定位。"
+    },
+    {
+      "source_id": "src-c91606d1f843d8d0",
+      "locator": "slide 35",
+      "status": "reviewed",
+      "notes": "G18 所用来源定位。"
+    },
+    {
+      "source_id": "src-84e3684edf602cbe",
+      "locator": "PDF p. 7",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G19 所用来源定位。"
+    },
+    {
+      "source_id": "src-fb7cd688ab3b11cc",
+      "locator": "PDF p. 19",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G19 所用来源定位。"
+    },
+    {
+      "source_id": "src-ca93b5983dc72028",
+      "locator": "PDF p. 9",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G20 所用来源定位。"
+    },
+    {
+      "source_id": "src-f0bf9bc357a2008a",
+      "locator": "PDF p. 6",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G21 所用来源定位。"
+    },
+    {
+      "source_id": "src-3b3629fd050fb9ae",
+      "locator": "PDF p. 17",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G21 所用来源定位。"
+    },
+    {
+      "source_id": "src-18500dd62b0693fc",
+      "locator": "PDF p. 6",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G22 所用来源定位。"
+    },
+    {
+      "source_id": "src-cbddd6352371a868",
+      "locator": "PDF p. 16",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G22 所用来源定位。"
+    },
+    {
+      "source_id": "src-e02792da5ed08187",
+      "locator": "PDF p. 6",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G23 所用来源定位。"
+    },
+    {
+      "source_id": "src-94774d70917b5f92",
+      "locator": "PDF p. 18",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G23 所用来源定位。"
+    },
+    {
+      "source_id": "src-32c6318be74245dd",
+      "locator": "PDF p. 20",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G23 所用来源定位。"
+    },
+    {
+      "source_id": "src-c8f5da5d61bae04a",
+      "locator": "PDF p. 4",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G24 所用来源定位。"
+    },
+    {
+      "source_id": "src-b075081d52dbf53f",
+      "locator": "PDF p. 14",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G25 所用来源定位。"
+    },
+    {
+      "source_id": "src-091652f3101da963",
+      "locator": "PDF p. 8",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G26 所用来源定位。"
+    },
+    {
+      "source_id": "src-d67879038726fe8d",
+      "locator": "PDF p. 33",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G27 所用来源定位。"
+    },
+    {
+      "source_id": "src-59ed4bffbe07ab74",
+      "locator": "PDF p. 1",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G27 所用来源定位。"
+    },
+    {
+      "source_id": "src-5392e2ad482af6e6",
+      "locator": "PDF p. 22",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G28 所用来源定位。"
+    },
+    {
+      "source_id": "src-ca35c3b78baed425",
+      "locator": "PDF p. 10",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G29 所用来源定位。"
+    },
+    {
+      "source_id": "src-6ac8c4084f88d0ab",
+      "locator": "PDF p. 30",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "G30 所用来源定位。"
+    },
+    {
+      "source_id": "src-be4fa1145545bd09",
+      "locator": "slide 7",
+      "status": "reviewed",
+      "notes": "G31 所用来源定位。"
+    },
+    {
+      "source_id": "src-e515d4e4d966dd92",
+      "locator": "slide 12",
+      "status": "reviewed",
+      "notes": "G31 所用来源定位。"
+    },
+    {
+      "source_id": "src-82fd8be48dfe8af3",
+      "locator": "slide 9",
+      "status": "reviewed",
+      "notes": "G31 所用来源定位。"
+    },
+    {
+      "source_id": "src-82fd8be48dfe8af3",
+      "locator": "slide 12",
+      "status": "reviewed",
+      "notes": "G31 所用来源定位。"
+    },
+    {
+      "source_id": "src-bd10ab4ad07d7fc3",
+      "locator": "slide 5",
+      "status": "reviewed",
+      "notes": "G32 所用来源定位。"
+    },
+    {
+      "source_id": "src-6e26acb18a89e91c",
+      "locator": "slide 20",
+      "status": "reviewed",
+      "notes": "G33 所用来源定位。"
+    },
+    {
+      "source_id": "src-d5c41cd411c24dd0",
+      "locator": "PDF p. 8",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F01 所用来源定位。"
+    },
+    {
+      "source_id": "src-ac3eedd502ab8012",
+      "locator": "PDF p. 4",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F01 所用来源定位。"
+    },
+    {
+      "source_id": "src-7ccc48e431ee2dc8",
+      "locator": "PDF p. 12",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F02 所用来源定位。"
+    },
+    {
+      "source_id": "src-80dc00c76a506baa",
+      "locator": "PDF p. 14",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F03 所用来源定位。"
+    },
+    {
+      "source_id": "src-80dc00c76a506baa",
+      "locator": "PDF p. 22",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F03 所用来源定位。"
+    },
+    {
+      "source_id": "src-e478da9cd788d7dc",
+      "locator": "PDF p. 14",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F04 所用来源定位。"
+    },
+    {
+      "source_id": "src-e478da9cd788d7dc",
+      "locator": "PDF p. 16",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F04 所用来源定位。"
+    },
+    {
+      "source_id": "src-e478da9cd788d7dc",
+      "locator": "PDF p. 17",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F04 所用来源定位。"
+    },
+    {
+      "source_id": "src-856e10a8aafe89e4",
+      "locator": "PDF p. 6",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F05 所用来源定位。"
+    },
+    {
+      "source_id": "src-43dae986b9473a93",
+      "locator": "PDF p. 6",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F05 所用来源定位。"
+    },
+    {
+      "source_id": "src-1259f7a9ca3fe904",
+      "locator": "PDF p. 4",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F06 所用来源定位。"
+    },
+    {
+      "source_id": "src-ddc6cde233c479de",
+      "locator": "PDF p. 12",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F06 所用来源定位。"
+    },
+    {
+      "source_id": "src-130f1d19af3c09c2",
+      "locator": "PDF p. 24",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F07 所用来源定位。"
+    },
+    {
+      "source_id": "src-909d91d15468ce7a",
+      "locator": "PDF p. 28",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F07 所用来源定位。"
+    },
+    {
+      "source_id": "src-b993fcca9e1b8f5f",
+      "locator": "PDF p. 23",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F07 所用来源定位。"
+    },
+    {
+      "source_id": "src-e8902e9070d84e42",
+      "locator": "PDF p. 12",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F08 所用来源定位。"
+    },
+    {
+      "source_id": "src-a9586dd0517e692f",
+      "locator": "PDF p. 14",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F08 所用来源定位。"
+    },
+    {
+      "source_id": "src-12aa76c26dc11eff",
+      "locator": "PDF p. 14",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F09 所用来源定位。"
+    },
+    {
+      "source_id": "src-73db8a9374dc4acc",
+      "locator": "PDF p. 16",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F09 所用来源定位。"
+    },
+    {
+      "source_id": "src-73db8a9374dc4acc",
+      "locator": "PDF p. 22",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F09 所用来源定位。"
+    },
+    {
+      "source_id": "src-b246ff73e1ad908a",
+      "locator": "PDF p. 20",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F09 所用来源定位。"
+    },
+    {
+      "source_id": "src-b993fcca9e1b8f5f",
+      "locator": "PDF p. 32",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F09 所用来源定位。"
+    },
+    {
+      "source_id": "src-4666497a9c463eb9",
+      "locator": "PDF p. 11",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F09 所用来源定位。"
+    },
+    {
+      "source_id": "src-eb1a343ac9985e26",
+      "locator": "PDF p. 20",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F10 所用来源定位。"
+    },
+    {
+      "source_id": "src-a418724f2c74aace",
+      "locator": "PDF p. 40",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F10 所用来源定位。"
+    },
+    {
+      "source_id": "src-52e016007fb8e14d",
+      "locator": "PDF p. 16",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F11 所用来源定位。"
+    },
+    {
+      "source_id": "src-aba88872a907bade",
+      "locator": "PDF p. 16",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F11 所用来源定位。"
+    },
+    {
+      "source_id": "src-b993fcca9e1b8f5f",
+      "locator": "PDF p. 35",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F11 所用来源定位。"
+    },
+    {
+      "source_id": "src-ce3eec896a95d917",
+      "locator": "PDF p. 8",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F12 所用来源定位。"
+    },
+    {
+      "source_id": "src-9c3596455d29210f",
+      "locator": "PDF p. 8",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F12 所用来源定位。"
+    },
+    {
+      "source_id": "src-9c3596455d29210f",
+      "locator": "PDF p. 10",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F12 所用来源定位。"
+    },
+    {
+      "source_id": "src-0d8a671699481839",
+      "locator": "PDF p. 38",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F13 所用来源定位。"
+    },
+    {
+      "source_id": "src-28341a206ac50804",
+      "locator": "PDF p. 36",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F13 所用来源定位。"
+    },
+    {
+      "source_id": "src-df4a9e27a7a6b9e8",
+      "locator": "PDF p. 30",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F14 所用来源定位。"
+    },
+    {
+      "source_id": "src-b4615d12bb74dbf6",
+      "locator": "PDF p. 28",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F14 所用来源定位。"
+    },
+    {
+      "source_id": "src-b993fcca9e1b8f5f",
+      "locator": "PDF p. 21",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F15 所用来源定位。"
+    },
+    {
+      "source_id": "src-b993fcca9e1b8f5f",
+      "locator": "PDF p. 28",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F15 所用来源定位。"
+    },
+    {
+      "source_id": "src-b993fcca9e1b8f5f",
+      "locator": "PDF p. 38",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F15 所用来源定位。"
+    },
+    {
+      "source_id": "src-b993fcca9e1b8f5f",
+      "locator": "PDF p. 4",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F15 所用来源定位。"
+    },
+    {
+      "source_id": "src-b993fcca9e1b8f5f",
+      "locator": "PDF p. 47",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F15 所用来源定位。"
+    },
+    {
+      "source_id": "src-f6d101962053404f",
+      "locator": "PDF p. 2",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F16 所用来源定位。"
+    },
+    {
+      "source_id": "src-c825db2d1a869ad1",
+      "locator": "PDF p. 2",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F16 所用来源定位。"
+    },
+    {
+      "source_id": "src-9f01d7790355eb97",
+      "locator": "PDF p. 4",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F16 所用来源定位。"
+    },
+    {
+      "source_id": "src-909d91d15468ce7a",
+      "locator": "PDF p. 12",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F17 所用来源定位。"
+    },
+    {
+      "source_id": "src-aba88872a907bade",
+      "locator": "PDF p. 10",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F17 所用来源定位。"
+    },
+    {
+      "source_id": "src-445e08614f98975c",
+      "locator": "PDF p. 22",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F18 所用来源定位。"
+    },
+    {
+      "source_id": "src-445e08614f98975c",
+      "locator": "PDF p. 28",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F18 所用来源定位。"
+    },
+    {
+      "source_id": "src-8f4082e6a9929f89",
+      "locator": "PDF p. 50",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F18 所用来源定位。"
+    },
+    {
+      "source_id": "src-4666497a9c463eb9",
+      "locator": "PDF p. 17",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F19 所用来源定位。"
+    },
+    {
+      "source_id": "src-4666497a9c463eb9",
+      "locator": "PDF p. 18",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F19 所用来源定位。"
+    },
+    {
+      "source_id": "src-4666497a9c463eb9",
+      "locator": "PDF p. 26",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F20 所用来源定位。"
+    },
+    {
+      "source_id": "src-4666497a9c463eb9",
+      "locator": "PDF p. 28",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F20 所用来源定位。"
+    },
+    {
+      "source_id": "src-96476ef97c4e6c45",
+      "locator": "PDF p. 9",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F21 所用来源定位。"
+    },
+    {
+      "source_id": "src-96476ef97c4e6c45",
+      "locator": "PDF p. 10",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F21 所用来源定位。"
+    },
+    {
+      "source_id": "src-8ea10782fb572eca",
+      "locator": "PDF p. 26",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F22 所用来源定位。"
+    },
+    {
+      "source_id": "src-50c9d528fbd380b0",
+      "locator": "PDF p. 12",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F23 所用来源定位。"
+    },
+    {
+      "source_id": "src-50c9d528fbd380b0",
+      "locator": "PDF p. 14",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F23 所用来源定位。"
+    },
+    {
+      "source_id": "src-a418724f2c74aace",
+      "locator": "PDF p. 28",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F23 所用来源定位。"
+    },
+    {
+      "source_id": "src-0c5f093967aa524a",
+      "locator": "PDF p. 20",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F23 所用来源定位。"
+    },
+    {
+      "source_id": "src-aba88872a907bade",
+      "locator": "PDF p. 6",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F24 所用来源定位。"
+    },
+    {
+      "source_id": "src-52e016007fb8e14d",
+      "locator": "PDF p. 6",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F24 所用来源定位。"
+    },
+    {
+      "source_id": "src-aba88872a907bade",
+      "locator": "PDF p. 10",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F25 所用来源定位。"
+    },
+    {
+      "source_id": "src-b993fcca9e1b8f5f",
+      "locator": "PDF p. 20",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F25 所用来源定位。"
+    },
+    {
+      "source_id": "src-33248bd8edea4f73",
+      "locator": "PDF p. 44",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F26 所用来源定位。"
+    },
+    {
+      "source_id": "src-33248bd8edea4f73",
+      "locator": "PDF p. 46",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "F26 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-SELECT",
+      "locator": "#1223699",
+      "status": "reviewed",
+      "notes": "M01 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-REFERENCE-PDF",
+      "locator": "PDF p. 512",
+      "pdf_page_label": "512",
+      "status": "reviewed",
+      "notes": "M01 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-SELECT",
+      "locator": "About Selecting Geometric Entities，开篇、Table 6-2 前",
+      "status": "reviewed",
+      "notes": "M01 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-REFERENCE-PDF",
+      "locator": "PDF p. 598",
+      "pdf_page_label": "598",
+      "status": "reviewed",
+      "notes": "M02 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-ASSOC",
+      "locator": "#636448",
+      "status": "reviewed",
+      "notes": "M02 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL64-REFERENCE-PDF",
+      "locator": "PDF p. 618",
+      "pdf_page_label": "618",
+      "status": "reviewed",
+      "notes": "M03 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL60-PROGRAMMING",
+      "locator": "PDF p. 34",
+      "pdf_page_label": "34",
+      "status": "reviewed",
+      "notes": "M04 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-PROGRAMMING-PDF",
+      "locator": "PDF p. 35",
+      "pdf_page_label": "35",
+      "status": "reviewed",
+      "notes": "M05 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-API-SELECT",
+      "locator": "#5431382",
+      "status": "reviewed",
+      "notes": "M05 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-API-SELECT",
+      "locator": "Selections / General Syntax，selection.entities(dim) 与 inputEntities()",
+      "status": "reviewed",
+      "notes": "M05 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL64-PROGRAMMING-PDF",
+      "locator": "PDF p. 35",
+      "pdf_page_label": "35",
+      "status": "reviewed",
+      "notes": "M06 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL64-API-SELECT",
+      "locator": "#5431382",
+      "status": "reviewed",
+      "notes": "M06 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-CFD-PDF",
+      "locator": "PDF p. 153",
+      "pdf_page_label": "153",
+      "status": "reviewed",
+      "notes": "M07 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-PRESSURE",
+      "locator": "#4474497",
+      "status": "reviewed",
+      "notes": "M07 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-PRESSURE",
+      "locator": "Pressure Point Constraint / Pressure Constraint",
+      "status": "reviewed",
+      "notes": "M07 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL64-CFD-PDF",
+      "locator": "PDF p. 161",
+      "pdf_page_label": "161",
+      "status": "reviewed",
+      "notes": "M08 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL63-HEAT-PDF",
+      "locator": "PDF p. 675",
+      "pdf_page_label": "675",
+      "status": "reviewed",
+      "notes": "M09 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL64-HEAT-PDF",
+      "locator": "PDF p. 702",
+      "pdf_page_label": "702",
+      "status": "reviewed",
+      "notes": "M10 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL64-INFLOW",
+      "locator": "#567058",
+      "status": "reviewed",
+      "notes": "M10 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL64-INFLOW",
+      "locator": "Inflow，Eq. (6-16) 前后、Upstream Properties",
+      "status": "reviewed",
+      "notes": "M10 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL64-HEATSINK",
+      "locator": "#701817",
+      "status": "reviewed",
+      "notes": "M11 所用来源定位。"
+    },
+    {
+      "source_id": "COMSOL64-HEATSINK",
+      "locator": "#702731",
+      "status": "reviewed",
+      "notes": "M11 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-USER-PDF",
+      "locator": "PDF p. 1472",
+      "pdf_page_label": "1472",
+      "status": "reviewed",
+      "notes": "M12 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-MATERIAL",
+      "locator": "8.1 Defining Materials, opening paragraphs",
+      "status": "reviewed",
+      "notes": "M13 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-MATERIAL",
+      "locator": "§8.1 Defining Materials",
+      "status": "reviewed",
+      "notes": "M13 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-TABLE",
+      "locator": "#flu_ug_sec_material_piece",
+      "status": "reviewed",
+      "notes": "M14 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-USER-PDF",
+      "locator": "PDF p. 1619",
+      "pdf_page_label": "1619",
+      "status": "reviewed",
+      "notes": "M14 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-USER-PDF",
+      "locator": "PDF p. 1620",
+      "pdf_page_label": "1620",
+      "status": "reviewed",
+      "notes": "M14 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-TABLE",
+      "locator": "8.2.2 / Piecewise-Linear Profiles，Figure 8.13 后 Important",
+      "status": "reviewed",
+      "notes": "M14 所用来源定位。"
+    },
+    {
+      "source_id": "src-97a825e54bdaad1a",
+      "locator": "cxpoly.h lines 13, 61–67, 97–98",
+      "status": "reviewed",
+      "notes": "M15 所用来源定位。"
+    },
+    {
+      "source_id": "src-97a825e54bdaad1a",
+      "locator": "cxpoly.h lines 13–16, 57–68, 83–88, 95–100",
+      "status": "reviewed",
+      "notes": "M15 所用来源定位。"
+    },
+    {
+      "source_id": "src-97a825e54bdaad1a",
+      "locator": "lines 13-16",
+      "status": "reviewed",
+      "notes": "M15 所用来源定位。"
+    },
+    {
+      "source_id": "src-b811ca1cdc5700b7",
+      "locator": "#enablecleancad_generatethesurfacemeshwtm_smqualityimprovelimit",
+      "status": "reviewed",
+      "notes": "M16 所用来源定位。"
+    },
+    {
+      "source_id": "src-b811ca1cdc5700b7",
+      "locator": "lines 225-228",
+      "status": "reviewed",
+      "notes": "M16 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-USER-PDF",
+      "locator": "PDF p. 1147",
+      "pdf_page_label": "1147",
+      "status": "reviewed",
+      "notes": "M17 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-THEORY-PDF",
+      "locator": "PDF p. 191",
+      "pdf_page_label": "145",
+      "status": "reviewed",
+      "notes": "M18 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-THEORY-PDF",
+      "locator": "PDF p. 651",
+      "pdf_page_label": "605",
+      "status": "reviewed",
+      "notes": "M19 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-USER-PDF",
+      "locator": "PDF p. 3694",
+      "pdf_page_label": "3694",
+      "status": "reviewed",
+      "notes": "M20 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-USER-PDF",
+      "locator": "PDF p. 3772",
+      "pdf_page_label": "3772",
+      "status": "reviewed",
+      "notes": "M21 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-USER-PDF",
+      "locator": "PDF p. 3773",
+      "pdf_page_label": "3773",
+      "status": "reviewed",
+      "notes": "M21 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-MONITOR",
+      "locator": "41.2 Monitoring and Reporting Solution Data",
+      "status": "reviewed",
+      "notes": "M22 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-USER-PDF",
+      "locator": "PDF p. 4132",
+      "pdf_page_label": "4132",
+      "status": "reviewed",
+      "notes": "M22 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-SURFACE",
+      "locator": "25.3 Surface Integration",
+      "status": "reviewed",
+      "notes": "M23 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-THEORY-PDF",
+      "locator": "PDF p. 1086",
+      "pdf_page_label": "1040",
+      "status": "reviewed",
+      "notes": "M23 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-THEORY-PDF",
+      "locator": "PDF p. 1089",
+      "pdf_page_label": "1043",
+      "status": "reviewed",
+      "notes": "M24 所用来源定位。"
+    },
+    {
+      "source_id": "FLUENT242-AXIS-UDF",
+      "locator": "#flu_udf_sec_axisymmetric_considerations",
+      "status": "reviewed",
+      "notes": "M25 所用来源定位。"
+    },
+    {
+      "source_id": "src-fe2275dcf285d6f6",
+      "locator": "lines 6-10",
+      "status": "reviewed",
+      "notes": "P01 所用来源定位。"
+    },
+    {
+      "source_id": "src-a2e99ffc1fa0ac6a",
+      "locator": "lines 6-10",
+      "status": "reviewed",
+      "notes": "P01 所用来源定位。"
+    },
+    {
+      "source_id": "src-7ae7c7f9307028cf",
+      "locator": "lines 48-57",
+      "status": "reviewed",
+      "notes": "P01 所用来源定位。"
+    },
+    {
+      "source_id": "src-7ae7c7f9307028cf",
+      "locator": "lines 50-55",
+      "status": "reviewed",
+      "notes": "P01 所用来源定位。"
+    },
+    {
+      "source_id": "src-41f87fb814e1b604",
+      "locator": "lines 8-15",
+      "status": "reviewed",
+      "notes": "P02 所用来源定位。"
+    },
+    {
+      "source_id": "src-d5797504c4e856e4",
+      "locator": "lines 3-9",
+      "status": "reviewed",
+      "notes": "P02 所用来源定位。"
+    },
+    {
+      "source_id": "src-15deca0d9fd1d5ab",
+      "locator": "lines 3-12",
+      "status": "reviewed",
+      "notes": "P02 所用来源定位。"
+    },
+    {
+      "source_id": "src-e46446b5855e99e1",
+      "locator": "lines 5-17",
+      "status": "reviewed",
+      "notes": "P02 所用来源定位。"
+    },
+    {
+      "source_id": "src-91f186886d6b7bc5",
+      "locator": "lines 5-13",
+      "status": "reviewed",
+      "notes": "P03 所用来源定位。"
+    },
+    {
+      "source_id": "src-195f0a5cb1c9d444",
+      "locator": "lines 7-17",
+      "status": "reviewed",
+      "notes": "P03 所用来源定位。"
+    },
+    {
+      "source_id": "src-7e8d89cdbaeb350f",
+      "locator": "lines 5-10",
+      "status": "reviewed",
+      "notes": "P03 所用来源定位。"
+    },
+    {
+      "source_id": "src-2b174d5e686d3f12",
+      "locator": "lines 55-63",
+      "status": "reviewed",
+      "notes": "P04 所用来源定位。"
+    },
+    {
+      "source_id": "src-a6e3536594d5e151",
+      "locator": "lines 14-16",
+      "status": "reviewed",
+      "notes": "P04 所用来源定位。"
+    },
+    {
+      "source_id": "src-677864e4a33c079d",
+      "locator": "lines 16-20",
+      "status": "reviewed",
+      "notes": "P04 所用来源定位。"
+    },
+    {
+      "source_id": "src-09440e7d47085f70",
+      "locator": "lines 24-31",
+      "status": "reviewed",
+      "notes": "P04 所用来源定位。"
+    },
+    {
+      "source_id": "src-09440e7d47085f70",
+      "locator": "lines 29-31",
+      "status": "reviewed",
+      "notes": "P04 所用来源定位。"
+    },
+    {
+      "source_id": "src-ba9b2d68ec797c90",
+      "locator": "lines 3-11",
+      "status": "reviewed",
+      "notes": "P05 所用来源定位。"
+    },
+    {
+      "source_id": "src-4fd78e25cb6a1db5",
+      "locator": "lines 19-26",
+      "status": "reviewed",
+      "notes": "P05 所用来源定位。"
+    },
+    {
+      "source_id": "src-3d47a868e093e9ae",
+      "locator": "lines 15-24",
+      "status": "reviewed",
+      "notes": "P05 所用来源定位。"
+    },
+    {
+      "source_id": "src-372b324b8313a104",
+      "locator": "lines 16-20",
+      "status": "reviewed",
+      "notes": "P05 所用来源定位。"
+    },
+    {
+      "source_id": "src-4a708e8914bdb734",
+      "locator": "lines 5-12",
+      "status": "reviewed",
+      "notes": "P06 所用来源定位。"
+    },
+    {
+      "source_id": "src-4a708e8914bdb734",
+      "locator": "lines 5-11",
+      "status": "reviewed",
+      "notes": "P06 所用来源定位。"
+    },
+    {
+      "source_id": "src-39663cbd8e2fabe1",
+      "locator": "lines 7-26",
+      "status": "reviewed",
+      "notes": "P07 所用来源定位。"
+    },
+    {
+      "source_id": "src-452b00d1885884b8",
+      "locator": "lines 13-36",
+      "status": "reviewed",
+      "notes": "P07 所用来源定位。"
+    },
+    {
+      "source_id": "src-29e41f0e607e2681",
+      "locator": "lines 2-6",
+      "status": "reviewed",
+      "notes": "P07 所用来源定位。"
+    },
+    {
+      "source_id": "src-452b00d1885884b8",
+      "locator": "lines 13-45",
+      "status": "reviewed",
+      "notes": "P07 所用来源定位。"
+    },
+    {
+      "source_id": "src-7cc5bd4be54b8ae6",
+      "locator": "lines 15-24",
+      "status": "reviewed",
+      "notes": "P08 所用来源定位。"
+    },
+    {
+      "source_id": "src-a6e3536594d5e151",
+      "locator": "lines 4-5",
+      "status": "reviewed",
+      "notes": "P08 所用来源定位。"
+    },
+    {
+      "source_id": "src-0e1eac17ada03101",
+      "locator": "lines 7-10",
+      "status": "reviewed",
+      "notes": "P08 所用来源定位。"
+    },
+    {
+      "source_id": "src-a6e3536594d5e151",
+      "locator": "lines 2-5",
+      "status": "reviewed",
+      "notes": "P08 所用来源定位。"
+    },
+    {
+      "source_id": "src-938b5203a3071ad6",
+      "locator": "lines 15-29",
+      "status": "reviewed",
+      "notes": "P09 所用来源定位。"
+    },
+    {
+      "source_id": "src-a6e3536594d5e151",
+      "locator": "lines 7-12",
+      "status": "reviewed",
+      "notes": "P09 所用来源定位。"
+    },
+    {
+      "source_id": "src-0e1eac17ada03101",
+      "locator": "lines 8-11",
+      "status": "reviewed",
+      "notes": "P09 所用来源定位。"
+    },
+    {
+      "source_id": "src-a6e3536594d5e151",
+      "locator": "lines 8-12",
+      "status": "reviewed",
+      "notes": "P09 所用来源定位。"
+    },
+    {
+      "source_id": "src-e0dadaf01330705d",
+      "locator": "lines 3-9",
+      "status": "reviewed",
+      "notes": "P10 所用来源定位。"
+    },
+    {
+      "source_id": "src-82166b30b6896ce1",
+      "locator": "lines 11-25",
+      "status": "reviewed",
+      "notes": "P10 所用来源定位。"
+    },
+    {
+      "source_id": "src-82166b30b6896ce1",
+      "locator": "lines 17-23",
+      "status": "reviewed",
+      "notes": "P10 所用来源定位。"
+    },
+    {
+      "source_id": "src-4183c40acbc17ef4",
+      "locator": "lines 3-9",
+      "status": "reviewed",
+      "notes": "P11 所用来源定位。"
+    },
+    {
+      "source_id": "src-57899eb34decaabe",
+      "locator": "lines 16-25",
+      "status": "reviewed",
+      "notes": "P11 所用来源定位。"
+    },
+    {
+      "source_id": "src-4183c40acbc17ef4",
+      "locator": "lines 5-11",
+      "status": "reviewed",
+      "notes": "P11 所用来源定位。"
+    },
+    {
+      "source_id": "src-bcfa81651395912f",
+      "locator": "lines 55-65",
+      "status": "reviewed",
+      "notes": "P12 所用来源定位。"
+    },
+    {
+      "source_id": "src-68414424d4a1b189",
+      "locator": "lines 5-11",
+      "status": "reviewed",
+      "notes": "P12 所用来源定位。"
+    },
+    {
+      "source_id": "src-bcfa81651395912f",
+      "locator": "lines 55-61",
+      "status": "reviewed",
+      "notes": "P12 所用来源定位。"
+    },
+    {
+      "source_id": "src-cc324b677242b28b",
+      "locator": "lines 5-14",
+      "status": "reviewed",
+      "notes": "P13 所用来源定位。"
+    },
+    {
+      "source_id": "src-cc324b677242b28b",
+      "locator": "lines 7-14",
+      "status": "reviewed",
+      "notes": "P13 所用来源定位。"
+    },
+    {
+      "source_id": "src-6de1c335a8043248",
+      "locator": "lines 7-13",
+      "status": "reviewed",
+      "notes": "P14 所用来源定位。"
+    },
+    {
+      "source_id": "src-6de1c335a8043248",
+      "locator": "lines 51-55",
+      "status": "reviewed",
+      "notes": "P14 所用来源定位。"
+    },
+    {
+      "source_id": "src-520a7a834a8a849a",
+      "locator": "lines 9-14",
+      "status": "reviewed",
+      "notes": "P15 所用来源定位。"
+    },
+    {
+      "source_id": "src-57899eb34decaabe",
+      "locator": "lines 16-22",
+      "status": "reviewed",
+      "notes": "P15 所用来源定位。"
+    },
+    {
+      "source_id": "src-520a7a834a8a849a",
+      "locator": "lines 11-14",
+      "status": "reviewed",
+      "notes": "P15 所用来源定位。"
+    },
+    {
+      "source_id": "src-e0fe986bbe016fbc",
+      "locator": "lines 7-21",
+      "status": "reviewed",
+      "notes": "P16 所用来源定位。"
+    },
+    {
+      "source_id": "src-fbddb9c91bc7743a",
+      "locator": "lines 16-27",
+      "status": "reviewed",
+      "notes": "P16 所用来源定位。"
+    },
+    {
+      "source_id": "src-98050a7e1c17d0d9",
+      "locator": "lines 5-11",
+      "status": "reviewed",
+      "notes": "P16 所用来源定位。"
+    },
+    {
+      "source_id": "src-a723a36a78931e52",
+      "locator": "lines 3-12",
+      "status": "reviewed",
+      "notes": "P17 所用来源定位。"
+    },
+    {
+      "source_id": "src-7959c091be421452",
+      "locator": "lines 11-18",
+      "status": "reviewed",
+      "notes": "P17 所用来源定位。"
+    },
+    {
+      "source_id": "src-7f468e60dc467640",
+      "locator": "lines 55-63",
+      "status": "reviewed",
+      "notes": "P17 所用来源定位。"
+    },
+    {
+      "source_id": "src-a723a36a78931e52",
+      "locator": "lines 3-13",
+      "status": "reviewed",
+      "notes": "P17 所用来源定位。"
+    },
+    {
+      "source_id": "src-de39b03dc959542b",
+      "locator": "lines 5-11",
+      "status": "reviewed",
+      "notes": "P18 所用来源定位。"
+    },
+    {
+      "source_id": "src-c801dbcc01c70598",
+      "locator": "lines 5-15",
+      "status": "reviewed",
+      "notes": "P18 所用来源定位。"
+    },
+    {
+      "source_id": "src-9b594492ca6de9c6",
+      "locator": "lines 10-15",
+      "status": "reviewed",
+      "notes": "P18 所用来源定位。"
+    },
+    {
+      "source_id": "src-99c4c33e642a5e7d",
+      "locator": "lines 13-18",
+      "status": "reviewed",
+      "notes": "P18 所用来源定位。"
+    },
+    {
+      "source_id": "src-057c1cba87272279",
+      "locator": "lines 5-12",
+      "status": "reviewed",
+      "notes": "P19 所用来源定位。"
+    },
+    {
+      "source_id": "src-99c4c33e642a5e7d",
+      "locator": "lines 20-32",
+      "status": "reviewed",
+      "notes": "P19 所用来源定位。"
+    },
+    {
+      "source_id": "src-fb935b7f0b0bcae5",
+      "locator": "lines 5-12",
+      "status": "reviewed",
+      "notes": "P19 所用来源定位。"
+    },
+    {
+      "source_id": "src-372b324b8313a104",
+      "locator": "lines 14-24",
+      "status": "reviewed",
+      "notes": "P19 所用来源定位。"
+    },
+    {
+      "source_id": "src-372b324b8313a104",
+      "locator": "lines 19-24",
+      "status": "reviewed",
+      "notes": "P19 所用来源定位。"
+    },
+    {
+      "source_id": "src-4a5188785a14bf92",
+      "locator": "PDF p. 14",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "X01 所用来源定位。"
+    },
+    {
+      "source_id": "src-a3f73293a4d8cf4f",
+      "locator": "PDF p. 5",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "X02 所用来源定位。"
+    },
+    {
+      "source_id": "src-0d8a671699481839",
+      "locator": "PDF p. 1",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "X03 所用来源定位。"
+    },
+    {
+      "source_id": "src-0d8a671699481839",
+      "locator": "PDF p. 10",
+      "pdf_page_label": null,
+      "status": "reviewed",
+      "notes": "X03 所用来源定位。"
+    }
+  ]
+}

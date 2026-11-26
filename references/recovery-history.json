@@ -1,0 +1,1 @@
+[{"id":"P031-R16E","symptom":"几何重建后压力点选区为空，需查有效实体与域归属","action":"读取有效点选区与邻接关系，再核对重绑的点。","observation":"历史记录中域2重绑点5、域3重绑点6。记录时 SOLVING，热结果 NOT_RUN。点编号仅属于该模型。","status":"observed","build":"COMSOL 6.3","source":"LAB9_P031逐轮验证.csv R13/R16E"}]

@@ -1,0 +1,27 @@
+name: Paper2Simu verification-driven gate
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install offline test dependencies
+        run: python -m pip install -e '.[test]' 'hypothesis>=6,<7'
+      - name: Fetch pinned TLC release and check published checksum
+        run: |
+          curl --fail --location --retry 2 https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar -o "$RUNNER_TEMP/tla2tools.jar"
+          echo "bee4a54f3ee3d4afc347c3240ec2d9e93b075104  $RUNNER_TEMP/tla2tools.jar" | sha1sum -c -
+      - name: Verification and distribution checks
+        run: python scripts/verification_release_gate.py --output "$RUNNER_TEMP/Paper2Simu-v0.6.0.zip" --require-hypothesis --tlc-jar "$RUNNER_TEMP/tla2tools.jar" --require-tlc
+      - name: Full offline regression
+        run: python -m pytest -q tests

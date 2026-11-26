@@ -1,0 +1,124 @@
+{
+  "schema": {
+    "structural_status": "PASS",
+    "empty_pack": false,
+    "counts": {
+      "concepts.jsonl": 2,
+      "rules.jsonl": 106,
+      "formula-index.jsonl": 1
+    },
+    "sources": 174,
+    "sections": 421,
+    "errors": [],
+    "semantic_validation": "NOT_ASSESSED"
+  },
+  "graph": {
+    "sources": 174,
+    "evidence": 247,
+    "nodes": 109,
+    "edges": 24,
+    "status": "STRUCTURE_PASS"
+  },
+  "case_retrieval": {
+    "P014": [
+      "M14",
+      "M15",
+      "M25"
+    ],
+    "P031": [
+      "M01",
+      "M02",
+      "M05",
+      "M07",
+      "P05"
+    ],
+    "P010": [
+      "F07",
+      "F13",
+      "F14",
+      "P07"
+    ],
+    "P048": [
+      "F08",
+      "F14",
+      "M23",
+      "M24"
+    ]
+  },
+  "archive_replay": [
+    {
+      "id": "P014",
+      "basis": "archived feedback IDs C018/C022/C023/C026 and local 23.1 header",
+      "result": "PASS",
+      "outcome": "full settings echo does not admit the table; axisymmetric convention must be known; final numerical failure remains",
+      "observations": {
+        "observed_table_pairs": 52,
+        "header_max_pairs": 50,
+        "case_replacement_pairs": 30
+      }
+    },
+    {
+      "id": "P031",
+      "basis": "archived R3/R13/R16E and COMSOL 6.3 selection/pressure documentation",
+      "result": "PASS",
+      "outcome": "repair readback is separate from thermal solve and validation",
+      "observations": {
+        "r16e_state": "SOLVING",
+        "thermal_score": "NOT_RUN"
+      }
+    },
+    {
+      "id": "P010",
+      "basis": "archived Case4 sheet and published Eqs. 19, 22, 27–33",
+      "result": "PASS",
+      "outcome": "denominator swap reproduces the diagnostic number; actual power and main status are preserved",
+      "observations": {
+        "main_absolute_error_pct": 30.96121975780758,
+        "diagnostic_absolute_error_pct": 1.7790851816443083,
+        "diagnostic_signed_error_pct": -1.7790851816443083,
+        "actual_pump_w": 1.0712198758260625,
+        "required_pump_w": 1.2
+      }
+    },
+    {
+      "id": "P048",
+      "basis": "live diagnosis row and published Eq. 17–20",
+      "result": "PASS",
+      "outcome": "pressure and heat comparisons remain separate; author temperature weighting remains unknown",
+      "observations": {
+        "baseline_nu_error_pct_from_rounded_inputs": 99.4776505724241,
+        "board_nu_error_pct": 99.47763787,
+        "pressure_error_pct": 0.3994334277620347,
+        "later_nu": 0.10488
+      }
+    }
+  ],
+  "paths_F07_EQ01": true,
+  "formula_checks": [
+    {
+      "power_W": 75,
+      "volume_m3": 1e-05,
+      "result_W_per_m3": 7499999.999999999,
+      "expected": 7500000.0
+    },
+    {
+      "power_W": 0,
+      "volume_m3": 0.002,
+      "result_W_per_m3": 0.0,
+      "expected": 0
+    },
+    {
+      "power_W": -2,
+      "volume_m3": 0.001,
+      "result_W_per_m3": -2000.0,
+      "expected": -2000
+    },
+    {
+      "power_W": 20,
+      "volume_m3": 0,
+      "result": "无定义，已拦截"
+    }
+  ],
+  "engineering_runs": "NOT_RUN",
+  "held_out_evaluation": "NOT_RUN"
+}

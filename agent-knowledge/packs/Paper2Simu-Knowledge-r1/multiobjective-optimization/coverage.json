@@ -1,0 +1,58 @@
+{
+  "sections": [
+    {
+      "source_id": "CAND010",
+      "locator": "PDF pp. 5–8",
+      "status": "parsed",
+      "notes": "原生提取和渲染。具体已审位置另列。"
+    },
+    {
+      "source_id": "CAND010",
+      "locator": "PDF/印刷 pp. 6–8, §§2.3–2.5, Table 2、Eqs. (14)–(19)、Fig. 2",
+      "status": "reviewed",
+      "notes": "核对了供本包使用的证据。推断与作者本意仍按各卡状态。"
+    },
+    {
+      "source_id": "P010",
+      "locator": "PDF pp. 4–21",
+      "status": "parsed",
+      "notes": "原生提取和渲染。具体已审位置另列。"
+    },
+    {
+      "source_id": "P010",
+      "locator": "PDF/印刷 pp. 16–18, §5, Tables 6–8、Eqs. (27)–(33)、Fig. 13",
+      "status": "reviewed",
+      "notes": "核对了供本包使用的证据。推断与作者本意仍按各卡状态。"
+    },
+    {
+      "source_id": "P010",
+      "locator": "PDF/印刷 pp. 7–8, §§3.1–3.2 Eqs. (19)–(25)，Fig. 2",
+      "status": "reviewed",
+      "notes": "核对了供本包使用的证据。推断与作者本意仍按各卡状态。"
+    },
+    {
+      "source_id": "P010-CASE4",
+      "locator": "P010 Case4优化，整器件泵功、跨 Case 口径、RSM 与 360/480 W 分支",
+      "status": "reviewed",
+      "notes": "核对了供本包使用的证据。推断与作者本意仍按各卡状态。"
+    },
+    {
+      "source_id": "P048-PAPER",
+      "locator": "PDF/印刷 p. 6, §2.4 Eqs. (16)–(20)；p. 11 Fig. 7(a)",
+      "status": "reviewed",
+      "notes": "核对了供本包使用的证据。推断与作者本意仍按各卡状态。"
+    },
+    {
+      "source_id": "Wagner2020_Calibration",
+      "locator": "PDF pp. 12–24",
+      "status": "parsed",
+      "notes": "原生提取和渲染。具体已审位置另列。"
+    },
+    {
+      "source_id": "Wagner2020_Calibration",
+      "locator": "机构稿 PDF pp. 14–16、19–22，§3.1、§§3.3–3.4",
+      "status": "reviewed",
+      "notes": "核对了供本包使用的证据。推断与作者本意仍按各卡状态。"
+    }
+  ]
+}

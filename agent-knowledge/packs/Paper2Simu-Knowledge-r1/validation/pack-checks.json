@@ -1,0 +1,62 @@
+[
+  {
+    "pack": "simulation-validation",
+    "files": {
+      "concepts.jsonl": 4,
+      "rules.jsonl": 7,
+      "formula-index.jsonl": 6
+    },
+    "statuses": {
+      "verified": 16,
+      "blocked": 1
+    },
+    "structural_status": "PASS",
+    "graph": {
+      "sources": 26,
+      "evidence": 49,
+      "nodes": 21,
+      "edges": 9,
+      "status": "STRUCTURE_PASS"
+    }
+  },
+  {
+    "pack": "experiment-design",
+    "files": {
+      "concepts.jsonl": 2,
+      "rules.jsonl": 4,
+      "formula-index.jsonl": 2
+    },
+    "statuses": {
+      "verified": 8
+    },
+    "structural_status": "PASS",
+    "graph": {
+      "sources": 10,
+      "evidence": 21,
+      "nodes": 11,
+      "edges": 4,
+      "status": "STRUCTURE_PASS"
+    }
+  },
+  {
+    "pack": "multiobjective-optimization",
+    "files": {
+      "concepts.jsonl": 2,
+      "rules.jsonl": 4,
+      "formula-index.jsonl": 4
+    },
+    "statuses": {
+      "verified": 7,
+      "candidate": 2,
+      "blocked": 1
+    },
+    "structural_status": "PASS",
+    "graph": {
+      "sources": 5,
+      "evidence": 21,
+      "nodes": 11,
+      "edges": 3,
+      "status": "STRUCTURE_PASS"
+    }
+  }
+]

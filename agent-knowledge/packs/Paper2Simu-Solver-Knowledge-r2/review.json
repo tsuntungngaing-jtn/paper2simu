@@ -1,0 +1,2157 @@
+{
+  "scope": "批次读者按中立来源问题先冻结原文观察，再与其他作者的规则对照。verified 限核心来源语义，check 为建议的现场验证。公式与概念沿用标明的已复核母卡。candidate 已有定位，采纳前仍需复核。",
+  "review_sources": [
+    {
+      "reader": "verify",
+      "batch": "mesh",
+      "neutral_sha256": "8e27f7a0b681451b16d1df894d5d0e80cb7b75535fe2504eab9be8be8d3825d1",
+      "verdict_sha256": "ee37d449a3e019fd738a14b82facf4a9eda4a94d826dec07d8163c921fe93deb"
+    },
+    {
+      "reader": "mesh",
+      "batch": "fluent",
+      "neutral_sha256": "bda0ba042ea0b932067491401adf3f6fb0d12e5dbbac8c11840b4b3fa8cdd628",
+      "verdict_sha256": "122947087c9a6eb8d3decaa01a95c3a8f1bcbe94cff1b3cdaa9ba984bf475aca"
+    },
+    {
+      "reader": "fluent",
+      "batch": "project",
+      "neutral_sha256": "6015f1896fd47182df5f7da0e2d783547bbb05d0e5d4ee36b9169b34e9d1ec80",
+      "verdict_sha256": "8a91261738ddf508d5b6f521164ac506936addf3267f1e8c54babf11b5fe3b0c"
+    },
+    {
+      "reader": "fluent",
+      "batch": "verify",
+      "neutral_sha256": "c66561144101c2e3c8825a68b85ce65262ad9517ee153b01af601313479d7f79",
+      "verdict_sha256": "d6ecad389a9f83d7ef97ebe615c7ba959b0a5ed0024a8e85ff6798e06ceea7c2"
+    },
+    {
+      "reader": "mesh",
+      "batch": "extra",
+      "neutral_sha256": "a8fe17c9af9db6bcbee30c6087de3ba7d31349c503bbbaa23773e2447f432683",
+      "verdict_sha256": "b0465653670c76b39f70f29910eb6503ed390473dfe20a5ee327db792e12f138"
+    }
+  ],
+  "results": [
+    {
+      "card": "G01",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "结构树可创建或移动组件，Activate Component 决定编辑目标；PPT 的第 24 张另示插入文件进入结构树。",
+      "checked_locator": {
+        "source_id": "src-60e98536344bbf96",
+        "locator": "PDF p. 21",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-60e98536344bbf96",
+          "locator": "PDF p. 21",
+          "pdf_page_label": null,
+          "observation": "结构树可创建或移动组件，Activate Component 决定编辑目标；PPT 的第 24 张另示插入文件进入结构树。"
+        }
+      ]
+    },
+    {
+      "card": "G02",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "布局曲线开关用于暂时不参与三维成形的参考线，须依草绘意图选择。",
+      "checked_locator": {
+        "source_id": "src-b1ccce81caa63433",
+        "locator": "PDF p. 9",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-b1ccce81caa63433",
+          "locator": "PDF p. 9",
+          "pdf_page_label": null,
+          "observation": "布局曲线开关用于暂时不参与三维成形的参考线，须依草绘意图选择。"
+        }
+      ]
+    },
+    {
+      "card": "G03",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "partial",
+      "note": "修复课 p.18 写移除体积最大实体的干涉；另一份实际 PPT 第 6 张写包围盒较大的实体且仅通常体积较大。两种准则在异形体会不一致，自动删除对象需按具体部件与版本验证。",
+      "checked_locator": {
+        "source_id": "src-210c7f01383f7fbb",
+        "locator": "PDF p. 18",
+        "pdf_page_label": null
+      },
+      "evidence": []
+    },
+    {
+      "card": "G04",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "中面工具可按选面对或搜索厚度范围建立面，课件明确其壳单元简化用途。",
+      "checked_locator": {
+        "source_id": "src-243f06402b095e66",
+        "locator": "PDF p. 11",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-243f06402b095e66",
+          "locator": "PDF p. 11",
+          "pdf_page_label": null,
+          "observation": "中面工具可按选面对或搜索厚度范围建立面，课件明确其壳单元简化用途。"
+        }
+      ]
+    },
+    {
+      "card": "G05",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "手册列出直接链接与已有 Workbench 几何单元导入两种路径，原生和中性格式例证在另一课页。",
+      "checked_locator": {
+        "source_id": "src-37923befea4d0a21",
+        "locator": "PDF p. 10",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-37923befea4d0a21",
+          "locator": "PDF p. 10",
+          "pdf_page_label": null,
+          "observation": "手册列出直接链接与已有 Workbench 几何单元导入两种路径，原生和中性格式例证在另一课页。"
+        }
+      ]
+    },
+    {
+      "card": "G06",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "属性面板反映选中对象，旋转实体示例明示移动未记入树；选择层级有据。",
+      "checked_locator": {
+        "source_id": "src-c8139cc0ab687bae",
+        "locator": "PDF p. 8",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-c8139cc0ab687bae",
+          "locator": "PDF p. 8",
+          "pdf_page_label": null,
+          "observation": "属性面板反映选中对象，旋转实体示例明示移动未记入树；选择层级有据。"
+        }
+      ]
+    },
+    {
+      "card": "G07",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "内部面预览可查看润湿面，另有单独隐藏原零件查看新体的步骤。",
+      "checked_locator": {
+        "source_id": "src-e16e6ae7b74f11d0",
+        "locator": "PDF p. 6",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-e16e6ae7b74f11d0",
+          "locator": "PDF p. 6",
+          "pdf_page_label": null,
+          "observation": "内部面预览可查看润湿面，另有单独隐藏原零件查看新体的步骤。"
+        }
+      ]
+    },
+    {
+      "card": "G08",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "剖面模式配合 Pull 的 Up To，指定邻体内边对齐孔径，实际案例证实。",
+      "checked_locator": {
+        "source_id": "src-a3376486d960930d",
+        "locator": "PDF p. 5",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-a3376486d960930d",
+          "locator": "PDF p. 5",
+          "pdf_page_label": null,
+          "observation": "剖面模式配合 Pull 的 Up To，指定邻体内边对齐孔径，实际案例证实。"
+        }
+      ]
+    },
+    {
+      "card": "G09",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "支管案例先拖动手柄原点至两轴交点，再按当前姿态调整旋转方向。",
+      "checked_locator": {
+        "source_id": "src-7f6699545fc56a2b",
+        "locator": "PDF p. 22",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-7f6699545fc56a2b",
+          "locator": "PDF p. 22",
+          "pdf_page_label": null,
+          "observation": "支管案例先拖动手柄原点至两轴交点，再按当前姿态调整旋转方向。"
+        }
+      ]
+    },
+    {
+      "card": "G10",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "按边拉伸创建圆角及只移除可识别圆角分别有依据，检查数值需按设计输入。",
+      "checked_locator": {
+        "source_id": "src-9433e7c63fa17786",
+        "locator": "PDF p. 10",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-9433e7c63fa17786",
+          "locator": "PDF p. 10",
+          "pdf_page_label": null,
+          "observation": "按边拉伸创建圆角及只移除可识别圆角分别有依据，检查数值需按设计输入。"
+        }
+      ]
+    },
+    {
+      "card": "G11",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "圆柱面切割的例子明确要求分割后两实体，另一幻灯片明确分开选择切割对象与平面。",
+      "checked_locator": {
+        "source_id": "src-b7fcfd05d3e1d1ba",
+        "locator": "PDF p. 23",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-b7fcfd05d3e1d1ba",
+          "locator": "PDF p. 23",
+          "pdf_page_label": null,
+          "observation": "圆柱面切割的例子明确要求分割后两实体，另一幻灯片明确分开选择切割对象与平面。"
+        }
+      ]
+    },
+    {
+      "card": "G12",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "命名驱动量后调角观察几何，再恢复原值，课页明确。",
+      "checked_locator": {
+        "source_id": "src-78e6233ee9cc8ebd",
+        "locator": "PDF p. 8",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-78e6233ee9cc8ebd",
+          "locator": "PDF p. 8",
+          "pdf_page_label": null,
+          "observation": "命名驱动量后调角观察几何，再恢复原值，课页明确。"
+        }
+      ]
+    },
+    {
+      "card": "G13",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "原件分别演示清空后重建及用 TryGetDimensionValue 判别组，隔离测试文档为合理保护措施。",
+      "checked_locator": {
+        "source_id": "src-568f0dc2df9afabe",
+        "locator": "PDF p. 12",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-568f0dc2df9afabe",
+          "locator": "PDF p. 12",
+          "pdf_page_label": null,
+          "observation": "原件分别演示清空后重建及用 TryGetDimensionValue 判别组，隔离测试文档为合理保护措施。"
+        }
+      ]
+    },
+    {
+      "card": "G14",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "命名出口供后续 Fluent 边界使用，另一例可点选名称高亮对应面。",
+      "checked_locator": {
+        "source_id": "src-349d07bc02c32977",
+        "locator": "PDF p. 7",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-84e3684edf602cbe",
+          "locator": "PDF p. 4",
+          "pdf_page_label": null,
+          "observation": "散热器工作坊在导入前给重要表面建立命名选择，用于导入后辨识面。"
+        },
+        {
+          "source_id": "src-349d07bc02c32977",
+          "locator": "PDF p. 7",
+          "pdf_page_label": null,
+          "observation": "命名出口供后续 Fluent 边界使用，另一例可点选名称高亮对应面。"
+        }
+      ]
+    },
+    {
+      "card": "G15",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "Remove Faces 工作坊明确选择凹陷，完成后延伸周边几何；功能性特征须由设计决定。",
+      "checked_locator": {
+        "source_id": "src-d3bd5f4cc77e00a4",
+        "locator": "slide 19"
+      },
+      "evidence": [
+        {
+          "source_id": "src-d3bd5f4cc77e00a4",
+          "locator": "slide 19",
+          "observation": "Remove Faces 工作坊明确选择凹陷，完成后延伸周边几何；功能性特征须由设计决定。"
+        }
+      ]
+    },
+    {
+      "card": "G16",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "过滤文本仅缩小清单，Use WildCard 同时选中所有匹配项。记录方式也不同，课页有据。",
+      "checked_locator": {
+        "source_id": "src-5ad33be825f8843b",
+        "locator": "PDF p. 34",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-5ad33be825f8843b",
+          "locator": "PDF p. 34",
+          "pdf_page_label": null,
+          "observation": "过滤文本仅缩小清单，Use WildCard 同时选中所有匹配项。记录方式也不同，课页有据。"
+        }
+      ]
+    },
+    {
+      "card": "G17",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "partial",
+      "note": "原页的图文示范尺寸预览、网格生成和读取最大偏斜数值；这些页未说明如何定位最大偏斜单元，位置需另取诊断依据。",
+      "checked_locator": {
+        "source_id": "src-e38aac3894a8f288",
+        "locator": "PDF p. 6",
+        "pdf_page_label": null
+      },
+      "evidence": []
+    },
+    {
+      "card": "G18",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "分区设置作用于体内；poly/tet 可改最大长度和增长率，hexcore 等仅改最大长度。PPT 说明软目标允许更细的体单元。",
+      "checked_locator": {
+        "source_id": "src-40c34032980f1d8a",
+        "locator": "PDF p. 39",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-40c34032980f1d8a",
+          "locator": "PDF p. 39",
+          "pdf_page_label": null,
+          "observation": "分区设置作用于体内；poly/tet 可改最大长度和增长率，hexcore 等仅改最大长度。PPT 说明软目标允许更细的体单元。"
+        }
+      ]
+    },
+    {
+      "card": "G19",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "原页说明鳍片上仅 1 格是课堂算力折中，另一页示意不同厚度分辨率；不能直接用课堂层数验收热解。",
+      "checked_locator": {
+        "source_id": "src-84e3684edf602cbe",
+        "locator": "PDF p. 7",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-84e3684edf602cbe",
+          "locator": "PDF p. 7",
+          "pdf_page_label": null,
+          "observation": "本例的 proximity sizing 作用在 heatsink 与 heatsource 壁面的面标签。跨厚度仅一格是压低训练算例单元数的妥协，原页明确提出更高的跨厚度分辨率更理想。"
+        },
+        {
+          "source_id": "src-84e3684edf602cbe",
+          "locator": "PDF p. 7",
+          "pdf_page_label": null,
+          "observation": "原页说明鳍片上仅 1 格是课堂算力折中，另一页示意不同厚度分辨率；不能直接用课堂层数验收热解。"
+        }
+      ]
+    },
+    {
+      "card": "G20",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "Update 先查上游并更新关联下游单元状态，Generate 以当前设置生成，含全新网格时的例外。",
+      "checked_locator": {
+        "source_id": "src-ca93b5983dc72028",
+        "locator": "PDF p. 9",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-ca93b5983dc72028",
+          "locator": "PDF p. 9",
+          "pdf_page_label": null,
+          "observation": "Update 先查上游并更新关联下游单元状态，Generate 以当前设置生成，含全新网格时的例外。"
+        }
+      ]
+    },
+    {
+      "card": "G21",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "最小尺寸可能妨碍曲率法向角的细分，另有近距控制适用描述。",
+      "checked_locator": {
+        "source_id": "src-3b3629fd050fb9ae",
+        "locator": "PDF p. 17",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-3b3629fd050fb9ae",
+          "locator": "PDF p. 17",
+          "pdf_page_label": null,
+          "observation": "最小尺寸可能妨碍曲率法向角的细分，另有近距控制适用描述。"
+        }
+      ]
+    },
+    {
+      "card": "G22",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "偏置比是最大／最小格之比，相邻格增长率是另一个量；非对称边可反向。",
+      "checked_locator": {
+        "source_id": "src-18500dd62b0693fc",
+        "locator": "PDF p. 6",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-18500dd62b0693fc",
+          "locator": "PDF p. 6",
+          "pdf_page_label": null,
+          "observation": "偏置比是最大／最小格之比，相邻格增长率是另一个量；非对称边可反向。"
+        }
+      ]
+    },
+    {
+      "card": "G23",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "手动源／目标与自动识别分别有说明，旋转体不自动识别和复杂体分解也有来源。",
+      "checked_locator": {
+        "source_id": "src-e02792da5ed08187",
+        "locator": "PDF p. 6",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-e02792da5ed08187",
+          "locator": "PDF p. 6",
+          "pdf_page_label": null,
+          "observation": "手动源／目标与自动识别分别有说明，旋转体不自动识别和复杂体分解也有来源。"
+        }
+      ]
+    },
+    {
+      "card": "G24",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "partial",
+      "note": "图文支持变形、细长程度和过渡平滑性；该页本身没有给出沿流向与近壁层可接受细长单元的条件或判据。",
+      "checked_locator": {
+        "source_id": "src-c8f5da5d61bae04a",
+        "locator": "PDF p. 4",
+        "pdf_page_label": null
+      },
+      "evidence": []
+    },
+    {
+      "card": "G25",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "partial",
+      "note": "此练习明确设 MultiZone 的 Free Mesh Type 为 Tetra/Pyramid；仅凭这页不能断言每次使用 MultiZone 均必须显式设定填充。",
+      "checked_locator": {
+        "source_id": "src-b075081d52dbf53f",
+        "locator": "PDF p. 14",
+        "pdf_page_label": null
+      },
+      "evidence": []
+    },
+    {
+      "card": "G26",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "课页说明创建两个虚拟面，引出两条作为网格生成依据的新边。",
+      "checked_locator": {
+        "source_id": "src-091652f3101da963",
+        "locator": "PDF p. 8",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-091652f3101da963",
+          "locator": "PDF p. 8",
+          "pdf_page_label": null,
+          "observation": "课页说明创建两个虚拟面，引出两条作为网格生成依据的新边。"
+        }
+      ]
+    },
+    {
+      "card": "G27",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "旧扩展使用 tmp.scm 记录操作、SYS#.trn 记录单元质量等统计，迁移说明明确 R17 与 R18 扩展互不兼容。",
+      "checked_locator": {
+        "source_id": "src-d67879038726fe8d",
+        "locator": "PDF p. 33",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-d67879038726fe8d",
+          "locator": "PDF p. 33",
+          "pdf_page_label": null,
+          "observation": "旧扩展使用 tmp.scm 记录操作、SYS#.trn 记录单元质量等统计，迁移说明明确 R17 与 R18 扩展互不兼容。"
+        }
+      ]
+    },
+    {
+      "card": "G28",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "原页截图显示 Body Connection 色阶以及线框显示，支持用它定位可疑界面。",
+      "checked_locator": {
+        "source_id": "src-5392e2ad482af6e6",
+        "locator": "PDF p. 22",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-5392e2ad482af6e6",
+          "locator": "PDF p. 22",
+          "pdf_page_label": null,
+          "observation": "原页截图显示 Body Connection 色阶以及线框显示，支持用它定位可疑界面。"
+        }
+      ]
+    },
+    {
+      "card": "G29",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "partial",
+      "note": "原页明确仅在非 Adaptive size function 时适用，并指出 CutCell 不支持其中的 Element Size；应将前者明确为检索和执行前提。",
+      "checked_locator": {
+        "source_id": "src-ca35c3b78baed425",
+        "locator": "PDF p. 10",
+        "pdf_page_label": null
+      },
+      "evidence": []
+    },
+    {
+      "card": "G30",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "连接容差下短边／窄面可能被消隐，四边形失败可退回三角形并有警告。",
+      "checked_locator": {
+        "source_id": "src-6ac8c4084f88d0ab",
+        "locator": "PDF p. 30",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-6ac8c4084f88d0ab",
+          "locator": "PDF p. 30",
+          "pdf_page_label": null,
+          "observation": "连接容差下短边／窄面可能被消隐，四边形失败可退回三角形并有警告。"
+        }
+      ]
+    },
+    {
+      "card": "G31",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "逐区悬停高亮、改区域类型有明确文字。不同案例的自动区和排除列表不同。",
+      "checked_locator": {
+        "source_id": "src-82fd8be48dfe8af3",
+        "locator": "slide 12"
+      },
+      "evidence": [
+        {
+          "source_id": "src-82fd8be48dfe8af3",
+          "locator": "slide 12",
+          "observation": "逐区悬停高亮、改区域类型有明确文字。不同案例的自动区和排除列表不同。"
+        }
+      ]
+    },
+    {
+      "card": "G32",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "示例明确按 face label 施加 Local Face Size、按 zone 选择 BOI，两个控制对象不同。",
+      "checked_locator": {
+        "source_id": "src-bd10ab4ad07d7fc3",
+        "locator": "slide 5"
+      },
+      "evidence": [
+        {
+          "source_id": "src-bd10ab4ad07d7fc3",
+          "locator": "slide 5",
+          "observation": "示例明确按 face label 施加 Local Face Size、按 zone 选择 BOI，两个控制对象不同。"
+        }
+      ]
+    },
+    {
+      "card": "G33",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "verify",
+      "verdict": "supported",
+      "note": "名称匹配会给出初始边界类型，Update Boundaries 支持修改名称及批量设类型。",
+      "checked_locator": {
+        "source_id": "src-6e26acb18a89e91c",
+        "locator": "slide 20"
+      },
+      "evidence": [
+        {
+          "source_id": "src-6e26acb18a89e91c",
+          "locator": "slide 20",
+          "observation": "名称匹配会给出初始边界类型，Update Boundaries 支持修改名称及批量设类型。"
+        }
+      ]
+    },
+    {
+      "card": "F01",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "两种描述的区别在于是否存在宏观相界面；VOF 需界面可分辨且形状为目标。",
+      "checked_locator": {
+        "source_id": "src-ac3eedd502ab8012",
+        "locator": "PDF p. 4",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-ac3eedd502ab8012",
+          "locator": "PDF p. 4",
+          "pdf_page_label": null,
+          "observation": "两种描述的区别在于是否存在宏观相界面；VOF 需界面可分辨且形状为目标。"
+        }
+      ]
+    },
+    {
+      "card": "F02",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "该页分列载流体影响颗粒和颗粒反作用载流体的两种耦合。",
+      "checked_locator": {
+        "source_id": "src-7ccc48e431ee2dc8",
+        "locator": "PDF p. 12",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-7ccc48e431ee2dc8",
+          "locator": "PDF p. 12",
+          "pdf_page_label": null,
+          "observation": "该页分列载流体影响颗粒和颗粒反作用载流体的两种耦合。"
+        }
+      ]
+    },
+    {
+      "card": "F03",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "不完整轨迹可能受追踪步数限制，也可能确实滞留于回流区。",
+      "checked_locator": {
+        "source_id": "src-80dc00c76a506baa",
+        "locator": "PDF p. 22",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-80dc00c76a506baa",
+          "locator": "PDF p. 22",
+          "pdf_page_label": null,
+          "observation": "不完整轨迹可能受追踪步数限制，也可能确实滞留于回流区。"
+        }
+      ]
+    },
+    {
+      "card": "F04",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "先全域初始化为空气，再在指定纯水区给空气相体积分数赋零。",
+      "checked_locator": {
+        "source_id": "src-e478da9cd788d7dc",
+        "locator": "PDF p. 16",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-e478da9cd788d7dc",
+          "locator": "PDF p. 17",
+          "pdf_page_label": null,
+          "observation": "液位初始化后，先在课件所指定剖面显示水相体积分数检验分区，再开始时间推进。"
+        },
+        {
+          "source_id": "src-e478da9cd788d7dc",
+          "locator": "PDF p. 16",
+          "pdf_page_label": null,
+          "observation": "先全域初始化为空气，再在指定纯水区给空气相体积分数赋零。"
+        }
+      ]
+    },
+    {
+      "card": "F05",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "边界应设于有合理数据且条件类型可匹配的位置，必要时外延。",
+      "checked_locator": {
+        "source_id": "src-856e10a8aafe89e4",
+        "locator": "PDF p. 6",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-856e10a8aafe89e4",
+          "locator": "PDF p. 6",
+          "pdf_page_label": null,
+          "observation": "边界应设于有合理数据且条件类型可匹配的位置，必要时外延。"
+        }
+      ]
+    },
+    {
+      "card": "F06",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "已目视页图，指出检查 Domain Extents，若尺寸正确则无需缩放。",
+      "checked_locator": {
+        "source_id": "src-ddc6cde233c479de",
+        "locator": "PDF p. 12",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-ddc6cde233c479de",
+          "locator": "PDF p. 12",
+          "pdf_page_label": null,
+          "observation": "已目视页图，指出检查 Domain Extents，若尺寸正确则无需缩放。"
+        }
+      ]
+    },
+    {
+      "card": "F07",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "源项单位 W/m³，课件用指定区的总功率除以其体积。",
+      "checked_locator": {
+        "source_id": "src-909d91d15468ce7a",
+        "locator": "PDF p. 28",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-b993fcca9e1b8f5f",
+          "locator": "PDF p. 23",
+          "pdf_page_label": null,
+          "observation": "直接目读原页表达式截图：将 75 W 除以 solid_heatsource 的体积，刷新后显示 W/m³；此例的源密度依器件几何体积而定。"
+        },
+        {
+          "source_id": "src-909d91d15468ce7a",
+          "locator": "PDF p. 28",
+          "pdf_page_label": null,
+          "observation": "源项单位 W/m³，课件用指定区的总功率除以其体积。"
+        }
+      ]
+    },
+    {
+      "card": "F08",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "明确区分边界通量、指定表面的统计和指定单元区的统计。",
+      "checked_locator": {
+        "source_id": "src-a9586dd0517e692f",
+        "locator": "PDF p. 14",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-a9586dd0517e692f",
+          "locator": "PDF p. 14",
+          "pdf_page_label": null,
+          "observation": "Flux 报告给出穿过边界的质量或能量流，表面积分和体积分可对指定面或单元区求平均、和或极值；记录报告类型与作用域。"
+        },
+        {
+          "source_id": "src-a9586dd0517e692f",
+          "locator": "PDF p. 14",
+          "pdf_page_label": null,
+          "observation": "明确区分边界通量、指定表面的统计和指定单元区的统计。"
+        }
+      ]
+    },
+    {
+      "card": "F09",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "稳态收敛需残差、整体平衡和关注量稳定，物理精度需另查。",
+      "checked_locator": {
+        "source_id": "src-73db8a9374dc4acc",
+        "locator": "PDF p. 16",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-b993fcca9e1b8f5f",
+          "locator": "PDF p. 32",
+          "pdf_page_label": null,
+          "observation": "该次迭代达到残差判停指标时报告曲线仍在变化，能量收支也还需检查。作者继续迭代。"
+        },
+        {
+          "source_id": "src-4666497a9c463eb9",
+          "locator": "PDF p. 11",
+          "pdf_page_label": null,
+          "observation": "该工作坊以质量、能量不平衡量与边界实际流率的相对量级检查守恒。"
+        },
+        {
+          "source_id": "src-73db8a9374dc4acc",
+          "locator": "PDF p. 16",
+          "pdf_page_label": null,
+          "observation": "稳态收敛需残差、整体平衡和关注量稳定，物理精度需另查。"
+        }
+      ]
+    },
+    {
+      "card": "F10",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "入流及回流的湍流信息可按强度加尺度或黏度比等方式定义。",
+      "checked_locator": {
+        "source_id": "src-eb1a343ac9985e26",
+        "locator": "PDF p. 20",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-eb1a343ac9985e26",
+          "locator": "PDF p. 20",
+          "pdf_page_label": null,
+          "observation": "入流及回流的湍流信息可按强度加尺度或黏度比等方式定义。"
+        }
+      ]
+    },
+    {
+      "card": "F11",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "总热量报告包括对流和辐射并计源项；净辐射量可反映介质吸收。",
+      "checked_locator": {
+        "source_id": "src-aba88872a907bade",
+        "locator": "PDF p. 16",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-aba88872a907bade",
+          "locator": "PDF p. 16",
+          "pdf_page_label": null,
+          "observation": "总热量报告包括对流和辐射并计源项；净辐射量可反映介质吸收。"
+        }
+      ]
+    },
+    {
+      "card": "F12",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "时间步需解析相关非稳态变化，并受更快过程和稳定性约束。",
+      "checked_locator": {
+        "source_id": "src-9c3596455d29210f",
+        "locator": "PDF p. 8",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-9c3596455d29210f",
+          "locator": "PDF p. 8",
+          "pdf_page_label": null,
+          "observation": "时间步需解析相关非稳态变化，并受更快过程和稳定性约束。"
+        }
+      ]
+    },
+    {
+      "card": "F13",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "混合三通通量报告列两入口一出口的逐边界有符号流率。",
+      "checked_locator": {
+        "source_id": "src-0d8a671699481839",
+        "locator": "PDF p. 38",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-0d8a671699481839",
+          "locator": "PDF p. 38",
+          "pdf_page_label": null,
+          "observation": "质量流率报告同时选两个入口和一个出口。此报告以流入为正、流出为负，净和与各边界流率比较。"
+        },
+        {
+          "source_id": "src-0d8a671699481839",
+          "locator": "PDF p. 38",
+          "pdf_page_label": null,
+          "observation": "混合三通通量报告列两入口一出口的逐边界有符号流率。"
+        }
+      ]
+    },
+    {
+      "card": "F14",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "报告读出进出口各自面积加权静压；出口均值为零时算例可取入口值。",
+      "checked_locator": {
+        "source_id": "src-b4615d12bb74dbf6",
+        "locator": "PDF p. 28",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-b4615d12bb74dbf6",
+          "locator": "PDF p. 28",
+          "pdf_page_label": null,
+          "observation": "报告读出进出口各自面积加权静压；出口均值为零时算例可取入口值。"
+        }
+      ]
+    },
+    {
+      "card": "F15",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "复核修订版后，分开报告体平均、表面最高和体内最高的条件获得原页支持。实验测点按位置和范围核验属于应用边界。",
+      "checked_locator": {
+        "source_id": "src-b993fcca9e1b8f5f",
+        "locator": "PDF p. 38",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-b993fcca9e1b8f5f",
+          "locator": "PDF p. 4",
+          "pdf_page_label": null,
+          "observation": "工作坊的预测目标是发热元件最高温度，元件的总发热功率是 75 W。"
+        },
+        {
+          "source_id": "src-b993fcca9e1b8f5f",
+          "locator": "PDF p. 38",
+          "pdf_page_label": null,
+          "observation": "元件外表面算顶点最高静温；若内部可能更热，需对元件体域求最大值。无辐射分支的结果还要做网格无关性检查，数值会随发布版和机器变化。"
+        },
+        {
+          "source_id": "src-b993fcca9e1b8f5f",
+          "locator": "PDF p. 47",
+          "pdf_page_label": null,
+          "observation": "含辐射分支沿用同一表面和体域观测区别并再次要求网格无关性检查。算例图示温度只对应本分支。"
+        },
+        {
+          "source_id": "src-b993fcca9e1b8f5f",
+          "locator": "PDF p. 38",
+          "pdf_page_label": null,
+          "observation": "复核修订版后，分开报告体平均、表面最高和体内最高的条件获得原页支持。实验测点按位置和范围核验属于应用边界。"
+        }
+      ]
+    },
+    {
+      "card": "F16",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "工作流名称指定水密几何；2021 版需按已有许可选择可用能力。",
+      "checked_locator": {
+        "source_id": "src-9f01d7790355eb97",
+        "locator": "PDF p. 4",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-9f01d7790355eb97",
+          "locator": "PDF p. 4",
+          "pdf_page_label": null,
+          "observation": "工作流名称指定水密几何；2021 版需按已有许可选择可用能力。"
+        }
+      ]
+    },
+    {
+      "card": "F17",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "课件明确绝对压力等于操作压力加相对压力，重力分支另有压力变量定义。",
+      "checked_locator": {
+        "source_id": "src-909d91d15468ce7a",
+        "locator": "PDF p. 12",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-909d91d15468ce7a",
+          "locator": "PDF p. 12",
+          "pdf_page_label": null,
+          "observation": "课件明确绝对压力等于操作压力加相对压力，重力分支另有压力变量定义。"
+        }
+      ]
+    },
+    {
+      "card": "F18",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "输出参数随设计点列表归档，只有保留的设计点可切换为当前解。",
+      "checked_locator": {
+        "source_id": "src-8f4082e6a9929f89",
+        "locator": "PDF p. 50",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-8f4082e6a9929f89",
+          "locator": "PDF p. 50",
+          "pdf_page_label": null,
+          "observation": "输出参数随设计点列表归档，只有保留的设计点可切换为当前解。"
+        }
+      ]
+    },
+    {
+      "card": "F19",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "插值后检查温度切面，该例观察到液体初值误入固体并需局部修补。",
+      "checked_locator": {
+        "source_id": "src-4666497a9c463eb9",
+        "locator": "PDF p. 18",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-4666497a9c463eb9",
+          "locator": "PDF p. 18",
+          "pdf_page_label": null,
+          "observation": "插值后检查温度切面，该例观察到液体初值误入固体并需局部修补。"
+        }
+      ]
+    },
+    {
+      "card": "F20",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "速度差值报告明确先后顺序，基础量均为各出口速度模量顶点最大值。",
+      "checked_locator": {
+        "source_id": "src-4666497a9c463eb9",
+        "locator": "PDF p. 28",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-4666497a9c463eb9",
+          "locator": "PDF p. 28",
+          "pdf_page_label": null,
+          "observation": "速度差值报告明确先后顺序，基础量均为各出口速度模量顶点最大值。"
+        }
+      ]
+    },
+    {
+      "card": "F21",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "固定 SST 在系列网格比较同一 Nu 峰值，两种离散阶次在粗网格结果有差异。",
+      "checked_locator": {
+        "source_id": "src-96476ef97c4e6c45",
+        "locator": "PDF p. 10",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-96476ef97c4e6c45",
+          "locator": "PDF p. 10",
+          "pdf_page_label": null,
+          "observation": "固定 SST 在系列网格比较同一 Nu 峰值，两种离散阶次在粗网格结果有差异。"
+        }
+      ]
+    },
+    {
+      "card": "F22",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "讲义以此二维翼型的弦长乘 z 向厚度设参考面积；其他问题需另定。",
+      "checked_locator": {
+        "source_id": "src-8ea10782fb572eca",
+        "locator": "PDF p. 26",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-8ea10782fb572eca",
+          "locator": "PDF p. 26",
+          "pdf_page_label": null,
+          "observation": "讲义以此二维翼型的弦长乘 z 向厚度设参考面积；其他问题需另定。"
+        }
+      ]
+    },
+    {
+      "card": "F23",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "实际绘制壁面 y+ 并建议改变近壁网格做敏感性比较，配套讲义区分壁函数和解析底层。",
+      "checked_locator": {
+        "source_id": "src-a418724f2c74aace",
+        "locator": "PDF p. 28",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-a418724f2c74aace",
+          "locator": "PDF p. 28",
+          "pdf_page_label": null,
+          "observation": "实际绘制壁面 y+ 并建议改变近壁网格做敏感性比较，配套讲义区分壁函数和解析底层。"
+        }
+      ]
+    },
+    {
+      "card": "F24",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "壁温、热通量、外部换热和辐射分别列出；混合壁面所需输入随实际环境。",
+      "checked_locator": {
+        "source_id": "src-aba88872a907bade",
+        "locator": "PDF p. 6",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-52e016007fb8e14d",
+          "locator": "PDF p. 6",
+          "pdf_page_label": null,
+          "observation": "壁面可指定热通量或壁温；用外部换热条件模拟未显式建模的环境时，需要另外给出有关系数或辐射环境量。"
+        },
+        {
+          "source_id": "src-aba88872a907bade",
+          "locator": "PDF p. 6",
+          "pdf_page_label": null,
+          "observation": "壁温、热通量、外部换热和辐射分别列出；混合壁面所需输入随实际环境。"
+        }
+      ]
+    },
+    {
+      "card": "F25",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "浮力源于重力作用于温度造成的密度变化，联合检查压力口径有依据。",
+      "checked_locator": {
+        "source_id": "src-aba88872a907bade",
+        "locator": "PDF p. 10",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-aba88872a907bade",
+          "locator": "PDF p. 10",
+          "pdf_page_label": null,
+          "observation": "浮力源于重力作用于温度造成的密度变化，联合检查压力口径有依据。"
+        }
+      ]
+    },
+    {
+      "card": "F26",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "FFT 使用过渡段后的报告时序，窗长会影响频率分辨率。",
+      "checked_locator": {
+        "source_id": "src-33248bd8edea4f73",
+        "locator": "PDF p. 44",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-33248bd8edea4f73",
+          "locator": "PDF p. 44",
+          "pdf_page_label": null,
+          "observation": "FFT 使用过渡段后的报告时序，窗长会影响频率分辨率。"
+        }
+      ]
+    },
+    {
+      "card": "M01",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "选择明确区分域、边界、边和点，核目标层级。",
+      "checked_locator": {
+        "source_id": "COMSOL63-SELECT",
+        "locator": "#1223699"
+      },
+      "evidence": [
+        {
+          "source_id": "COMSOL63-SELECT",
+          "locator": "About Selecting Geometric Entities，开篇、Table 6-2 前",
+          "observation": "域、边界、边和点可分别建立选择。分派材料、边界条件或源时，应明确所选几何实体的层级和范围。"
+        },
+        {
+          "source_id": "COMSOL63-SELECT",
+          "locator": "#1223699",
+          "observation": "选择明确区分域、边界、边和点，核目标层级。"
+        }
+      ]
+    },
+    {
+      "card": "M02",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "命名选区帮助几何映射，手册明确映射可能有歧义。",
+      "checked_locator": {
+        "source_id": "COMSOL63-REFERENCE-PDF",
+        "locator": "PDF p. 598",
+        "pdf_page_label": "598"
+      },
+      "evidence": [
+        {
+          "source_id": "COMSOL63-REFERENCE-PDF",
+          "locator": "PDF p. 598",
+          "pdf_page_label": "598",
+          "observation": "命名选区帮助几何映射，手册明确映射可能有歧义。"
+        }
+      ]
+    },
+    {
+      "card": "M03",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "6.4 同版正文强调自动映射可能无法保留预期物理指派。",
+      "checked_locator": {
+        "source_id": "COMSOL64-REFERENCE-PDF",
+        "locator": "PDF p. 618",
+        "pdf_page_label": "618"
+      },
+      "evidence": [
+        {
+          "source_id": "COMSOL64-REFERENCE-PDF",
+          "locator": "PDF p. 618",
+          "pdf_page_label": "618",
+          "observation": "6.4 同版正文强调自动映射可能无法保留预期物理指派。"
+        }
+      ]
+    },
+    {
+      "card": "M04",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "6.0 明确列出 entities(dim) 可能少于 set 列表，并列出了 inputEntities 的 null 情况。",
+      "checked_locator": {
+        "source_id": "COMSOL60-PROGRAMMING",
+        "locator": "PDF p. 34",
+        "pdf_page_label": "34"
+      },
+      "evidence": [
+        {
+          "source_id": "COMSOL60-PROGRAMMING",
+          "locator": "PDF p. 34",
+          "pdf_page_label": "34",
+          "observation": "6.0 明确列出 entities(dim) 可能少于 set 列表，并列出了 inputEntities 的 null 情况。"
+        }
+      ]
+    },
+    {
+      "card": "M05",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "6.3 原生 API 的输入列表与过滤后实体有别。",
+      "checked_locator": {
+        "source_id": "COMSOL63-PROGRAMMING-PDF",
+        "locator": "PDF p. 35",
+        "pdf_page_label": "35"
+      },
+      "evidence": [
+        {
+          "source_id": "COMSOL63-API-SELECT",
+          "locator": "Selections / General Syntax，selection.entities(dim) 与 inputEntities()",
+          "observation": "对最终几何上的选区，适用性过滤能使 entities(dim) 返回的实体少于 set 输入。inputEntities() 表示输入而非最终活动实体，部分选区类型还可能返回 null。"
+        },
+        {
+          "source_id": "COMSOL63-PROGRAMMING-PDF",
+          "locator": "PDF p. 35",
+          "pdf_page_label": "35",
+          "observation": "6.3 原生 API 的输入列表与过滤后实体有别。"
+        }
+      ]
+    },
+    {
+      "card": "M06",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "6.4 原文保留了该区分，过滤取决于边界条件和活动物理域。",
+      "checked_locator": {
+        "source_id": "COMSOL64-PROGRAMMING-PDF",
+        "locator": "PDF p. 35",
+        "pdf_page_label": "35"
+      },
+      "evidence": [
+        {
+          "source_id": "COMSOL64-PROGRAMMING-PDF",
+          "locator": "PDF p. 35",
+          "pdf_page_label": "35",
+          "observation": "6.4 原文保留了该区分，过滤取决于边界条件和活动物理域。"
+        }
+      ]
+    },
+    {
+      "card": "M07",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "无其他压力基准时可用点压，参考压力决定绝对/相对含义。",
+      "checked_locator": {
+        "source_id": "COMSOL63-CFD-PDF",
+        "locator": "PDF p. 153",
+        "pdf_page_label": "153"
+      },
+      "evidence": [
+        {
+          "source_id": "COMSOL63-PRESSURE",
+          "locator": "Pressure Point Constraint / Pressure Constraint",
+          "observation": "未通过边界设定压力水平时，可用固定点压设定基准。p0 是相对压；接口参考压为零时才对应绝对压。启用重力并采用非减压形式时，还需核对静水压补偿状态。"
+        },
+        {
+          "source_id": "COMSOL63-CFD-PDF",
+          "locator": "PDF p. 153",
+          "pdf_page_label": "153",
+          "observation": "无其他压力基准时可用点压，参考压力决定绝对/相对含义。"
+        }
+      ]
+    },
+    {
+      "card": "M08",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "在 6.4 版原文核验了压力水平、点压和参考压力的关系。",
+      "checked_locator": {
+        "source_id": "COMSOL64-CFD-PDF",
+        "locator": "PDF p. 161",
+        "pdf_page_label": "161"
+      },
+      "evidence": [
+        {
+          "source_id": "COMSOL64-CFD-PDF",
+          "locator": "PDF p. 161",
+          "pdf_page_label": "161",
+          "observation": "在 6.4 版原文核验了压力水平、点压和参考压力的关系。"
+        }
+      ]
+    },
+    {
+      "card": "M09",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "6.3 流入焓条件未强制入口面的温度等于上游设定。",
+      "checked_locator": {
+        "source_id": "COMSOL63-HEAT-PDF",
+        "locator": "PDF p. 675",
+        "pdf_page_label": "675"
+      },
+      "evidence": [
+        {
+          "source_id": "COMSOL63-HEAT-PDF",
+          "locator": "PDF p. 675",
+          "pdf_page_label": "675",
+          "observation": "6.3 流入焓条件未强制入口面的温度等于上游设定。"
+        }
+      ]
+    },
+    {
+      "card": "M10",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "6.4 同样通过上游焓通量处理，原文与 6.4 网页相符。",
+      "checked_locator": {
+        "source_id": "COMSOL64-HEAT-PDF",
+        "locator": "PDF p. 702",
+        "pdf_page_label": "702"
+      },
+      "evidence": [
+        {
+          "source_id": "COMSOL64-INFLOW",
+          "locator": "Inflow，Eq. (6-16) 前后、Upstream Properties",
+          "observation": "非固体区域的热流入节点用虚拟上游域的焓通量条件表示。规定上游温度并不严格钳住入口面温度，入口附近存在热源时应核对温度剖面及所采用的热边界类型。"
+        },
+        {
+          "source_id": "COMSOL64-HEAT-PDF",
+          "locator": "PDF p. 702",
+          "pdf_page_label": "702",
+          "observation": "6.4 同样通过上游焓通量处理，原文与 6.4 网页相符。"
+        }
+      ]
+    },
+    {
+      "card": "M11",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "教程稳态积蓄率为零、净能量约等于已知基底热源，监测基底温度。1 W 和绝热条件属该教程。",
+      "checked_locator": {
+        "source_id": "COMSOL64-HEATSINK",
+        "locator": "#702731"
+      },
+      "evidence": [
+        {
+          "source_id": "COMSOL64-HEATSINK",
+          "locator": "#702731",
+          "observation": "教程稳态积蓄率为零、净能量约等于已知基底热源，监测基底温度。1 W 和绝热条件属该教程。"
+        }
+      ]
+    },
+    {
+      "card": "M12",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "双侧壁热耦合选项和 shadow 对应关系有明确说明。",
+      "checked_locator": {
+        "source_id": "FLUENT242-USER-PDF",
+        "locator": "PDF p. 1472",
+        "pdf_page_label": "1472"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-USER-PDF",
+          "locator": "PDF p. 1472",
+          "pdf_page_label": "1472",
+          "observation": "双侧壁热耦合选项和 shadow 对应关系有明确说明。"
+        }
+      ]
+    },
+    {
+      "card": "M13",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "材料关系依赖能量方程时可自动启用；需要依据实际工况复核边界热输入。",
+      "checked_locator": {
+        "source_id": "FLUENT242-MATERIAL",
+        "locator": "§8.1 Defining Materials"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-MATERIAL",
+          "locator": "§8.1 Defining Materials",
+          "observation": "材料关系依赖能量方程时可自动启用；需要依据实际工况复核边界热输入。"
+        }
+      ]
+    },
+    {
+      "card": "M14",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "温度递增、每属性最多50点、超界采用端值仅针对分段线性输入。",
+      "checked_locator": {
+        "source_id": "FLUENT242-TABLE",
+        "locator": "#flu_ug_sec_material_piece"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-TABLE",
+          "locator": "8.2.2 / Piecewise-Linear Profiles，Figure 8.13 后 Important",
+          "observation": "每项物性的分段线性表最多 50 个点，必须按温度递增提交，求解器不会代排。温度越界时分别保持低端或高端物性值，而非延长末段斜率。"
+        },
+        {
+          "source_id": "FLUENT242-TABLE",
+          "locator": "#flu_ug_sec_material_piece",
+          "observation": "温度递增、每属性最多50点、超界采用端值仅针对分段线性输入。"
+        }
+      ]
+    },
+    {
+      "card": "M15",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "宏明确提供 100 槽与 50 对；另核第 63–65 行 float 布局和第 97 行求值接口。",
+      "checked_locator": {
+        "source_id": "src-97a825e54bdaad1a",
+        "locator": "lines 13-16"
+      },
+      "evidence": [
+        {
+          "source_id": "src-97a825e54bdaad1a",
+          "locator": "cxpoly.h lines 13–16, 57–68, 83–88, 95–100",
+          "observation": "此安装件为分段线性表预留 100 个 float 槽，x、y 交替存储，对应 50 对。求值函数为 float 输入和返回；积分声明另用 double，不应据此推断全求解器精度或其他版本固定上限。"
+        },
+        {
+          "source_id": "src-97a825e54bdaad1a",
+          "locator": "lines 13-16",
+          "observation": "宏明确提供 100 槽与 50 对；另核第 63–65 行 float 布局和第 97 行求值接口。"
+        }
+      ]
+    },
+    {
+      "card": "M16",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "安装件明确仅尝试改进偏斜超过阈值的三角面，控制值不保证最终值。",
+      "checked_locator": {
+        "source_id": "src-b811ca1cdc5700b7",
+        "locator": "lines 225-228"
+      },
+      "evidence": [
+        {
+          "source_id": "src-b811ca1cdc5700b7",
+          "locator": "lines 225-228",
+          "observation": "安装件明确仅尝试改进偏斜超过阈值的三角面，控制值不保证最终值。"
+        }
+      ]
+    },
+    {
+      "card": "M17",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "目视核对完整原页，两组单元的默认正交质量公式不同，增强定义另含面和边形状信息。",
+      "checked_locator": {
+        "source_id": "FLUENT242-USER-PDF",
+        "locator": "PDF p. 1147",
+        "pdf_page_label": "1147"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-USER-PDF",
+          "locator": "PDF p. 1147",
+          "pdf_page_label": "1147",
+          "observation": "目视核对完整原页，两组单元的默认正交质量公式不同，增强定义另含面和边形状信息。"
+        }
+      ]
+    },
+    {
+      "card": "M18",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "增强近壁处理与网格分辨率关联；此处介绍 ε 方程，不能代替所有闭合模型。",
+      "checked_locator": {
+        "source_id": "FLUENT242-THEORY-PDF",
+        "locator": "PDF p. 191",
+        "pdf_page_label": "145"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-THEORY-PDF",
+          "locator": "PDF p. 191",
+          "pdf_page_label": "145",
+          "observation": "增强近壁处理与网格分辨率关联；此处介绍 ε 方程，不能代替所有闭合模型。"
+        }
+      ]
+    },
+    {
+      "card": "M19",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "不可混溶、共享动量方程、压力基求解器和无空域限制同页可查。",
+      "checked_locator": {
+        "source_id": "FLUENT242-THEORY-PDF",
+        "locator": "PDF p. 651",
+        "pdf_page_label": "605"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-THEORY-PDF",
+          "locator": "PDF p. 651",
+          "pdf_page_label": "605",
+          "observation": "不可混溶、共享动量方程、压力基求解器和无空域限制同页可查。"
+        }
+      ]
+    },
+    {
+      "card": "M20",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "默认对流时间尺度按低速不可压流说明；表面张力与网格运动等可引入其他时间尺度。",
+      "checked_locator": {
+        "source_id": "FLUENT242-USER-PDF",
+        "locator": "PDF p. 3694",
+        "pdf_page_label": "3694"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-USER-PDF",
+          "locator": "PDF p. 3694",
+          "pdf_page_label": "3694",
+          "observation": "默认对流时间尺度按低速不可压流说明；表面张力与网格运动等可引入其他时间尺度。"
+        }
+      ]
+    },
+    {
+      "card": "M21",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "建议监测工程积分量，局部与全局缩放残差的默认判据可需按应用调整。",
+      "checked_locator": {
+        "source_id": "FLUENT242-USER-PDF",
+        "locator": "PDF p. 3773",
+        "pdf_page_label": "3773"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-USER-PDF",
+          "locator": "PDF p. 3773",
+          "pdf_page_label": "3773",
+          "observation": "建议监测工程积分量，局部与全局缩放残差的默认判据可需按应用调整。"
+        }
+      ]
+    },
+    {
+      "card": "M22",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "报告定义描述计算对象，监测文件和曲线另行指定，支持区分设置与已保存的时间历史。",
+      "checked_locator": {
+        "source_id": "FLUENT242-USER-PDF",
+        "locator": "PDF p. 4132",
+        "pdf_page_label": "4132"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-USER-PDF",
+          "locator": "PDF p. 4132",
+          "pdf_page_label": "4132",
+          "observation": "报告定义描述计算对象，监测文件和曲线另行指定，支持区分设置与已保存的时间历史。"
+        }
+      ]
+    },
+    {
+      "card": "M23",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "按报告和面类型采用面通量或单元数据，流率计算与普通变量统计需区分。",
+      "checked_locator": {
+        "source_id": "FLUENT242-THEORY-PDF",
+        "locator": "PDF p. 1086",
+        "pdf_page_label": "1040"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-THEORY-PDF",
+          "locator": "PDF p. 1086",
+          "pdf_page_label": "1040",
+          "observation": "按报告和面类型采用面通量或单元数据，流率计算与普通变量统计需区分。"
+        }
+      ]
+    },
+    {
+      "card": "M24",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "按各面质量通量绝对值加权，且多相时手册仅推荐混合物级变量。",
+      "checked_locator": {
+        "source_id": "FLUENT242-THEORY-PDF",
+        "locator": "PDF p. 1089",
+        "pdf_page_label": "1043"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-THEORY-PDF",
+          "locator": "PDF p. 1089",
+          "pdf_page_label": "1043",
+          "observation": "按各面质量通量绝对值加权，且多相时手册仅推荐混合物级变量。"
+        }
+      ]
+    },
+    {
+      "card": "M25",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "C 侧特定宏以一弧度计，全周换算适用于所述轴对称积分量，不能机械套用已全周量。",
+      "checked_locator": {
+        "source_id": "FLUENT242-AXIS-UDF",
+        "locator": "#flu_udf_sec_axisymmetric_considerations"
+      },
+      "evidence": [
+        {
+          "source_id": "FLUENT242-AXIS-UDF",
+          "locator": "#flu_udf_sec_axisymmetric_considerations",
+          "observation": "C 侧特定宏以一弧度计，全周换算适用于所述轴对称积分量，不能机械套用已全周量。"
+        }
+      ]
+    },
+    {
+      "card": "P01",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "明确查实际 provider、版本、会话和身份。历史安装路径不能代替实时读回。",
+      "checked_locator": {
+        "source_id": "src-7ae7c7f9307028cf",
+        "locator": "lines 50-55"
+      },
+      "evidence": [
+        {
+          "source_id": "src-7ae7c7f9307028cf",
+          "locator": "lines 50-55",
+          "observation": "明确查实际 provider、版本、会话和身份。历史安装路径不能代替实时读回。"
+        }
+      ]
+    },
+    {
+      "card": "P02",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "22.1 旧 Windows 桥在隔离副本中用 batch/journal，不能自称当前官方 MCP。",
+      "checked_locator": {
+        "source_id": "src-41f87fb814e1b604",
+        "locator": "lines 8-15"
+      },
+      "evidence": [
+        {
+          "source_id": "src-41f87fb814e1b604",
+          "locator": "lines 8-15",
+          "observation": "22.1 旧 Windows 桥在隔离副本中用 batch/journal，不能自称当前官方 MCP。"
+        }
+      ]
+    },
+    {
+      "card": "P03",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "该项目按 checkout、计算节点、gRPC 分阶段关联当次日志。",
+      "checked_locator": {
+        "source_id": "src-91f186886d6b7bc5",
+        "locator": "lines 5-13"
+      },
+      "evidence": [
+        {
+          "source_id": "src-91f186886d6b7bc5",
+          "locator": "lines 5-13",
+          "observation": "该项目按 checkout、计算节点、gRPC 分阶段关联当次日志。"
+        }
+      ]
+    },
+    {
+      "card": "P04",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "枚举并回读实际属性及默认值，版本命名与复制设置均不能代替验证。",
+      "checked_locator": {
+        "source_id": "src-09440e7d47085f70",
+        "locator": "lines 29-31"
+      },
+      "evidence": [
+        {
+          "source_id": "src-09440e7d47085f70",
+          "locator": "lines 29-31",
+          "observation": "枚举并回读实际属性及默认值，版本命名与复制设置均不能代替验证。"
+        }
+      ]
+    },
+    {
+      "card": "P05",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "此处明确要求邻接、角色、面积和重绑；选区合同第12–16行另说明实际实体读回。允许为空的可选角色不应判失败。",
+      "checked_locator": {
+        "source_id": "src-372b324b8313a104",
+        "locator": "lines 16-20"
+      },
+      "evidence": [
+        {
+          "source_id": "src-372b324b8313a104",
+          "locator": "lines 16-20",
+          "observation": "此处明确要求邻接、角色、面积和重绑；选区合同第12–16行另说明实际实体读回。允许为空的可选角色不应判失败。"
+        }
+      ]
+    },
+    {
+      "card": "P06",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "截面端点、层、来源与两种解释都在项目示例中，不依赖示意图的像素比例。",
+      "checked_locator": {
+        "source_id": "src-4a708e8914bdb734",
+        "locator": "lines 5-11"
+      },
+      "evidence": [
+        {
+          "source_id": "src-4a708e8914bdb734",
+          "locator": "lines 5-11",
+          "observation": "截面端点、层、来源与两种解释都在项目示例中，不依赖示意图的像素比例。"
+        }
+      ]
+    },
+    {
+      "card": "P07",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "项目更新撤回统一热量阈值与必选节点，按有效耦合和控制体核验。",
+      "checked_locator": {
+        "source_id": "src-452b00d1885884b8",
+        "locator": "lines 13-45"
+      },
+      "evidence": [
+        {
+          "source_id": "src-452b00d1885884b8",
+          "locator": "lines 13-45",
+          "observation": "项目更新撤回统一热量阈值与必选节点，按有效耦合和控制体核验。"
+        }
+      ]
+    },
+    {
+      "card": "P08",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "6.4 build 293 热通量边界子类型及 h、Text 单位有明文，热通量符号需对热源复核。",
+      "checked_locator": {
+        "source_id": "src-a6e3536594d5e151",
+        "locator": "lines 2-5"
+      },
+      "evidence": [
+        {
+          "source_id": "src-a6e3536594d5e151",
+          "locator": "lines 2-5",
+          "observation": "6.4 build 293 热通量边界子类型及 h、Text 单位有明文，热通量符号需对热源复核。"
+        }
+      ]
+    },
+    {
+      "card": "P09",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "强度与长度尺度模式要求同时给 IT、LT，不能外推 SST。",
+      "checked_locator": {
+        "source_id": "src-a6e3536594d5e151",
+        "locator": "lines 8-12"
+      },
+      "evidence": [
+        {
+          "source_id": "src-a6e3536594d5e151",
+          "locator": "lines 8-12",
+          "observation": "强度与长度尺度模式要求同时给 IT、LT，不能外推 SST。"
+        }
+      ]
+    },
+    {
+      "card": "P10",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "模板明确分别建等温、固定流场传热和全耦合副本；模板是 NOT_RUN，不能称已执行。",
+      "checked_locator": {
+        "source_id": "src-82166b30b6896ce1",
+        "locator": "lines 17-23"
+      },
+      "evidence": [
+        {
+          "source_id": "src-82166b30b6896ce1",
+          "locator": "lines 17-23",
+          "observation": "模板明确分别建等温、固定流场传热和全耦合副本；模板是 NOT_RUN，不能称已执行。"
+        }
+      ]
+    },
+    {
+      "card": "P11",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "阶段门槛依模型冻结，回执不清核对原作业。阶段成功和最终目标验证分开。",
+      "checked_locator": {
+        "source_id": "src-4183c40acbc17ef4",
+        "locator": "lines 5-11"
+      },
+      "evidence": [
+        {
+          "source_id": "src-4183c40acbc17ef4",
+          "locator": "lines 5-11",
+          "observation": "阶段门槛依模型冻结，回执不清核对原作业。阶段成功和最终目标验证分开。"
+        }
+      ]
+    },
+    {
+      "card": "P12",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "检查点恢复、KPI、耗时和迭代记录并列比较。预算来自本次任务。",
+      "checked_locator": {
+        "source_id": "src-bcfa81651395912f",
+        "locator": "lines 55-61"
+      },
+      "evidence": [
+        {
+          "source_id": "src-bcfa81651395912f",
+          "locator": "lines 55-61",
+          "observation": "检查点恢复、KPI、耗时和迭代记录并列比较。预算来自本次任务。"
+        }
+      ]
+    },
+    {
+      "card": "P13",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "两级 GCI 需外部阶数与渐近区依据，接近零时保留绝对量与噪声。",
+      "checked_locator": {
+        "source_id": "src-cc324b677242b28b",
+        "locator": "lines 7-14"
+      },
+      "evidence": [
+        {
+          "source_id": "src-cc324b677242b28b",
+          "locator": "lines 7-14",
+          "observation": "两级 GCI 需外部阶数与渐近区依据，接近零时保留绝对量与噪声。"
+        }
+      ]
+    },
+    {
+      "card": "P14",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "节点线性三角形标量比较只报告有覆盖点的差，未提供网格独立证据。",
+      "checked_locator": {
+        "source_id": "src-6de1c335a8043248",
+        "locator": "lines 51-55"
+      },
+      "evidence": [
+        {
+          "source_id": "src-6de1c335a8043248",
+          "locator": "lines 51-55",
+          "observation": "节点线性三角形标量比较只报告有覆盖点的差，未提供网格独立证据。"
+        }
+      ]
+    },
+    {
+      "card": "P15",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "图与日志分开保留，瞬态可能为步长倒数；保存 MPH 不保证保留曲线。",
+      "checked_locator": {
+        "source_id": "src-520a7a834a8a849a",
+        "locator": "lines 11-14"
+      },
+      "evidence": [
+        {
+          "source_id": "src-520a7a834a8a849a",
+          "locator": "lines 11-14",
+          "observation": "图与日志分开保留，瞬态可能为步长倒数；保存 MPH 不保证保留曲线。"
+        }
+      ]
+    },
+    {
+      "card": "P16",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "对照冻结合同和候选可观测量；离线评分基于报告，科学验证另做。",
+      "checked_locator": {
+        "source_id": "src-e0fe986bbe016fbc",
+        "locator": "lines 7-21"
+      },
+      "evidence": [
+        {
+          "source_id": "src-e0fe986bbe016fbc",
+          "locator": "lines 7-21",
+          "observation": "对照冻结合同和候选可观测量；离线评分基于报告，科学验证另做。"
+        }
+      ]
+    },
+    {
+      "card": "P17",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "台账含来源、不确定性和候选冲突，区分原文与假设。",
+      "checked_locator": {
+        "source_id": "src-a723a36a78931e52",
+        "locator": "lines 3-13"
+      },
+      "evidence": [
+        {
+          "source_id": "src-a723a36a78931e52",
+          "locator": "lines 3-13",
+          "observation": "台账含来源、不确定性和候选冲突，区分原文与假设。"
+        }
+      ]
+    },
+    {
+      "card": "P18",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "以流态、分离、转捩和近壁目标选模型，另有验证清单核对壁面网格。",
+      "checked_locator": {
+        "source_id": "src-c801dbcc01c70598",
+        "locator": "lines 5-15"
+      },
+      "evidence": [
+        {
+          "source_id": "src-c801dbcc01c70598",
+          "locator": "lines 5-15",
+          "observation": "以流态、分离、转捩和近壁目标选模型，另有验证清单核对壁面网格。"
+        }
+      ]
+    },
+    {
+      "card": "P19",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "fluent",
+      "verdict": "supported",
+      "note": "检查原生终止、报告符号选择和范围，独立重开后零迭代读回及新算例重放区分。",
+      "checked_locator": {
+        "source_id": "src-372b324b8313a104",
+        "locator": "lines 19-24"
+      },
+      "evidence": [
+        {
+          "source_id": "src-372b324b8313a104",
+          "locator": "lines 19-24",
+          "observation": "检查原生终止、报告符号选择和范围，独立重开后零迭代读回及新算例重放区分。"
+        }
+      ]
+    },
+    {
+      "card": "X01",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "原页确有写出 .msh.gz 网格文件的动作；重开后核实文件和区域身份属于衍生检查。",
+      "checked_locator": {
+        "source_id": "src-4a5188785a14bf92",
+        "locator": "PDF p. 14",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-4a5188785a14bf92",
+          "locator": "PDF p. 14",
+          "pdf_page_label": null,
+          "observation": "原页确有写出 .msh.gz 网格文件的动作；重开后核实文件和区域身份属于衍生检查。"
+        }
+      ]
+    },
+    {
+      "card": "X02",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "partial",
+      "note": "原页仅指示选择 Metric (mm...) 单位；书中此页未给出原几何量换算、读回与已知尺寸比较等额外步骤。",
+      "checked_locator": {
+        "source_id": "src-a3f73293a4d8cf4f",
+        "locator": "PDF p. 5",
+        "pdf_page_label": null
+      },
+      "evidence": []
+    },
+    {
+      "card": "X03",
+      "scope": "核心定义与操作；附条件检查单列",
+      "independent_reader": "mesh",
+      "verdict": "supported",
+      "note": "第1页封面与第10页局部版本说明分别为 R1 与 R2；R1及以前跳过第10页。",
+      "checked_locator": {
+        "source_id": "src-0d8a671699481839",
+        "locator": "PDF p. 10",
+        "pdf_page_label": null
+      },
+      "evidence": [
+        {
+          "source_id": "src-0d8a671699481839",
+          "locator": "PDF p. 10",
+          "pdf_page_label": null,
+          "observation": "第1页封面与第10页局部版本说明分别为 R1 与 R2；R1及以前跳过第10页。"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+# 对应版本的官方手册与覆盖
+
+[手册文件清单](manual-manifest.json) 记录下载与核读来源的 SHA-256、状态及具体 URL。完整手册留在私有工作目录；知识包仅引用已读的章节。厂商许可及对应安装版本继续适用。
+
+| 版本 | 已核正文及使用范围 | 仍待补或须现场核对 |
+| --- | --- | --- |
+| COMSOL 6.3 | Reference、CFD、Heat Transfer、Programming Reference 的完整 PDF 都已下载。核对了关联几何、API 有效实体回读、压力点条件和 P031。 [Reference 6.3](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/COMSOL_ReferenceManual.pdf) · [CFD 6.3](https://doc.comsol.com/6.3/doc/com.comsol.help.cfd/CFDModuleUsersGuide.pdf) · [Heat 6.3](https://doc.comsol.com/6.3/doc/com.comsol.help.heat/HeatTransferModuleUsersGuide.pdf) · [Programming 6.3](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/COMSOL_ProgrammingReferenceManual.pdf) | 项目实际 build、许可、MCP 工具暴露和活动原生节点需现场核查。 |
+| COMSOL 6.4 | Reference、CFD、Heat Transfer、Programming Reference 的完整 PDF 都已下载。核对了选区 API、Inflow 和 Heat Sink 教程。 [Reference 6.4](https://doc.comsol.com/6.4/doc/com.comsol.help.comsol/COMSOL_ReferenceManual.pdf) · [CFD 6.4](https://doc.comsol.com/6.4/doc/com.comsol.help.cfd/CFDModuleUsersGuide.pdf) · [Heat 6.4](https://doc.comsol.com/6.4/doc/com.comsol.help.heat/HeatTransferModuleUsersGuide.pdf) · [Programming 6.4](https://doc.comsol.com/6.4/doc/com.comsol.help.comsol/COMSOL_ProgrammingReferenceManual.pdf) | 先按具体 case 选择物理和接口，再读该版本的运行许可与 API。 |
+| Fluent 2024 R2（24.2） | 完整 Theory/User Guide PDF 都已下载。审过材料设置、温变函数、面积分/平均、监测和报告定义。另核了 Customization Manual 的轴对称 UDF 约定。 [Theory Guide](https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/pdf/Ansys_Fluent_Theory_Guide.pdf) · [User’s Guide](https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/pdf/Ansys_Fluent_Users_Guide.pdf) · [温变物性](https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/flu_ug/flu_ug_sec_material_functions.html) · [轴对称宏](https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/flu_udf/flu_udf_DataAccessMacros.html) | TUI 枚举和连接器参数仍按实际安装版本读回。 |
+| Fluent 2023 R1（23.1） | 官方 Release 2023 R1 资料的 PDF 第 81 页确认 User’s Guide 与 Theory Guide 文档身份。本机有 GUI Help 和 `cxpoly.h`，已用安装件与看板核 P014。 [Ansys 官方下载目录说明](https://storage.ansys.com/staticfiles/cp/Readme/release2023R1/info_combined.pdf) | 23.1 公共 HTML 和 PDF 目标地址返回 404，完整两本仍需 Ansys 历史版本资料或机构授权。24.2 上述章节只作并行参考。 |
+| P048 作者 Fluent 19.0 | 已定位原论文 p. 5 §2.3 的版本记录和 p. 6–11 输出定义。 [P048](https://doi.org/10.3390/mi14071366) | 本轮未取得 19.0 官方手册，也没有作者后处理设置。`PS-V-F03` 的公式可查原文，平均权重继续待核。 |

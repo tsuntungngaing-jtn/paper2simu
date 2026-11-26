@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stage": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "worker_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "snapshot_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "artifact_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "kind": {
+      "enum": [
+        "provider",
+        "lease",
+        "checkpoint",
+        "budget",
+        "supervisor",
+        "physics",
+        "reservation",
+        "source_inputs",
+        "geometry",
+        "mesh",
+        "physics_model",
+        "solution",
+        "postprocessing",
+        "persistence",
+        "independent_acceptance"
+      ]
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "NOT_RUN"
+      ]
+    },
+    "observed_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_utc": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "task_id",
+    "case_id",
+    "stage",
+    "action_id",
+    "worker_id",
+    "source",
+    "observation",
+    "artifact_path",
+    "revision",
+    "spec_hash",
+    "snapshot_hash",
+    "artifact_sha256",
+    "kind",
+    "status",
+    "observed_utc",
+    "expires_utc"
+  ],
+  "additionalProperties": true
+}

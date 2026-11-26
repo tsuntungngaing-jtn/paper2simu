@@ -1,0 +1,270 @@
+{
+  "revision": "r1",
+  "paper2simu_target": "v0.5.2",
+  "roles": {
+    "A00": [
+      "PS-V-R01",
+      "PS-D-R01"
+    ],
+    "A01": [
+      "PS-V-R03",
+      "PS-V-R07",
+      "PS-O-R02"
+    ],
+    "A02": [
+      "PS-V-C04",
+      "PS-V-R04",
+      "PS-V-R05",
+      "PS-V-R06"
+    ],
+    "A03": [
+      "PS-V-C03",
+      "PS-V-R02",
+      "PS-V-R03",
+      "PS-V-R05",
+      "PS-V-F03",
+      "PS-V-F05"
+    ],
+    "A04": [
+      "PS-V-R04",
+      "PS-V-R05",
+      "PS-V-R06"
+    ],
+    "A05": [
+      "PS-V-R01",
+      "PS-V-R05"
+    ],
+    "A06": [
+      "PS-V-R01",
+      "PS-V-R03",
+      "PS-V-R04",
+      "PS-V-R05",
+      "PS-V-R06"
+    ],
+    "A07": [
+      "PS-V-C01",
+      "PS-V-R01",
+      "PS-V-R02",
+      "PS-V-R03",
+      "PS-V-R07",
+      "PS-O-R01"
+    ],
+    "A08": [
+      "PS-V-R01",
+      "PS-V-R07"
+    ],
+    "A09": [
+      "PS-D-R01",
+      "PS-D-R02",
+      "PS-D-R03",
+      "PS-D-R04",
+      "PS-O-R01",
+      "PS-O-R02",
+      "PS-O-R03"
+    ]
+  },
+  "cards": {
+    "PS-V-C01": {
+      "pack": "simulation-validation",
+      "file": "concepts.jsonl",
+      "status": "verified"
+    },
+    "PS-V-C02": {
+      "pack": "simulation-validation",
+      "file": "concepts.jsonl",
+      "status": "verified"
+    },
+    "PS-V-C03": {
+      "pack": "simulation-validation",
+      "file": "concepts.jsonl",
+      "status": "verified"
+    },
+    "PS-V-C04": {
+      "pack": "simulation-validation",
+      "file": "concepts.jsonl",
+      "status": "verified"
+    },
+    "PS-V-R01": {
+      "pack": "simulation-validation",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-V-R02": {
+      "pack": "simulation-validation",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-V-R03": {
+      "pack": "simulation-validation",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-V-R04": {
+      "pack": "simulation-validation",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-V-R05": {
+      "pack": "simulation-validation",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-V-R06": {
+      "pack": "simulation-validation",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-V-R07": {
+      "pack": "simulation-validation",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-V-F01": {
+      "pack": "simulation-validation",
+      "file": "formula-index.jsonl",
+      "status": "verified"
+    },
+    "PS-V-F02": {
+      "pack": "simulation-validation",
+      "file": "formula-index.jsonl",
+      "status": "verified"
+    },
+    "PS-V-F03": {
+      "pack": "simulation-validation",
+      "file": "formula-index.jsonl",
+      "status": "verified"
+    },
+    "PS-V-F04": {
+      "pack": "simulation-validation",
+      "file": "formula-index.jsonl",
+      "status": "verified"
+    },
+    "PS-V-F05": {
+      "pack": "simulation-validation",
+      "file": "formula-index.jsonl",
+      "status": "verified"
+    },
+    "PS-V-F06": {
+      "pack": "simulation-validation",
+      "file": "formula-index.jsonl",
+      "status": "blocked"
+    },
+    "PS-D-C01": {
+      "pack": "experiment-design",
+      "file": "concepts.jsonl",
+      "status": "verified"
+    },
+    "PS-D-C02": {
+      "pack": "experiment-design",
+      "file": "concepts.jsonl",
+      "status": "verified"
+    },
+    "PS-D-R01": {
+      "pack": "experiment-design",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-D-R02": {
+      "pack": "experiment-design",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-D-R03": {
+      "pack": "experiment-design",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-D-R04": {
+      "pack": "experiment-design",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-D-F01": {
+      "pack": "experiment-design",
+      "file": "formula-index.jsonl",
+      "status": "verified"
+    },
+    "PS-D-F02": {
+      "pack": "experiment-design",
+      "file": "formula-index.jsonl",
+      "status": "verified"
+    },
+    "PS-O-C01": {
+      "pack": "multiobjective-optimization",
+      "file": "concepts.jsonl",
+      "status": "verified"
+    },
+    "PS-O-C02": {
+      "pack": "multiobjective-optimization",
+      "file": "concepts.jsonl",
+      "status": "candidate"
+    },
+    "PS-O-R01": {
+      "pack": "multiobjective-optimization",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-O-R02": {
+      "pack": "multiobjective-optimization",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-O-R03": {
+      "pack": "multiobjective-optimization",
+      "file": "rules.jsonl",
+      "status": "candidate"
+    },
+    "PS-O-R04": {
+      "pack": "multiobjective-optimization",
+      "file": "rules.jsonl",
+      "status": "verified"
+    },
+    "PS-O-F01": {
+      "pack": "multiobjective-optimization",
+      "file": "formula-index.jsonl",
+      "status": "verified"
+    },
+    "PS-O-F02": {
+      "pack": "multiobjective-optimization",
+      "file": "formula-index.jsonl",
+      "status": "verified"
+    },
+    "PS-O-F03": {
+      "pack": "multiobjective-optimization",
+      "file": "formula-index.jsonl",
+      "status": "verified"
+    },
+    "PS-O-F04": {
+      "pack": "multiobjective-optimization",
+      "file": "formula-index.jsonl",
+      "status": "blocked"
+    }
+  },
+  "historical_cases": {
+    "P014": [
+      "PS-V-R01",
+      "PS-V-R04",
+      "PS-V-R06",
+      "PS-D-R01"
+    ],
+    "P031": [
+      "PS-V-R05"
+    ],
+    "P010": [
+      "PS-V-R07",
+      "PS-D-R01",
+      "PS-D-R04",
+      "PS-O-R01",
+      "PS-O-R02",
+      "PS-O-F01",
+      "PS-V-F06"
+    ],
+    "P048": [
+      "PS-V-R01",
+      "PS-V-R03",
+      "PS-V-F03",
+      "PS-D-R04",
+      "PS-O-F03"
+    ]
+  }
+}

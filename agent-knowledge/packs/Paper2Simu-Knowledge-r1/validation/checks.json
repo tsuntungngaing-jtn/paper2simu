@@ -1,0 +1,110 @@
+{
+  "meaning": "offline evidence replay and arithmetic, not native solver or held-out evaluation",
+  "checks": [
+    {
+      "id": "P014",
+      "basis": "archived feedback IDs C018/C022/C023/C026 and local 23.1 header",
+      "result": "PASS",
+      "outcome": "full settings echo does not admit the table; axisymmetric convention must be known; final numerical failure remains",
+      "observations": {
+        "observed_table_pairs": 52,
+        "header_max_pairs": 50,
+        "case_replacement_pairs": 30
+      }
+    },
+    {
+      "id": "P031",
+      "basis": "archived R3/R13/R16E and COMSOL 6.3 selection/pressure documentation",
+      "result": "PASS",
+      "outcome": "repair readback is separate from thermal solve and validation",
+      "observations": {
+        "r16e_state": "SOLVING",
+        "thermal_score": "NOT_RUN"
+      }
+    },
+    {
+      "id": "P010",
+      "basis": "archived Case4 sheet and published Eqs. 19, 22, 27–33",
+      "result": "PASS",
+      "outcome": "denominator swap reproduces the diagnostic number; actual power and main status are preserved",
+      "observations": {
+        "main_absolute_error_pct": 30.96121975780758,
+        "diagnostic_absolute_error_pct": 1.7790851816443083,
+        "diagnostic_signed_error_pct": -1.7790851816443083,
+        "actual_pump_w": 1.0712198758260625,
+        "required_pump_w": 1.2
+      }
+    },
+    {
+      "id": "P048",
+      "basis": "live diagnosis row and published Eq. 17–20",
+      "result": "PASS",
+      "outcome": "pressure and heat comparisons remain separate; author temperature weighting remains unknown",
+      "observations": {
+        "baseline_nu_error_pct_from_rounded_inputs": 99.4776505724241,
+        "board_nu_error_pct": 99.47763787,
+        "pressure_error_pct": 0.3994334277620347,
+        "later_nu": 0.10488
+      }
+    },
+    {
+      "id": "PS-V-F01",
+      "basis": "synthetic Richardson sequence",
+      "result": "PASS",
+      "outcome": "valid GCI and rejected degeneracy/oscillation",
+      "observations": {
+        "p": 1.9999999999999973,
+        "gci": 0.012376237623762418
+      }
+    },
+    {
+      "id": "PS-V-F02",
+      "basis": "synthetic independent standard components",
+      "result": "PASS",
+      "outcome": "uncertainty in QoI units",
+      "observations": {
+        "u_val": 13,
+        "difference": 5
+      }
+    },
+    {
+      "id": "PS-V-F03–F05",
+      "basis": "synthetic heat flow, duct and weighted temperature",
+      "result": "PASS",
+      "outcome": "separate denominators and factor conventions",
+      "observations": {
+        "nu": 0.4,
+        "dh": 0.0013333333333333333,
+        "fanning": 0.0002666666666666666,
+        "darcy": 0.0010666666666666665
+      }
+    },
+    {
+      "id": "PS-D-F01–F02",
+      "basis": "synthetic linear, nonlinear and paired response",
+      "result": "PASS",
+      "outcome": "Morris and Jansen arithmetic",
+      "observations": {
+        "ee": 3,
+        "total_effect": 0.5
+      }
+    },
+    {
+      "id": "PS-O-F02–F03",
+      "basis": "synthetic endpoint and PEC ratio",
+      "result": "PASS",
+      "outcome": "endpoint reversal is visible and PEC arithmetic matches",
+      "observations": {
+        "encoded_hi": 1,
+        "eta": 0.75
+      }
+    },
+    {
+      "id": "PS-O-R03",
+      "basis": "synthetic two-objective vectors",
+      "result": "PASS",
+      "outcome": "trade-off non-domination; no solver or optimizer validation",
+      "observations": {}
+    }
+  ]
+}

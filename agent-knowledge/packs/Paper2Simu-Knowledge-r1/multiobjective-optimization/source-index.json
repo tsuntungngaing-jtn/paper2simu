@@ -1,0 +1,67 @@
+{
+  "sources": [
+    {
+      "id": "CAND010",
+      "title": "Numerical Investigation of Microchannel Heat Sink with Trefoil Shape Ribs",
+      "edition": "2021",
+      "locator": "https://doi.org/10.3390/en14206764",
+      "sha256": "2e52f3acbb1ec5a6e5a7d1f92204eab376e84d0e8604b32f20b350d11a385a93",
+      "access": "本机四机文献归档 PDF",
+      "rights": "版权随原出版物；只交付原创提炼与定位。",
+      "doi": "10.3390/en14206764",
+      "local_name": "CAND010.pdf",
+      "scope": "seed",
+      "page_count": 16,
+      "identity_note": ""
+    },
+    {
+      "id": "P010",
+      "title": "Performance Improvement of a Double-Layer Microchannel Heat Sink via Novel Fin Geometry—A Numerical Study",
+      "edition": "2021",
+      "locator": "https://doi.org/10.3390/en14123585",
+      "sha256": "050f576d0f2ae0ab9900e9cae1c82de5da2d44020066eb968da1de4c518f8d12",
+      "access": "本机四机文献归档 PDF",
+      "rights": "版权随原出版物；只交付原创提炼与定位。",
+      "doi": "10.3390/en14123585",
+      "local_name": "P010.pdf",
+      "scope": "seed",
+      "page_count": 23,
+      "identity_note": ""
+    },
+    {
+      "id": "P010-CASE4",
+      "title": "P010 Case 4 优化归档",
+      "edition": "2026-11-18 snapshot",
+      "locator": "https://docs.google.com/spreadsheets/d/19MxNKHp3cPE0alsO-9nEU8pdJhT0kLyK_f0VgLgki3U/edit#gid=1833020081&range=A12:H29",
+      "sha256": "bf92ac090380fbcb998b7907c1486c56132aa2972965927210ad07bc466e9155",
+      "access": "本机只读或看板快照；哈希对应核对版本。",
+      "rights": "项目内部；仅交付证据位置和最少诊断数值。",
+      "scope": "case-cross-check",
+      "local_name": "P010 Case4优化.csv"
+    },
+    {
+      "id": "P048-PAPER",
+      "title": "Numerical Investigation of Fluid Flow and Heat Transfer in High-Temperature Wavy Microchannels with Different Shaped Fins Cooled by Liquid Metal",
+      "edition": "2023, Micromachines 14(7), 1366",
+      "locator": "https://doi.org/10.3390/mi14071366",
+      "sha256": "7dc6bc52270a89db6159f6194b8752ac886c64580f37e2f7a20707806eafa31a",
+      "access": "本机原文；用于案例交叉核对",
+      "rights": "版权随出版版本；仅交付原创提炼与定位。",
+      "scope": "case-cross-check"
+    },
+    {
+      "id": "Wagner2020_Calibration",
+      "title": "Bayesian calibration and sensitivity analysis of heat transfer models for fire insulation panels",
+      "edition": "2020",
+      "locator": "https://doi.org/10.1016/j.engstruct.2019.110063",
+      "sha256": "b24c18769406dc6c027c341a5a54da5a1ccf85d4c823a119c5f259c6602a678f",
+      "access": "本机四机文献归档 PDF",
+      "rights": "版权随原出版物；只交付原创提炼与定位。",
+      "doi": "10.1016/j.engstruct.2019.110063",
+      "local_name": "Wagner2020_Calibration.pdf",
+      "scope": "seed",
+      "page_count": 50,
+      "identity_note": "ETH机构稿RSUQ-2019-002B，含期刊DOI；已有arXiv:1909.07060是同一工作的相关版本，不重复计数。"
+    }
+  ]
+}

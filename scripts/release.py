@@ -46,11 +46,17 @@ def public_files(root=ROOT):
                 'paper2simu_acceptance_agent.toml', 'paper2simu_recorder.toml',
                 'paper2simu_experiment_designer.toml'}:
                 continue
+        elif rel.as_posix() == 'references/recovery-history.json':
+            pass
         elif rel.parts[0] not in DIRECTORIES:
             continue
         if p.suffix.lower() in FORBIDDEN_EXTENSIONS or p.name.startswith('.env'):
             raise ValueError(f'Forbidden file in a publication directory: {rel}')
-        if p.suffix.lower() not in EXTENSIONS and p.name not in ROOT_FILES:
+        pack_jsonl = (p.suffix.lower() == '.jsonl' and len(rel.parts) >= 4
+                      and rel.parts[:2] == ('agent-knowledge', 'packs')
+                      and rel.parts[2] in {'Paper2Simu-Knowledge-r1', 'Paper2Simu-Solver-Knowledge-r2'})
+        formal = rel.as_posix() in {'docs/formal/Coordination.tla','docs/formal/Coordination.cfg'}
+        if p.suffix.lower() not in EXTENSIONS and p.name not in ROOT_FILES and not pack_jsonl and not formal:
             raise ValueError(f'Unreviewed file type in publication directory: {rel}')
         data=p.read_bytes()
         # Match file-name/word markers, not accidental substrings in SHA digests.

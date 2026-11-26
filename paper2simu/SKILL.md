@@ -4,7 +4,7 @@ description: Reproduce engineering papers, build reusable article knowledge pack
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.5.2"
+  version: "0.6.0"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -100,3 +100,11 @@ Keep executed calls/code, native logs, warnings, termination, versions, settings
 When requested, perform conservation, mesh, sensitivity or reference comparisons using the task's definitions. Preserve values, signs, normalization, units and run identity. No criterion means no acceptance decision. Offline helpers do not authenticate supplied evidence. Report mesh sensitivity and conditional GCI using the [grid-refinement reporting guide](../docs/grid-refinement-reporting.md) when a grid study is in scope.
 
 Save/export and, when performed, reopen as a separately tracked model and reevaluate outputs. Unperformed checks stay NOT_RUN. Report execution, checks and paper agreement separately. Deliver failed/partial models and logs without claiming successful execution or scientific PASS. BLOCK_FINAL_VALIDATION restricts certification, not independent preparation or conditional runs. RSI promotion, retrieval benchmarking and policy learning are separate requested development tasks.
+
+## v0.6.0 — Verification-driven architecture and persistent recovery
+
+For source-grounded solver and research knowledge follow [knowledge pack routing](../docs/knowledge-packs-v0.6.0.md). Use r1 for validation, experiment design and optimization, and r2 for version-specific solver knowledge. Select scoped cards by role and record original provenance and applicability; neither cards nor historical results grant native authorization.
+
+For multi-agent native operations and reproduction acceptance follow [verification-driven gate](../docs/verification-driven-v0.6.0.md). Run the existing v051 policy and the evidence-bound checker; a non-candidate result blocks the proposed action. Live provider permission, actual worker isolation, current native state and independent reviews remain mandatory. Use the feature map and bounded checks; offline validation does not prove native success. Single-agent fallback follows its existing separate baseline and is explicitly labeled.
+
+Before first fault diagnosis and each proposed repeat repair the Orchestrator consults [persistent recovery memory](../docs/recovery-memory.md), with private per-host SQLite state. Reserve only within authorization and budget, reconcile original job and matching evidence; NEW is not permission, HOLD blocks the proposed repeat. The Executor returns native observations, Recorder prepares evidence, and Orchestrator records the actual outcome. Never use the packaged JSON seed as a database or publish runtime memory. Keep canonical rules and skill modifications independently reviewed.
