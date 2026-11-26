@@ -56,7 +56,7 @@ class ClockTests(unittest.TestCase):
 
 class ReliabilityTests(unittest.TestCase):
     def fixture(self):
-        expected={"paper2simu_version":"0.6.1","runtime_root":"root","python_executable":"python",
+        expected={"paper2simu_version":"0.6.2","runtime_root":"root","python_executable":"python",
                   "output_root":"out","runtime_source_sha256":"a"*64,"require_hard_deadline":False}
         identity={k:v for k,v in expected.items() if k!="require_hard_deadline"}
         identity["runtime_id"]="r1"

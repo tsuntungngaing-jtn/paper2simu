@@ -4,7 +4,7 @@ description: Reproduce engineering papers, build reusable article knowledge pack
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.6.1"
+  version: "0.6.2"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -122,3 +122,7 @@ The trusted operator must provision and enroll the resource domain while idle, i
 For the operator-only `comsol_isolated_batch_submit`, use its actual registered schema, frozen Case Clock cutoff and solve budget, stable operation and case IDs, and reviewed MPH input inside the output root. Bind fresh independent verification receipts to the actual launch as specified in the integration contract; a candidate is not authorization. The status route `comsol_isolated_batch_status` and unified `comsol_job_status` are reviewer-readable. Polling is not progress; use trusted new native evidence only. Distinguish task exit, stop request, confirmed native stop, resource release and scientific acceptance. For unsupported platforms, missing evidence or unverified deployment, HOLD and continue independent work.
 
 The detached supervisor is scoped to its owned Windows job. No public arbitrary process-stop endpoint, global termination, unverified hard real-time guarantee, automatic database rollback or cross-machine resource exclusion is implied. Fluent capabilities remain separately verified.
+
+## Historical job reconciliation (v0.6.2)
+
+Keep an unresolved job blocked until the resource guard verifies a scoped ledger entry against the original manifest and evidence. Refer historical cases to the authorized local administrator and independent reviewer using the [historical reconciliation contract](../docs/historical-ledger.md). Preserve the original job and operation IDs, process lifecycle, native result, scientific verdict and Case Clock. A resource decision applies only to its named historical claim. Continue checking all other claims and ordinary admission requirements before submitting work. Commercial native hard-deadline verification remains NOT_RUN.

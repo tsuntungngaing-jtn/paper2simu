@@ -4,6 +4,7 @@ Not a sandbox: operators, the local database and its parent directory are truste
 Unregistered installations are outside this coordination domain.
 """
 import functools
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -23,11 +24,12 @@ def configure(runtime):
     runtime.resource_id = os.getenv('PAPER2SIMU_RESOURCE_ID')
     runtime.executor_id = os.getenv('PAPER2SIMU_EXECUTOR_ID')
     runtime.isolated_enabled = os.getenv('PAPER2SIMU_ALLOW_ISOLATED') == '1'
+    runtime.reconciliation_trust = os.getenv('PAPER2SIMU_RECONCILIATION_TRUST')
     runtime._native_context = threading.local()
 
 
 def coordinator(runtime, required=False, enroll=False):
-    if not runtime.coordination_path and not runtime.resource_id and not required:
+    if not runtime.coordination_path and not runtime.resource_id and not required and not runtime.reconciliation_trust:
         return None
     if not runtime.coordination_path or not runtime.resource_id:
         raise CoordinationError('COORDINATION_CONFIGURATION_REQUIRED')
@@ -56,10 +58,11 @@ def case_admission(runtime, case_id):
     return {'allowed': True}
 
 
-def check_history(roots, jobs, operation_id=None):
+def check_history(roots, jobs, operation_id=None, receipts=None):
     known = {j['job_id']: j for j in jobs}
     operations = {j['operation_id'] for j in jobs}
     seen = set()
+    seen_jobs = set()
     for root in roots:
         if not root.is_dir():
             raise CoordinationError('HISTORY_ROOT_UNAVAILABLE: '+str(root))
@@ -70,9 +73,13 @@ def check_history(roots, jobs, operation_id=None):
             if path.suffix != '.json':
                 continue
             try:
-                row = json.loads(path.read_text(encoding='utf-8'))
+                original = path.read_bytes()
+                row = json.loads(original)
                 if row['job_id'] != path.stem:
                     raise ValueError('identity mismatch')
+                if row['job_id'] in seen_jobs:
+                    raise ValueError('duplicate historical job identity')
+                seen_jobs.add(row['job_id'])
                 op = row.get('operation_id')
                 if op and op in seen:
                     raise ValueError('duplicate historical operation')
@@ -89,6 +96,12 @@ def check_history(roots, jobs, operation_id=None):
                     continue
                 if op and (op in operations or op == operation_id):
                     raise ValueError('unlinked duplicate operation')
+                if row.get('coordination_job_id'):
+                    raise ValueError('unlinked coordinated history')
+                if receipts and path in receipts:
+                    if receipts[path]['manifest_sha256'] != hashlib.sha256(original).hexdigest():
+                        raise ValueError('manifest changed during admission')
+                    continue
                 if row.get('status') not in {'completed', 'cancelled'}:
                     raise ValueError('unresolved historical native state')
             except (OSError, ValueError, KeyError) as exc:
@@ -109,6 +122,13 @@ def check_history(roots, jobs, operation_id=None):
                 raise CoordinationError('HISTORY_UNRESOLVED: '+str(folder)) from exc
 
 
+def history_receipts(runtime, c, roots):
+    if not runtime.reconciliation_trust:
+        return {}
+    from .historical_ledger import verified_history
+    return verified_history(c, roots, runtime.reconciliation_trust)
+
+
 def reserve(runtime, operation_id, request, kind):
     if runtime.tool_role != 'operator':
         raise CoordinationError('ROLE_FORBIDDEN')
@@ -116,9 +136,10 @@ def reserve(runtime, operation_id, request, kind):
     if c is None:
         return None
     def admission(roots, jobs):
-        check_history(roots, jobs, operation_id)
+        receipts = history_receipts(runtime, c, roots)
+        check_history(roots, jobs, operation_id, receipts)
         if kind != 'shared_call':
-            budget = runtime._submission_budget(len(runtime._active_jobs()), coordinated_jobs=jobs)
+            budget = runtime._submission_budget(len(runtime._active_jobs()), coordinated_jobs=jobs, receipts=receipts)
             if not budget['can_submit']:
                 raise CoordinationError('SUBMISSION_BUDGET_EXHAUSTED: '+','.join(budget['block_reasons']))
     return c.reserve(operation_id, request, runtime.runtime_id, kind, check_history=admission)

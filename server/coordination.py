@@ -265,6 +265,12 @@ class Coordinator:
     def _roots(db: sqlite3.Connection) -> list[Path]:
         return [Path(row[0]) for row in db.execute("SELECT path FROM roots ORDER BY path")]
 
+    @contextmanager
+    def history_snapshot(self):
+        # Serialize receipt inspection and local administration with native reservations.
+        with self._transaction() as (db, _clock):
+            yield self._roots(db), self._jobs(db)
+
     def roots(self) -> list[Path]:
         with self._transaction() as (db, _):
             return self._roots(db)

@@ -13,6 +13,7 @@ import re
 import time
 from types import SimpleNamespace
 
+from . import __version__
 from .case_clock import CaseClock
 from .coordination import Coordinator
 from . import isolated_batch, shared_guard
@@ -113,7 +114,7 @@ def record_failure(output_root, row, observation):
     req = row['request']
     db = Path(output_root)/'recovery-memory.sqlite3'
     reservation = run(SimpleNamespace(command='reserve', db=db, case=req['case_id'],
-        build='0.6.1', revision=req['input_sha256'], action=row['operation_id'],
+        build=__version__, revision=req['input_sha256'], action=row['operation_id'],
         evidence=hashlib.sha256(json.dumps(req, sort_keys=True).encode()).hexdigest(),
         symptom='isolated job '+row['job_id']))
     if reservation['decision'] == 'NEW' or reservation['prior_status'] == 'reserved':
