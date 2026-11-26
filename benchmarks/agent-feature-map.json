@@ -160,6 +160,41 @@
         "required tool registration",
         "missing isolated executor explicitly blocked"
       ]
+    },
+    {
+      "id": "isolated_execution",
+      "owner": "executor",
+      "contract": "docs/isolated-executor-v0.6.1.md",
+      "test": "tests/test_isolated_executor.py",
+      "failure_route": "docs/scheduled-connection-recovery.md",
+      "observations": [
+        "actual registered isolated backend",
+        "owned native job and confirmed stop",
+        "native validation NOT_RUN until observed"
+      ]
+    },
+    {
+      "id": "resource_coordination",
+      "owner": "supervisor",
+      "contract": "docs/isolated-executor-v0.6.1.md",
+      "test": "tests/test_coordination.py",
+      "failure_route": "docs/scheduled-connection-recovery.md",
+      "observations": [
+        "same configured resource domain",
+        "unreleased claims and root inventory",
+        "no unknown resource release"
+      ]
+    },
+    {
+      "id": "isolated_launch_binding",
+      "owner": "physics_reviewer",
+      "contract": "docs/isolated-executor-v0.6.1.md",
+      "test": "tests/test_isolated_integration.py",
+      "failure_route": "docs/scheduled-connection-recovery.md",
+      "observations": [
+        "reviewed input hash",
+        "fresh independent receipts and frozen deadlines"
+      ]
     }
   ]
 }

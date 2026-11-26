@@ -42,3 +42,5 @@ Before launch retries on Windows agent hosts, confirm the **actual launch identi
 For a Windows launch that checks out a license and then stalls at compute-node startup, follow [Windows MPI startup preflight](fluent-windows-mpi-preflight.md). Use the installed provider's launch schema and verify the effective Fluent arguments.
 
 For scheduled reproduction enable the persistent case clock and check the actual running fingerprint per [v0.6.1 reliability](runtime-reliability-v0.6.1.md). The old shared JVM still cannot stop an active solve independently.
+
+For the optional Windows isolated batch backend integrated via PR #35, follow [isolated executor deployment and scope](isolated-executor-v0.6.1.md). Do not enable production isolated execution until resource ownership, permissions, matching runtime fingerprint and controlled native tests have been verified. Existing shared JVM hard deadline restrictions remain in effect.

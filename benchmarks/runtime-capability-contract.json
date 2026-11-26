@@ -1,6 +1,6 @@
 {
   "version": "0.6.1",
-  "scope": "canonical COMSOL shared-JVM connector; not a native validation certificate",
+  "scope": "canonical COMSOL shared-JVM and opt-in Windows isolated connector; not a native validation certificate",
   "required_tools": [
     "comsol_queue_status",
     "comsol_job_status",
@@ -8,7 +8,9 @@
     "study_solve",
     "study_solve_async",
     "comsol_run_case",
-    "study_cancel"
+    "study_cancel",
+    "comsol_isolated_batch_submit",
+    "comsol_isolated_batch_status"
   ],
   "required_modules": [
     "server/runtime.py",
@@ -16,7 +18,13 @@
     "server/case_clock.py",
     "server/reliability.py",
     "scripts/verification_gate.py",
-    "scripts/recovery_memory.py"
+    "scripts/recovery_memory.py",
+    "server/coordination.py",
+    "server/shared_guard.py",
+    "server/isolated_runtime.py",
+    "server/isolated_batch.py",
+    "server/isolated_worker.py",
+    "server/windows_job.py"
   ],
   "capabilities": [
     {
@@ -41,9 +49,10 @@
     },
     {
       "id": "isolated_native_executor",
-      "state": "MISSING_LOCAL_PATCH",
-      "test": null,
-      "required_for_hard_deadline": true
+      "state": "INTEGRATED_OFFLINE_NATIVE_NOT_RUN",
+      "test": "tests/test_isolated_integration.py",
+      "required_for_hard_deadline": true,
+      "native_validation": "NOT_RUN"
     },
     {
       "id": "running_stop",
@@ -54,8 +63,18 @@
       "id": "deadline_enforcement",
       "state": "unsupported",
       "test": "tests/test_runtime_capability_contract.py"
+    },
+    {
+      "id": "durable_resource_coordination",
+      "state": "implemented_offline",
+      "test": "tests/test_coordination.py"
+    },
+    {
+      "id": "isolated_launch_evidence_binding",
+      "state": "implemented_offline",
+      "test": "tests/test_isolated_executor.py"
     }
   ],
   "native_validation": "NOT_RUN",
-  "release_policy": "Offline source checks permit a limited release; hard-deadline production readiness requires independently reviewed isolated executor source, registered tools, mutual exclusion and native stop evidence. Never change unsupported to supported based on version or a clock observer."
+  "release_policy": "Offline integration is not native readiness. Shared JVM running stop/deadline enforcement remain unsupported. Production hard-deadline use requires deployment-specific native verification, actual permissions, cooperative resource enrollment and proven stop scope."
 }

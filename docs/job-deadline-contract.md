@@ -32,3 +32,7 @@ COMSOL batch stop/cancel、Fluent 受支持 interrupt/checkpoint 都需验证真
 ## v0.6.1 clock enforcement
 
 See [runtime reliability](runtime-reliability-v0.6.1.md). With local clock enforcement, queue submissions must carry the current `task_case_id`. A hard-required case is blocked on this shared JVM regardless of the caller's individual flag. A persistent clock can latch EXIT independently of Codex but does not stop active native jobs; report native stop as unverified. The single-solve cap is a task-level limit pending verified native enforcement.
+
+## v0.6.1 isolated Windows route (offline-integrated)
+
+See [isolated executor integration](isolated-executor-v0.6.1.md). The separate operator-only isolated submission route binds reviewed saved model bytes, absolute deadline, case clock, resource coordination and actual owned process state. It does not change shared JVM limitations. Native COMSOL stop accuracy, disconnect/recovery and checkpoint reopen remain NOT_RUN. Before production use verify the deployed route with controlled licensed tests; do not treat an offline candidate, request to stop or process exit alone as verified native stop.

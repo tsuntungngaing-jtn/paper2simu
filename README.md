@@ -1,8 +1,12 @@
 # Paper2Simu v0.6.1 — Runtime reliability and autonomous recovery
 
+## v0.6.1 isolated executor integration
+
+[Windows isolated executor contract](docs/isolated-executor-v0.6.1.md): reviewed source integration, durable SQLite coordination, Case Clock and Verification Gate launch binding, private input snapshot, operator-only submission, reviewer-readable status and Recovery Memory. PR #35 candidate `ff01168317e8530c1e33cf5d14c4a25e920d0881` passed Linux/Windows and existing verification CI. Commercial native validation remains NOT_RUN; production hard deadlines remain blocked until deployment-specific validation. Shared JVM running-stop remains unsupported. See the integration contract for opt-in installation, cooperative resource scope, conservative claim retention and rollback.
+
 ## v0.6.1 runtime reliability
 
-[Deployment and recovery protocol](docs/runtime-reliability-v0.6.1.md): direct loopback diagnostic, live fingerprint checks, persistent case clock, bounded independent clock observer, unresolved journal admission blocks, and CI dependency correction. The shared JVM still lacks isolated native deadline enforcement; hard deadline tasks remain blocked until a verified provider is available. No native integration or autonomous process restart claimed. Existing multi-agent architecture and v0.6.0 knowledge packs remain intact.
+[Deployment and recovery protocol](docs/runtime-reliability-v0.6.1.md): direct loopback diagnostic, live fingerprint checks, persistent case clock, bounded independent clock observer, unresolved journal admission blocks, and CI dependency correction. The shared JVM still lacks running-job hard deadline enforcement; the opt-in Windows isolated route is integrated offline but must pass native deployment validation before production hard deadline use. No native integration or autonomous process restart claimed. Existing multi-agent architecture and v0.6.0 knowledge packs remain intact.
 
 ## v0.6.0 upgrade
 
