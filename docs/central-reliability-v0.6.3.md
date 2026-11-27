@@ -164,3 +164,23 @@ deduplication as production guarantees. Existing native gates remain unchanged.
 ## Local read-only dispatch architecture pilot
 
 See [read-only dispatch pilot](readonly-dispatch-pilot.md). This is a minimal cooperating local writer and replay contract, not production deployment. It excludes native actions, preserves the original journal and requires authenticated host/ACL and dependency callbacks. Cross-thread handoff remains a pilot view, not a verified production TRACE used edge. No automatic retry or lock release.
+
+
+## Round 5 counterexamples
+
+R5-01: reject journals with hard links or unknown file identity. Record local
+reservation metadata before append, preserve unknown locks. No network
+filesystem or cross-host guarantee.
+R5-02/03: strict completion now requires independently pinned plan/index
+digests and explicit trusted authority callback; completion proposal/review
+bind the full plan digest. Legacy unsigned completion remains a mapping
+gap, not verified. Incident structural replay without authority labels review
+UNKNOWN; optional verified incident review context checks retained scoped
+receipt. A structural closure can suppress a candidate but cannot authorize
+recovery. Actual source/issuer and production integration remain BLOCKED.
+R5-04/05/06: dispatch append checks original journal readiness inside CAS,
+rejects native scope and wrong/expired/self-issued grants, binds both sides
+of handoff and rejects cross-revision. Trusted callback and actual Provider
+ACL are still separate requirements. No production activation.
+R5-07/08: reservation diagnostics only; full process birth, reconciliation,
+multi-writer cross-revision transactions and carry-forward remain open.

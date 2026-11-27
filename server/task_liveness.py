@@ -179,7 +179,8 @@ def reviewed_completion(plan, node_id, revision, evidence_refs, review_receipt):
         raise ValueError("missing completion evidence")
     if not isinstance(review_receipt,str) or not review_receipt.strip():
         raise ValueError("missing review receipt")
-    return {"event":"work_completed","node_id":node_id,
+    from server.review_authority import content_digest
+    return {"event":"work_completed","node_id":node_id,"plan_sha256":content_digest(plan),
             "revision_binding":revision,"evidence_refs":sorted(set(evidence_refs)),
             "review_receipt":review_receipt}
 
@@ -241,23 +242,28 @@ def required_artifact_ids(node):
     return set(refs)
 
 
-def verify_completion_receipt(plan, event, root, approved_index):
+def verify_completion_receipt(plan, event, root, approved_index, authority=None):
     """Check an independently approved retained review projection.
 
     The caller must independently establish the index's authority and actual
     worker identities. A hash alone is not authentication or a scientific PASS.
     """
     from server.receipt_evidence import load_receipt, load_retained_bytes
+    from server.review_authority import require_authority, require_verified
+    digest = require_authority(plan,approved_index,authority)
+    if event.get("plan_sha256")!=digest:
+        raise ValueError("completion plan digest mismatch")
     node = next((n for n in plan["work_nodes"] if n["id"] == event["node_id"]),None)
     if node is None or event.get("revision_binding") != node["revision_binding"]:
         raise ValueError("unknown node or stale revision")
     receipt = load_receipt(root,approved_index,event.get("review_receipt"))
-    expected = {"task_id":plan["task_id"],"node_id":node["id"],
+    expected = {"task_id":plan["task_id"],"node_id":node["id"],"plan_sha256":digest,
                 "revision_binding":node["revision_binding"],
                 "evidence_refs":sorted(set(event["evidence_refs"])),
                 "decision":"ACCEPT_COMPLETION"}
     if any(receipt.get(k) != v for k,v in expected.items()):
         raise ValueError("review receipt scope or evidence mismatch")
+    require_verified(authority,"completion_review",receipt)
     if receipt.get("producer_role") != node["owner_role"] or receipt.get("reviewer_role") not in {"A03","A05","A07"}:
         raise ValueError("invalid review role")
     producer, reviewer = receipt.get("producer_worker"),receipt.get("reviewer_worker")
@@ -276,7 +282,7 @@ def verify_completion_receipt(plan, event, root, approved_index):
     return True
 
 
-def incident_projection(plan, events):
+def incident_projection(plan, events, *, review_context=None):
     """Replay approved incident events from the original journal; no writer.
 
     The host authenticates source/review receipts and serializes append.
@@ -284,6 +290,12 @@ def incident_projection(plan, events):
     """
     nodes = {n["id"]:n for n in plan.get("work_nodes", [])}
     scopes, seen_ids, seen_events = {}, set(), {}
+    authority = None
+    if review_context is not None:
+        from server.review_authority import require_authority, require_verified
+        from server.receipt_evidence import load_receipt
+        root,index,authority=review_context
+        plan_digest=require_authority(plan,index,authority)
     kinds = {"incident_open","incident_reclassified","incident_recovered",
              "incident_recurred","incident_attempt"}
     for e in events:
@@ -314,6 +326,18 @@ def incident_projection(plan, events):
             raise ValueError("missing incident ID")
         kind=e["event"]
         current=scopes.get(key)
+        review_status="UNKNOWN"
+        if kind in {"incident_recovered","incident_recurred"} and authority is not None:
+            receipt=load_receipt(root,index,e.get("review_receipt"))
+            if receipt.get("event_projection")!=e or e.get("plan_sha256")!=plan_digest:
+                raise ValueError("incident review scope mismatch")
+            reviewer,producer=receipt.get("reviewer_worker"),receipt.get("producer_worker")
+            if (receipt.get("reviewer_role") not in {"A03","A05","A07"} or
+                not all(isinstance(v,str) and v.strip() for v in (reviewer,producer)) or
+                reviewer==producer):
+                raise ValueError("incident independent reviewer required")
+            require_verified(authority,"incident_review",receipt)
+            review_status="VERIFIED_BY_CALLER"
         if kind in {"incident_open","incident_recurred"}:
             if ident in seen_ids or (kind=="incident_open" and current is not None):
                 raise ValueError("duplicate incident generation")
@@ -322,7 +346,8 @@ def incident_projection(plan, events):
                 raise ValueError("recurrence requires reviewed closed generation")
             spent=current["attempts_used"] if current else 0
             current={"incident_id":ident,"generation":current["generation"]+1 if current else 1,
-                     "open":True,"attempts_used":spent,"classification":e.get("classification")}
+                     "open":True,"attempts_used":spent,"classification":e.get("classification"),
+                     "review_status":review_status}
             scopes[key]=current
             seen_ids.add(ident)
         else:
@@ -334,6 +359,7 @@ def incident_projection(plan, events):
                 if not e.get("review_receipt"):
                     raise ValueError("missing reviewed recovery evidence")
                 current["open"]=False
+                current["review_status"]=review_status
             elif kind=="incident_attempt":
                 if current["attempts_used"]>=budget:
                     raise ValueError("original attempt budget exhausted")

@@ -35,3 +35,28 @@ Tests are synthetic receipt positive/negative cases and local two-process
 contention using the same journal. No commercial solver is used. Before
 production: test actual host calls, cross-revision plan history, failure
 reconciliation, shared resource domains and original writer integration.
+
+
+## Round 5 hardening
+
+The pilot now rejects multi-link or unidentified journal files before and
+during append, binds the opened descriptor to the original file identity,
+and records reservation ID, PID, original digest/length and event digest.
+Process birth remains UNKNOWN, and a crash before metadata is still
+unresolved. No stale lock removal or multi-host claim is supplied.
+
+New appends require ReviewAuthority with independently pinned canonical plan
+and evidence-index digests and a trusted verification callback. Each event
+has explicit plan_sha256, action (read_only or independent_review),
+operation_id and separate indexed grant_id. Grant binds the exact event,
+worker/thread/resource/revision and plan, decision, independent issuer and
+validity window. Existing authenticate and ready_check are additional vetoes,
+not authority or override of the original journal's dependencies.
+The callback itself is a trust boundary; no trusted production issuer or ACL
+adapter is installed. Synthetic acceptance is never real authentication.
+
+Old pilot records can be viewed structurally; new append rejects old
+unbound dispatch sequences. Review migration rather than editing history.
+Handoff rejects different revisions, and binds both plan/revision identities
+in the separate send/read/review receipts. Actual cross-revision carry
+and production TRACE used remain unimplemented.

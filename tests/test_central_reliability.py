@@ -107,7 +107,8 @@ def test_legacy_migration_preserves_native_gates(tmp_path):
     with pytest.raises(ValueError,match="review index required"):
         work_progress(new,[event],[],False)
     import json
-    receipt = dict(receipt_id="review",task_id="t",node_id="x",revision_binding="r",
+    from server.review_authority import ReviewAuthority, content_digest
+    receipt = dict(receipt_id="review",task_id="t",node_id="x",revision_binding="r",plan_sha256=content_digest(new),
                    evidence_refs=["receipt"],decision="ACCEPT_COMPLETION",
                    producer_role="A06",reviewer_role="A05",
                    producer_worker="worker-1",reviewer_worker="worker-2",
@@ -117,17 +118,20 @@ def test_legacy_migration_preserves_native_gates(tmp_path):
     index={"review":{"path":"review.json","sha256":hashlib.sha256(data).hexdigest()}}
     (tmp_path/"artifact").write_bytes(b"artifact")
     index["receipt"]={"path":"artifact","sha256":hashlib.sha256(b"artifact").hexdigest()}
-    assert work_progress(new,[event],[],False,review_context=(tmp_path,index))[0] is None
-    new["work_nodes"][0]["required_artifacts"]=["receipt","B"]
-    with pytest.raises(ValueError,match="omits required"):
+    authority=ReviewAuthority(content_digest(new),content_digest(index),lambda kind,payload:True)
+    with pytest.raises(ValueError,match="authority required"):
         work_progress(new,[event],[],False,review_context=(tmp_path,index))
+    assert work_progress(new,[event],[],False,review_context=(tmp_path,index,authority))[0] is None
+    new["work_nodes"][0]["required_artifacts"]=["receipt","B"]
+    with pytest.raises(ValueError,match="digest mismatch"):
+        work_progress(new,[event],[],False,review_context=(tmp_path,index,authority))
     new["work_nodes"][0]["required_artifacts"]=["receipt"]
     (tmp_path/"artifact").write_bytes(b"tampered")
     with pytest.raises(ValueError):
-        work_progress(new,[event],[],False,review_context=(tmp_path,index))
+        work_progress(new,[event],[],False,review_context=(tmp_path,index,authority))
     (tmp_path/"artifact").write_bytes(b"artifact")
     with pytest.raises(ValueError):
-        work_progress(new,[dict(event,evidence_refs=["other"])],[],False,review_context=(tmp_path,index))
+        work_progress(new,[dict(event,evidence_refs=["other"])],[],False,review_context=(tmp_path,index,authority))
     with pytest.raises(ValueError):
         work_progress(new,[dict(event,revision_binding="old")],[],False)
 

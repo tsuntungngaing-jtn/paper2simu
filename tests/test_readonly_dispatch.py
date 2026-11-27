@@ -1,10 +1,13 @@
 import hashlib
 import json
 import multiprocessing
+import os
+import time
 from pathlib import Path
 
 import pytest
 from server.readonly_dispatch import append_event, snapshot, project
+from server.review_authority import ReviewAuthority, content_digest
 
 
 def node(ident,role="A01",**kw):
@@ -21,7 +24,8 @@ def plan():
 def event(kind="dispatch_intent",eid="e",**kw):
     return dict(dict(event=kind,event_id=eid,task_id="t",node_id="n",revision_binding="r",
                      resource_domain="local",role="A01",worker_id="w",thread_id="th",
-                     dispatch_id="d",receipt_id=eid),**kw)
+                     dispatch_id="d",receipt_id=eid,grant_id="grant-"+eid,
+                     operation_id="op-"+eid,plan_sha256=content_digest(plan()),action="read_only"),**kw)
 
 
 def store(root,index,ident,payload):
@@ -30,14 +34,22 @@ def store(root,index,ident,payload):
     index[ident]={"path":ident,"sha256":hashlib.sha256(data).hexdigest()}
 
 
-def receipt(root,index,e):
+def receipt(root,index,e,**overrides):
     store(root,index,e["receipt_id"],dict(receipt_id=e["receipt_id"],event_projection=e))
+    binding={k:e.get(k) for k in ("event","event_id","task_id","node_id","revision_binding",
+             "resource_domain","role","worker_id","thread_id","dispatch_id","plan_sha256",
+             "action","operation_id")}
+    grant=dict(receipt_id=e["grant_id"],operation_binding=binding,decision="ALLOW",
+               issuer_worker_id="admin",issuer_role="A00",valid_from=time.time()-10,
+               expires_at=time.time()+3600)
+    store(root,index,e["grant_id"],dict(grant,**overrides))
 
 
 def append(root,index,e,sha,allow=True):
     return append_event(plan(),root/"journal",e,expected_sha256=sha,root=root,
                         approved_index=index,authenticate=lambda e,r:allow,
-                        ready_check=lambda p,events,n:True)
+                        ready_check=lambda p,events,n:True,
+                        authority=ReviewAuthority(content_digest(plan()),content_digest(index),lambda k,v:True))
 
 
 def contender(root,index,e,sha,queue):
@@ -129,3 +141,77 @@ def test_handoff_projection_rejects_duplicate_and_wrong_thread():
         project(p,events+[dict(h,thread_id="wrong")])
     with pytest.raises(ValueError,match="duplicate handoff"):
         project(p,events+[h,dict(h,event_id="other",handoff_id="other")])
+
+
+def test_hardlink_rejected_before_append(tmp_path):
+    journal=tmp_path/"journal"
+    journal.write_bytes(b"")
+    alias=tmp_path/"alias"
+    try:
+        os.link(journal,alias)
+    except OSError:
+        pytest.skip("filesystem does not support hard links")
+    e=event()
+    idx={}
+    receipt(tmp_path,idx,e)
+    for path in (journal,alias):
+        with pytest.raises(ValueError,match="single-link"):
+            snapshot(path)
+        with pytest.raises(ValueError,match="single-link"):
+            append_event(plan(),path,e,expected_sha256=hashlib.sha256(b"").hexdigest(),
+                         root=tmp_path,approved_index=idx,authenticate=lambda e,r:True,
+                         ready_check=lambda p,events,n:True)
+    assert journal.read_bytes()==b""
+
+
+@pytest.mark.parametrize("change", [{"expires_at":1},{"issuer_worker_id":"w"}])
+def test_grant_rejected_even_with_permissive_callback(tmp_path,change):
+    (tmp_path/"journal").write_bytes(b"")
+    e=event()
+    idx={}
+    receipt(tmp_path,idx,e,**change)
+    with pytest.raises(ValueError):
+        append(tmp_path,idx,e,snapshot(tmp_path/"journal")[0])
+    assert (tmp_path/"journal").read_bytes()==b""
+
+
+def test_blocked_and_dependency_are_not_overridden(tmp_path):
+    p=plan()
+    p["work_nodes"].append(node("parent"))
+    p["work_nodes"][0]["depends_on"]=["parent"]
+    j=tmp_path/"journal"
+    j.write_bytes(b"")
+    e=event(plan_sha256=content_digest(p))
+    idx={}
+    receipt(tmp_path,idx,e)
+    with pytest.raises(ValueError,match="not READY"):
+        append_event(p,j,e,expected_sha256=snapshot(j)[0],root=tmp_path,
+                     approved_index=idx,authenticate=lambda e,r:True,
+                     ready_check=lambda p,events,n:True,
+                     authority=ReviewAuthority(content_digest(p),content_digest(idx),lambda k,v:True))
+    assert j.read_bytes()==b""
+    p=plan()
+    b=dict(event="work_blocked",node_id="n",evidence_refs=["x"],blocker_type="input_missing",
+           timestamp_utc="now",last_attempt="read",actual_return="missing",resume_when="data",next_action="inspect")
+    j.write_text(json.dumps(b)+"\n")
+    idx={}
+    e=event()
+    receipt(tmp_path,idx,e)
+    with pytest.raises(ValueError,match="not READY"):
+        append(tmp_path,idx,e,snapshot(j)[0])
+
+
+def test_readonly_action_and_trust_boundary(tmp_path):
+    j=tmp_path/"journal"
+    j.write_bytes(b"")
+    idx={}
+    e=event(action="native_submission")
+    receipt(tmp_path,idx,e)
+    with pytest.raises(ValueError,match="outside read-only"):
+        append(tmp_path,idx,e,snapshot(j)[0])
+    e=event()
+    receipt(tmp_path,idx,e)
+    with pytest.raises(ValueError,match="authority required"):
+        append_event(plan(),j,e,expected_sha256=snapshot(j)[0],root=tmp_path,
+                     approved_index=idx,authenticate=lambda e,r:True,ready_check=lambda p,events,n:True)
+    assert j.read_bytes()==b""

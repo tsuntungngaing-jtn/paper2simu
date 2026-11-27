@@ -42,7 +42,7 @@ def remaining(limit, previously_used, reserved):
     return str(max(0, limit - previously_used - reserved))
 
 
-def work_progress(plan, events, pending_jobs, can_submit, *, review_context=None):
+def work_progress(plan, events, pending_jobs, can_submit, *, review_context=None, state_only=False):
     from server.task_liveness import validate_nodes, recovery_candidates, verify_completion_receipt
     strict = validate_nodes(plan)
     entries = plan.get("work_nodes", [])
@@ -109,6 +109,8 @@ def work_progress(plan, events, pending_jobs, can_submit, *, review_context=None
         else:
             ready.append(node_id)
 
+    if state_only:
+        return {"ready":ready,"completed":sorted(completed),"waiting":waiting}
     lines = []
     if nodes:
         lines.append("- Work by dependency:")
