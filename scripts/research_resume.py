@@ -124,9 +124,9 @@ def work_progress(plan, events, pending_jobs, can_submit, *, review_context=None
         if not item.get("incident_id") or not nodes[key].get("resource_domain"):
             lines.append("  - RECOVERY MAPPING REQUIRED: " + key
                          + " | record reviewed resource_domain and stable incident_id; no inferred authorization")
-    for candidate in recovery_candidates(plan, blockers):
+    for candidate in recovery_candidates(plan, blockers, events=events):
         lines.append("  - RECOVERY CANDIDATE (verify authorization): " + candidate["id"]
-                     + " | " + candidate["action"] + " | proposed: " + candidate["proposed_next_action"])
+                     + " | " + candidate["status"] + " | " + candidate["action"] + " | proposed: " + candidate["proposed_next_action"])
     return (nodes[ready[0]]["action"] if ready else None), bool(waiting), lines
 
 

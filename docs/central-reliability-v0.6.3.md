@@ -137,3 +137,26 @@ Open: real production telemetry and ACL, dispatch engine, authorized
 cross-thread handoff, legacy migration, cross-host ownership, native
 reconciliation/release and production liveness normalization.
 All original scientific gates and resource claims remain unchanged.
+
+
+## Round 4 counterexamples
+
+Strict completion requires a reviewed, nonempty required_artifacts list on the
+node; all IDs must appear in the independent review and retained bytes. Legacy
+plans without that structured manifest remain readable but cannot claim strict
+completion until reviewed mapping is provided. No parsing prose into authority.
+Incident events must bind task_id, resource, node and revision. The existing
+resume renderer passes the original journal to recovery_candidates; a closed,
+stale or exhausted generation cannot propose another attempt. Legacy candidates
+without lifecycle evidence remain diagnostic mapping proposals only.
+Even legacy stdio context cannot mix different declared launches or origins;
+missing scope remains UNKNOWN. Isolated and production readiness stay separate.
+The runtime failure-evidence race is addressed by persisting job-error.json
+before publishing failed status; explicit evidence write failures are reported.
+
+Round 4 prototype is a design input, not production code. Manual dispatch
+positive control and synthetic admission/handoff do not prove host ACL, actual
+cross-thread used, cross-process CAS or native ownership. Future dispatch
+requires single authoritative journal, stable event IDs and serialized claims
+across revisions; do not adopt the prototype's in-process lock or transient
+deduplication as production guarantees. Existing native gates remain unchanged.

@@ -37,10 +37,17 @@ def classify_receipts(root, approved_index, receipt_ids, expected_context):
         raise ValueError("missing context")
     observed = {}
     verified = set()
+    scopes = set()
     for ident in receipt_ids:
         receipt = load_receipt(root, approved_index, ident)
         if any(receipt.get(k) != expected_context[k] for k in keys):
             raise ValueError("receipt from another context")
+        scope = tuple(receipt.get(k) for k in ("launch_id","origin"))
+        if any(v is not None and (not isinstance(v,str) or not v.strip()) for v in scope):
+            raise ValueError("invalid launch scope")
+        scopes.add(scope)
+        if len(scopes)>1:
+            raise ValueError("mixed launch or origin in receipt chain")
         stage, value = receipt.get("stage"), receipt.get("observed")
         allowed = {"configured","environment_ok","child_started","child_alive_at_initialize",
                    "stdout_protocol_clean","initialize_response","protocol_compatible",
@@ -59,5 +66,6 @@ def classify_receipts(root, approved_index, receipt_ids, expected_context):
     out["first_unresolved_stage"] = out.get("next_evidence")
     out["first_missing_stage"] = next((k for k,_ in STAGES if observed.get(k) is None),None)
     out["first_failed_stage"] = next((k for k,_ in STAGES if observed.get(k) is False),None)
+    out["launch_scope_status"] = "SINGLE_DECLARED_SCOPE" if scopes and all(next(iter(scopes))) else "UNKNOWN"
     out["authenticity_verified"] = False
     return out

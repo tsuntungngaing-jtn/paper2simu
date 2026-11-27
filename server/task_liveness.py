@@ -32,6 +32,8 @@ def validate_nodes(plan):
         for k in ("id", "action", "completion_evidence", "resource_domain", "revision_binding"):
             if not isinstance(n.get(k),str) or not n[k].strip():
                 raise ValueError("missing " + k)
+        if "required_artifacts" in n:
+            required_artifact_ids(n)
         for k in ("depends_on","failure_edges"):
             v = n.get(k)
             if not isinstance(v,list) or any(x not in ids for x in v):
@@ -61,14 +63,20 @@ def validate_nodes(plan):
     return True
 
 
-def recovery_candidates(plan, blockers):
+def recovery_candidates(plan, blockers, *, events=None):
     """Stable per existing incident; proposals do not add retry budget."""
     nodes = {n["id"]: n for n in plan.get("work_nodes", [])}
     result = []
+    latest = None if events is None else {(v["node_id"],v["resource_domain"]):v
+                    for v in incident_projection(plan,events)["incidents"]}
     for node, event in sorted(blockers.items()):
         incident = event.get("incident_id")
         resource = nodes[node].get("resource_domain")
         if not isinstance(incident,str) or not incident or not isinstance(resource,str) or not resource:
+            continue
+        current = None if latest is None else latest.get((node,resource))
+        if current is not None and (not current["open"] or current["incident_id"] != incident or
+                                    current["attempts_remaining"] <= 0):
             continue
         key = [plan["task_id"], resource, node, incident]
         ident = "recover-" + hashlib.sha256(json.dumps(key,separators=(",",":")).encode()).hexdigest()[:32]
@@ -90,7 +98,7 @@ def recovery_candidates(plan, blockers):
                        "action":"Inspect existing evidence and propose a scoped recovery",
                        "proposed_next_action":event["next_action"],
                        "completion_evidence":event["resume_when"],
-                       "status":"PROPOSED_VERIFY_AUTHORIZATION",
+                       "status":"PROPOSED_VERIFY_AUTHORIZATION" if current is not None else "PROPOSED_INCIDENT_MAPPING_REQUIRED",
                        "native_execution_authorized":False})
     return result
 
@@ -136,7 +144,7 @@ def migration_preview(plan, reviewed_nodes):
     if set(reviewed_nodes) - ids:
         raise ValueError("unknown existing node in migration")
     fields = {"owner_role","operation_scope","completion_evidence",
-              "resource_domain","revision_binding","attempt_budget","failure_edges"}
+              "resource_domain","revision_binding","attempt_budget","failure_edges","required_artifacts"}
     for node in nodes:
         supplied = reviewed_nodes.get(node["id"], {})
         if set(supplied) - fields:
@@ -223,6 +231,16 @@ def observation_replay(records, threshold=2):
             "native_execution_authorized":False}
 
 
+def required_artifact_ids(node):
+    """Only reviewed structured artifact IDs; prose is not a manifest."""
+    refs = node.get("required_artifacts")
+    if not isinstance(refs,list) or not refs or not all(isinstance(v,str) and v.strip() for v in refs):
+        raise ValueError("required_artifacts approval/mapping required")
+    if len(set(refs)) != len(refs):
+        raise ValueError("duplicate required artifact")
+    return set(refs)
+
+
 def verify_completion_receipt(plan, event, root, approved_index):
     """Check an independently approved retained review projection.
 
@@ -247,6 +265,8 @@ def verify_completion_receipt(plan, event, root, approved_index):
         raise ValueError("independent worker identities required")
     artifacts = receipt.get("artifact_sha256")
     refs = expected["evidence_refs"]
+    if not required_artifact_ids(node).issubset(refs):
+        raise ValueError("completion omits required artifact")
     if not isinstance(artifacts,dict) or set(artifacts) != set(refs) or not refs:
         raise ValueError("review must bind all artifact digests")
     for ref in refs:
@@ -269,6 +289,8 @@ def incident_projection(plan, events):
     for e in events:
         if e.get("event") not in kinds:
             continue
+        if not isinstance(plan.get("task_id"),str) or not plan["task_id"] or e.get("task_id") != plan["task_id"]:
+            raise ValueError("incident task identity mismatch")
         eid=e.get("event_id")
         if not isinstance(eid,str) or not eid:
             raise ValueError("missing incident event identity")

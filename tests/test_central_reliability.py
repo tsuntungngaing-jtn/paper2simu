@@ -98,7 +98,7 @@ def test_legacy_migration_preserves_native_gates(tmp_path):
     old = dict(task_id="t",work_nodes=[{"id":"x","action":"read"}])
     assert migration_preview(old,{})["status"] == "MIGRATION_INCOMPLETE"
     metadata = dict(owner_role="A06",operation_scope="read_only",completion_evidence="receipt",
-                    resource_domain="host",revision_binding="r",attempt_budget=1,failure_edges=[])
+                    resource_domain="host",revision_binding="r",attempt_budget=1,failure_edges=[],required_artifacts=["receipt"])
     new = migration_preview(old,{"x":metadata})["plan"]
     assert "work_schema" not in old and new["work_nodes"][0]["id"] == "x"
     with pytest.raises(ValueError):
@@ -118,6 +118,10 @@ def test_legacy_migration_preserves_native_gates(tmp_path):
     (tmp_path/"artifact").write_bytes(b"artifact")
     index["receipt"]={"path":"artifact","sha256":hashlib.sha256(b"artifact").hexdigest()}
     assert work_progress(new,[event],[],False,review_context=(tmp_path,index))[0] is None
+    new["work_nodes"][0]["required_artifacts"]=["receipt","B"]
+    with pytest.raises(ValueError,match="omits required"):
+        work_progress(new,[event],[],False,review_context=(tmp_path,index))
+    new["work_nodes"][0]["required_artifacts"]=["receipt"]
     (tmp_path/"artifact").write_bytes(b"tampered")
     with pytest.raises(ValueError):
         work_progress(new,[event],[],False,review_context=(tmp_path,index))
@@ -234,8 +238,8 @@ def test_round3_missing_vs_failed(tmp_path):
 
 def test_round3_incident_budget_survives_recurrence():
     from server.task_liveness import incident_projection
-    p=dict(work_nodes=[node("x",attempt_budget=1)])
-    common=dict(node_id="x",resource_domain="host",revision_binding="r",source_turn_id="t",evidence_refs=["e"])
+    p=dict(task_id="task",work_nodes=[node("x",attempt_budget=1)])
+    common=dict(task_id="task",node_id="x",resource_domain="host",revision_binding="r",source_turn_id="t",evidence_refs=["e"])
     def event(kind,eid,ident="i",**kw):
         return dict(common,event=kind,event_id=eid,incident_id=ident,**kw)
     seq=[event("incident_open","1"),event("incident_attempt","2"),
@@ -269,3 +273,33 @@ def test_round3_chain_anchor_and_tampering(tmp_path):
     assert verify_chain(tmp_path,turn)["status"]=="UNRESOLVED"
     put("exit",dict(spawn_sha256=s,pid=1,process_creation_identity=ident,event_sha256=ehash,exit_code=2))
     assert "ANCHOR_MISMATCH" in verify_chain(tmp_path,turn,anchor=anchor)["issues"]
+
+
+def test_round4_incident_task_and_stale_candidate():
+    from server.task_liveness import incident_projection
+    p=dict(task_id="task",work_nodes=[node("x")])
+    e=dict(task_id="task",event_id="1",event="incident_open",node_id="x",
+           resource_domain="host",revision_binding="r",source_turn_id="t",
+           evidence_refs=["r"],incident_id="i")
+    b={"x":dict(incident_id="i",next_action="inspect",resume_when="receipt")}
+    with pytest.raises(ValueError,match="task identity"):
+        incident_projection(p,[dict(e,task_id="other")])
+    assert recovery_candidates(p,b,events=[e])
+    end=dict(e,event_id="2",event="incident_recovered",review_receipt="review")
+    assert recovery_candidates(p,b,events=[e,end])==[]
+    assert recovery_candidates(p,b,events=[e,dict(e,event_id="2",event="incident_attempt")])==[]
+
+
+def test_round4_legacy_context_rejects_mixed_launch(tmp_path):
+    import json
+    from server.stdio_diagnostics import classify_receipts
+    ctx=dict(host_id="h",turn_id="t",provider_id="p")
+    idx={}
+    for ident,launch,stage in [("a","l1","configured"),("b","l2","child_started")]:
+        data=json.dumps(dict(ctx,receipt_id=ident,launch_id=launch,origin="production",
+                             stage=stage,observed=True)).encode()
+        (tmp_path/ident).write_bytes(data)
+        idx[ident]={"path":ident,"sha256":hashlib.sha256(data).hexdigest()}
+    with pytest.raises(ValueError,match="mixed launch"):
+        classify_receipts(tmp_path,idx,["a","b"],ctx)
+    assert classify_receipts(tmp_path,idx,["a"],ctx)["launch_scope_status"]=="SINGLE_DECLARED_SCOPE"
