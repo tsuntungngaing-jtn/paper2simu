@@ -211,7 +211,7 @@ def _reservation_metadata(lock,record):
 
 
 
-def _append_checked(journal,event,expected_sha256,validate):
+def _append_checked(journal,event,expected_sha256,validate,*,checkpoint_store=None,journal_anchor=None):
     """One local cooperating writer protocol for all pilot event types."""
     from server.journal_reconciliation import current_process_identity
     path=Path(journal).resolve(strict=True)
@@ -245,6 +245,8 @@ def _append_checked(journal,event,expected_sha256,validate):
                     _file_identity(path.stat())!=identity or stream.read()!=raw):
                 raise ValueError("journal changed before append")
             uncertain=True
+            if checkpoint_store is not None:
+                checkpoint_store.prepare(journal_anchor,_digest(raw+line),content_digest(event))
             stream.write(line)
             stream.flush()
             os.fsync(stream.fileno())
@@ -254,6 +256,8 @@ def _append_checked(journal,event,expected_sha256,validate):
             stream.seek(0)
             if stream.read()!=raw+line or path.read_bytes()!=raw+line:
                 raise ValueError("journal changed during append: retain reservation")
+        if checkpoint_store is not None:
+            checkpoint_store.finalize(journal_anchor,_digest(raw+line),content_digest(event))
         uncertain=False
         return {"status":"RECORDED","journal_sha256":_digest(raw+line),
                 "native_execution_authorized":False}
@@ -264,7 +268,7 @@ def _append_checked(journal,event,expected_sha256,validate):
 
 
 def append_event(plan,journal,event,*,expected_sha256,root,approved_index,authenticate,
-                 ready_check, authority=None, revision_history=None, journal_anchor=None):
+                 ready_check, authority=None, revision_history=None, journal_anchor=None, checkpoint_store=None):
     """Append a read-only event with trusted review and current-plan admission.
 
     revision_history is an independently supplied initial plan and retained
@@ -279,7 +283,7 @@ def append_event(plan,journal,event,*,expected_sha256,root,approved_index,authen
         require_anchor(journal_anchor,task_id=plan["task_id"],genesis_sha256=genesis,
                        raw=raw,events=all_events,identity=identity,authority=authority)
         return result
-    return _append_checked(journal,event,expected_sha256,validate)
+    return _append_checked(journal,event,expected_sha256,validate,checkpoint_store=checkpoint_store,journal_anchor=journal_anchor)
 
 
 def _validate_dispatch(plan,all_events,event,root,approved_index,authenticate,
@@ -324,6 +328,8 @@ def _validate_dispatch(plan,all_events,event,root,approved_index,authenticate,
     if any(old.get("operation_id")==event["operation_id"] for old in all_events if old.get("event") in KINDS):
         raise ValueError("operation identity already used")
     if event["event"]=="dispatch_intent":
+        if node["id"] in project(plan,events,require_bindings=True)["dispatches"]:
+            raise ValueError("existing dispatch; reconciliation required")
         spent=(state["attempts"].get(node["id"],0) if state is not None else
                len({e.get("event_id") for e in all_events if e.get("event")=="dispatch_intent" and e.get("node_id")==node["id"]}))
         if spent>=node["attempt_budget"]:

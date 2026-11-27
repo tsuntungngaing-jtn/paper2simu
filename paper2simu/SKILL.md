@@ -4,7 +4,7 @@ description: Reproduce engineering papers, build reusable article knowledge pack
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.6.3"
+  version: "0.6.4.dev0"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -152,3 +152,7 @@ Round 5: for strict completion require externally approved full plan and evidenc
 Round 7 opt-in isolated architecture: use the shared CAS revision transaction pilot with explicitly approved genesis/plan history and retained activation receipts. Preserve old events and cumulative attempts; reject unresolved dispatch, native/legacy history and unreviewed migration. Carry candidates do not satisfy dependencies. Reservation inspection is read-only; host observation requires an actual supported read-only adapter and trusted call binding. See [revision transactions pilot](../docs/revision-transactions-pilot.md). No automatic clear, production activation or native authorization.
 
 Round 8: opt-in pilot writes require externally approved monotonic JournalAnchor (genesis, exact journal SHA, sequence, file identity), not self-calculated hashes; enforce budget with or without revision history and replay retained historical receipts. Missing issuer/history blocks authorization. Distinguish semantic tail match from exact bytes; owner reconciliation is a candidate only. Host observations require current anchored dispatch and freshness. Existing native clocks, resources and scientific gates are unchanged.
+
+## v0.6.4-dev local research transactions (opt-in)
+
+See [Round 9 integration contract](../docs/research-transaction-v064-dev.md). Use a separately administered checkpoint store, reviewed dependency manifests and additive evidence deltas. Candidate selection is read-only, at most three outstanding specialists; no automatic actual host calls or remote resource grant. A04 remains sole native writer. Keep all original acceptance, clock, budget, provenance and independent vetoes. No production migration or solver invocation under this pilot.

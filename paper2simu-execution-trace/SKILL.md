@@ -63,3 +63,7 @@ Preserve the original L0–L5 meanings in section 6. Do not infer ADOPTED or use
 For a retained redacted event projection, server.trace_evidence.replay_consumption checks the approved receipt index and exact event bytes before structural linkage. The index must be independently reviewed; a self-authored matching hash is not host authenticity. Do not claim complete trace or L4 verification solely from this helper.
 
 Round 2: require explicit thread identity for replay. Reject cross-thread used edges until an independently reviewed transfer contract is implemented. Report input, mapped and unmapped counts; zero mapped events cannot establish byte verification or a scientific consumption rate. Legacy records remain in coverage gaps, not discarded evidence.
+
+## v0.6.4-dev pilot
+
+The transaction handoff projection is candidate evidence only. Do not promote it to production TRACE used until actual consumer, independent review and host provenance have been verified. Preserve the original P2S-TRACE-1.0 policy and compatibility declaration; this development build is not a certified new TRACE protocol.

@@ -152,7 +152,7 @@ def active_segment(history,events,root,index,authority):
             "native_execution_authorized":False,"host_authenticity_verified":False}
 
 
-def activate_revision(history,journal,event,*,expected_sha256,root,approved_index,authority,journal_anchor=None):
+def activate_revision(history,journal,event,*,expected_sha256,root,approved_index,authority,journal_anchor=None,checkpoint_store=None):
     """Atomically append one approved transition to the original local journal."""
     from server.readonly_dispatch import _append_checked
     if event.get("event")!=ACTIVATION:
@@ -169,4 +169,4 @@ def activate_revision(history,journal,event,*,expected_sha256,root,approved_inde
                 return {"status":"ALREADY_RECORDED"}
         active_segment(history,events+[event],root,approved_index,authority)
         return None
-    return _append_checked(journal,event,expected_sha256,validate)
+    return _append_checked(journal,event,expected_sha256,validate,checkpoint_store=checkpoint_store,journal_anchor=journal_anchor)
