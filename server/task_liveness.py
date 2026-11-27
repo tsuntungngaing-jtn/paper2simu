@@ -70,9 +70,19 @@ def recovery_candidates(plan, blockers):
         resource = nodes[node].get("resource_domain")
         if not isinstance(incident,str) or not incident or not isinstance(resource,str) or not resource:
             continue
-        key = [plan["task_id"], resource, node, event["blocker_type"], incident]
+        key = [plan["task_id"], resource, node, incident]
         ident = "recover-" + hashlib.sha256(json.dumps(key,separators=(",",":")).encode()).hexdigest()[:32]
-        if ident in nodes:
+        # Preserve existing candidate identities from the earlier key scheme.
+        # An incident is an externally reviewed stable ID, not a text label.
+        legacy_types = ("input_missing","physics_unresolved","model_incomplete",
+                        "capability_missing","deployment_mismatch","transport_error",
+                        "native_solver_failure","comparison_ambiguous")
+        legacy_ids = {"recover-" + hashlib.sha256(json.dumps(
+            [plan["task_id"],resource,node,kind,incident],separators=(",",":")
+        ).encode()).hexdigest()[:32] for kind in legacy_types}
+        if ident in nodes or legacy_ids.intersection(nodes) or any(
+                n.get("blocked_node") == node and n.get("incident_id") == incident
+                and n.get("resource_domain") == resource for n in nodes.values()):
             continue
         result.append({"id":ident,"blocked_node":node,"owner_role":"A06",
                        "operation_scope":"read_only","incident_id":incident,
@@ -164,3 +174,75 @@ def reviewed_completion(plan, node_id, revision, evidence_refs, review_receipt):
     return {"event":"work_completed","node_id":node_id,
             "revision_binding":revision,"evidence_refs":sorted(set(evidence_refs)),
             "review_receipt":review_receipt}
+
+
+def observation_replay(records, threshold=2):
+    """Production replay contract: distinct original turns, stable facts only.
+
+    Host maps source events to these fields using reviewed mappings. No prose
+    comparison or inferred progress; an event with unknown mapping stays a gap.
+    One final observation per source turn, in original journal order.
+    """
+    states = {"PENDING","READY","AUTHORIZED","DISPATCHED","RUNNING",
+              "BLOCKED","COMPLETED","VERIFIED","FAILED","UNKNOWN"}
+    codes = {"input_missing","physics_unresolved","model_incomplete",
+             "capability_missing","deployment_mismatch","transport_error",
+             "native_solver_failure","comparison_ambiguous"}
+    seen, ordered = {}, []
+    for row in records:
+        source = row.get("source_turn_id")
+        if not isinstance(source,str) or not source.strip():
+            raise ValueError("missing original turn ID")
+        node_states = row.get("node_states")
+        if not isinstance(node_states,dict) or any(
+                not isinstance(k,str) or v not in states for k,v in node_states.items()):
+            raise ValueError("unknown node state")
+        blockers = []
+        for item in row.get("blockers",[]):
+            if not all(isinstance(item.get(k),str) and item[k] for k in
+                       ("incident_id","resource_domain","node_id")) or item.get("code") not in codes:
+                raise ValueError("unmapped blocker")
+            blockers.append({k:item[k] for k in ("incident_id","resource_domain","node_id","code")})
+        milestones = row.get("verified_milestones")
+        ready = row.get("eligible_ready")
+        if not isinstance(milestones,list) or not isinstance(ready,list) or not all(
+                isinstance(x,str) and x for x in milestones+ready):
+            raise ValueError("missing stable milestone or ready ID")
+        facts = dict(node_states=node_states,blockers=sorted({
+            json.dumps(x,sort_keys=True) for x in blockers}),
+            verified_milestones=sorted(set(milestones)),eligible_ready=sorted(set(ready)))
+        fingerprint = json.dumps(facts,sort_keys=True)
+        if source in seen:
+            if seen[source] != fingerprint:
+                raise ValueError("conflicting observations for original turn")
+            continue
+        seen[source] = fingerprint
+        ordered.append(facts)
+    return {"status":repeated_observations(ordered,threshold),
+            "input_count":len(records),"unique_turns":len(ordered),
+            "native_execution_authorized":False}
+
+
+def verify_completion_receipt(plan, event, root, approved_index):
+    """Check an independently approved retained review projection.
+
+    The caller must independently establish the index's authority and actual
+    worker identities. A hash alone is not authentication or a scientific PASS.
+    """
+    from server.receipt_evidence import load_receipt
+    node = next((n for n in plan["work_nodes"] if n["id"] == event["node_id"]),None)
+    if node is None or event.get("revision_binding") != node["revision_binding"]:
+        raise ValueError("unknown node or stale revision")
+    receipt = load_receipt(root,approved_index,event.get("review_receipt"))
+    expected = {"task_id":plan["task_id"],"node_id":node["id"],
+                "revision_binding":node["revision_binding"],
+                "evidence_refs":sorted(set(event["evidence_refs"])),
+                "decision":"ACCEPT_COMPLETION"}
+    if any(receipt.get(k) != v for k,v in expected.items()):
+        raise ValueError("review receipt scope or evidence mismatch")
+    if receipt.get("producer_role") != node["owner_role"] or receipt.get("reviewer_role") not in {"A03","A05","A07"}:
+        raise ValueError("invalid review role")
+    producer, reviewer = receipt.get("producer_worker"),receipt.get("reviewer_worker")
+    if not all(isinstance(v,str) and v.strip() for v in (producer,reviewer)) or producer == reviewer:
+        raise ValueError("independent worker identities required")
+    return True

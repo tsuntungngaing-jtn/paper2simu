@@ -113,11 +113,32 @@ def source_identity(root, files):
             if entry:
                 meta, name = entry.split(b"\t",1)
                 tree[name.decode("utf-8")] = meta.split()[2].decode("ascii")
-        matches = all(tree.get(name) == hashlib.sha1(
+        # Determine eligible tracked paths from Git, not the supplied list.
+        # Reuse the publication policy on path names; no checkout mutation.
+        def eligible(name):
+            rel = Path(name)
+            parts = rel.parts
+            if any(p in SKIP_PARTS or p.endswith(".egg-info") for p in parts):
+                return False
+            if len(parts) == 1:
+                return rel.name in ROOT_FILES
+            if parts[0] == ".codex":
+                return len(parts)==3 and parts[1]=="agents" and rel.name in {
+                    "paper2simu_paper_reader.toml","paper2simu_documentation_expert.toml",
+                    "paper2simu_physics_reviewer.toml","paper2simu_supervisor.toml",
+                    "paper2simu_recovery_agent.toml","paper2simu_executor.toml",
+                    "paper2simu_acceptance_agent.toml","paper2simu_recorder.toml",
+                    "paper2simu_experiment_designer.toml"}
+            return name == "references/recovery-history.json" or parts[0] in DIRECTORIES
+        expected = {name for name in tree if eligible(name)}
+        supplied = {name for name,_ in files}
+        complete = bool(expected) and supplied == expected and len(supplied)==len(files)
+        matches = complete and all(tree.get(name) == hashlib.sha1(
             ("blob "+str(len(data))+"\0").encode("ascii")+data).hexdigest()
             for name,data in files)
         return {"build_protocol":"paper2simu-release/2","source_commit":commit,
-                "source_binding":"EXACT_PUBLISHED_BYTES" if matches else "PUBLISHED_BYTES_DIFFER"}
+                "source_binding":"EXACT_PUBLISHED_BYTES" if matches else "PUBLISHED_BYTES_DIFFER",
+                "path_set_complete":complete,"expected_path_count":len(expected)}
     except (OSError, ValueError, subprocess.CalledProcessError):
         return {"build_protocol":"paper2simu-release/2","source_commit":None,
                 "source_binding":"UNVERIFIED"}

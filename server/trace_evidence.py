@@ -40,7 +40,7 @@ def consumption_view(events):
             raise ValueError("missing task kind")
         if (event["task_kind"] == "paper") != (paper is not None):
             raise ValueError("invalid paper binding")
-        ctx += (event["task_kind"], paper)
+        ctx += (event["task_kind"], paper, event.get("thread_id"))
         digest = _hash(event.get("artifact_sha256"))
         _id(event.get("source_receipt_id"))
         if kind == "artifact_observed":
@@ -76,12 +76,23 @@ def replay_consumption(events, root, approved_index):
     Keep structural-only consumption_view separate for legacy offline tests.
     """
     from server.receipt_evidence import load_receipt
+    events = list(events)
+    verified = set()
+    ignored = 0
     for event in events:
         if event.get("event") not in ("artifact_observed","consumer_disposition"):
+            ignored += 1
             continue
+        _id(event.get("thread_id"))
         receipt = load_receipt(root, approved_index, event.get("source_receipt_id"))
         if receipt.get("event_projection") != event:
             raise ValueError("event does not match retained receipt projection")
+        verified.add(event["event_id"])
     result = consumption_view(events)
-    result["receipt_bytes_verified"] = True
+    result["receipt_bytes_verified"] = bool(verified) and ignored == 0
+    result["verified_event_count"] = len(verified)
+    result["unmapped_event_count"] = ignored
+    result["input_event_count"] = len(events)
+    result["coverage_status"] = ("NO_MAPPED_EVENTS" if not verified else
+                                 "PARTIAL" if ignored else "MAPPED_BYTES_CHECKED")
     return result

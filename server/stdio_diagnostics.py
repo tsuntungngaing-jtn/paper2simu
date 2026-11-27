@@ -32,6 +32,7 @@ def classify_receipts(root, approved_index, receipt_ids, expected_context):
     if not all(isinstance(expected_context.get(k),str) and expected_context[k] for k in keys):
         raise ValueError("missing context")
     observed = {}
+    verified = set()
     for ident in receipt_ids:
         receipt = load_receipt(root, approved_index, ident)
         if any(receipt.get(k) != expected_context[k] for k in keys):
@@ -45,7 +46,12 @@ def classify_receipts(root, approved_index, receipt_ids, expected_context):
         if stage in observed and observed[stage] is not value:
             raise ValueError("conflicting stage evidence")
         observed[stage] = value
+        verified.add(ident)
     out = classify(observed)
-    out["receipt_bytes_verified"] = True
+    out["receipt_bytes_verified"] = bool(verified)
+    out["verified_receipt_count"] = len(verified)
+    out["known_failed_stages"] = sorted(k for k,v in observed.items() if v is False)
+    out["observed_stages"] = sorted(k for k,v in observed.items() if v is not None)
+    out["first_unresolved_stage"] = out.get("next_evidence")
     out["authenticity_verified"] = False
     return out

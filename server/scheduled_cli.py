@@ -218,9 +218,13 @@ def tick(config, popen=subprocess.Popen):
             with inp.open("rb") as stdin, events.open("xb") as stdout, errors.open("xb") as stderr:
                 child = popen(argv, cwd=str(work), env=env, stdin=stdin,
                               stdout=stdout, stderr=stderr, shell=False)
+                creation_identity = _creation_identity(child)
                 _write_receipt(state/(turn+".spawn.json"), {
                     "turn_id": turn, "pid": child.pid, "observed_at": time.time(),
-                    "process_creation_identity": _creation_identity(child), "native_state": "UNKNOWN"})
+                    "process_creation_identity": creation_identity,
+                    "identity_status":"OBSERVED" if creation_identity else "UNAVAILABLE",
+                    "intent_sha256":_sha((state/(turn+".intent.json")).read_bytes()),
+                    "native_state": "UNKNOWN"})
                 mark("RUNNING",child.pid)
                 try:
                     code = child.wait(timeout=wait)
@@ -230,6 +234,8 @@ def tick(config, popen=subprocess.Popen):
             _write_receipt(state/(turn+".exit.json"), {
                 "turn_id":turn, "pid":child.pid, "exit_code":code,
                 "observed_at":time.time(), "event_sha256":_sha(events.read_bytes()),
+                "spawn_sha256":_sha((state/(turn+".spawn.json")).read_bytes()),
+                "process_creation_identity":creation_identity,
                 "native_state":"UNKNOWN"})
             if code != 0 or not _completed(events):
                 return mark("CLI_OUTCOME_UNRESOLVED",child.pid)

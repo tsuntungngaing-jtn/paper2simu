@@ -68,3 +68,39 @@ remain NOT_RUN. Pending checks only block dependent work.
 - Actual PC8 host adapter, original task migration, original TRACE collector,
   actual loaded deployment identity, CLI hard crash reconciliation, native
   attachment, ACL and production migration remain NOT_RUN.
+
+
+## PC8 Round 2 counterexample revision
+
+- Legacy mixed logs: use research_resume.legacy_journal_preview to inventory
+  raw lines by hash, unknown event type, unknown node, missing evidence and
+  native reconciliation requirement. It is deliberately read-only and never
+  substitutes a filtered legacy log for the authoritative journal. Independently
+  approve mapping and replay through the existing writer; no fabricated work
+  completions. Strict work completion requires review_context (retained root
+  and separately approved index); exact task/node/revision/evidence, decision,
+  role and distinct worker IDs must match. The host still authenticates identities
+  and the index. Existing strict refresh without a review context fails closed.
+- Recovery key uses stable reviewed incident ID, task, resource and node,
+  excluding mutable classification. Suppress earlier generated IDs as well.
+  Host incident lifecycle, recurrence generations and bounded attempt execution
+  remain open; never invent aliases or reset budgets.
+- Production observations use observation_replay with original turn IDs, one
+  final observation per turn, stable state codes and independently verified
+  milestone IDs. Free-text descriptions are excluded; conflicts reject replay.
+  Legacy repeated_observations is a low-level comparator, not production proof.
+- TRACE replay requires thread identity; cross-thread consumption is rejected
+  until an authorized handoff contract exists. Empty/ignored input does not
+  verify bytes; expose counts. Structural checks do not authenticate a host.
+- stdio replay preserves known failed stages even if an earlier stage is
+  unknown. An empty chain cannot verify bytes. Do not promote a host-reported
+  initialize error into a confirmed process exit or native diagnosis.
+- CLI exit receipt binds spawn digest and observed creation identity; spawn
+  binds intent digest. No automatic release or native claim changes.
+- Release source binding checks the complete Git-tracked publication path set,
+  not just the supplied files. Still not a signed release, approved deployment
+  inventory, or actual loaded identity.
+
+No live host capture, real ACL, production legacy mapping, actual agent claim
+engine, cross-host transfer, or evidence-based reservation release is supplied
+by this revision. Native tests and PC8 Fluent recovery remain open.

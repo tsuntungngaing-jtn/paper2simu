@@ -42,8 +42,8 @@ def remaining(limit, previously_used, reserved):
     return str(max(0, limit - previously_used - reserved))
 
 
-def work_progress(plan, events, pending_jobs, can_submit):
-    from server.task_liveness import validate_nodes, recovery_candidates
+def work_progress(plan, events, pending_jobs, can_submit, *, review_context=None):
+    from server.task_liveness import validate_nodes, recovery_candidates, verify_completion_receipt
     strict = validate_nodes(plan)
     entries = plan.get("work_nodes", [])
     nodes = {entry["id"]: entry for entry in entries}
@@ -83,6 +83,10 @@ def work_progress(plan, events, pending_jobs, can_submit):
             if strict and (event.get("revision_binding") != nodes[node_id]["revision_binding"]
                            or not event.get("review_receipt")):
                 raise ValueError(f"{node_id}: completion requires current revision and review receipt")
+            if strict:
+                if review_context is None:
+                    raise ValueError(f"{node_id}: independently approved review index required")
+                verify_completion_receipt(plan,event,*review_context)
             completed.add(node_id)
 
     waiting = {}
@@ -126,7 +130,7 @@ def work_progress(plan, events, pending_jobs, can_submit):
     return (nodes[ready[0]]["action"] if ready else None), bool(waiting), lines
 
 
-def render_summary(plan, events, journal):
+def render_summary(plan, events, journal, *, review_context=None):
     phases = {phase["id"]: phase for phase in plan["phases"]}
     if not phases or len(phases) != len(plan["phases"]):
         raise ValueError("plan must have unique phase IDs")
@@ -222,7 +226,7 @@ def render_summary(plan, events, journal):
     phase_budget = remaining(phase.get("max_new_solves"), phase.get("prior_solve_attempts"),
                              sum(value == phase_id for value in reservations.values()))
     can_submit = total not in {"0", "UNKNOWN"} and phase_budget not in {"0", "UNKNOWN"}
-    ready_action, work_waiting, progress_lines = work_progress(plan, events, pending, can_submit)
+    ready_action, work_waiting, progress_lines = work_progress(plan, events, pending, can_submit, review_context=review_context)
     if ready_action:
         next_action = ready_action
         if pending:
@@ -299,3 +303,31 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# Legacy logs are evidence sources, never authoritative trial journals.
+def legacy_journal_preview(plan, path):
+    """Read-only line audit; do not replay, drop or rewrite native history."""
+    import hashlib
+    nodes = {n["id"] for n in plan.get("work_nodes",[])}
+    rows = []
+    for number, raw in enumerate(Path(path).read_bytes().splitlines(keepends=True),1):
+        if not raw.strip():
+            continue
+        status = "REVIEW_MAPPING_REQUIRED"
+        try:
+            item = json.loads(raw.decode("utf-8-sig"))
+            if not isinstance(item,dict) or not item.get("event"):
+                status = "MISSING_EVENT_TYPE"
+            elif item["event"] in WORK_EVENTS and item.get("node_id") not in nodes:
+                status = "UNKNOWN_NODE"
+            elif item["event"] in WORK_EVENTS and not item.get("evidence_refs"):
+                status = "MISSING_EVIDENCE"
+            elif item["event"] in WORK_EVENTS:
+                status = "REVIEW_WORK_EVENT"
+            elif item["event"] in {"submission_started","submitted","job_observed","evaluated"}:
+                status = "RECONCILE_NATIVE_EVENT"
+        except (ValueError,UnicodeError):
+            status = "INVALID_ROW"
+        rows.append({"line":number,"sha256":hashlib.sha256(raw).hexdigest(),"status":status})
+    return {"status":"PREVIEW_ONLY","rows":rows,"native_execution_authorized":False}

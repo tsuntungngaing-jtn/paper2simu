@@ -6,7 +6,7 @@ from server.deployment_identity import verify, REQUIRED
 
 def trace(disposition="ADOPTED"):
     ctx = dict(task_id="t",case_id="c",plan_revision="r",task_kind="paper",paper_id="P1",
-               artifact_sha256="a"*64,source_receipt_id="receipt")
+               artifact_sha256="a"*64,source_receipt_id="receipt",thread_id="thread")
     a = dict(ctx,event="artifact_observed",event_id="p",producer_step="s1")
     b = dict(ctx,event="consumer_disposition",event_id="d",producer_event_id="p",
              consumer_step="s2",consumer_input_sha256="a"*64,disposition=disposition)
@@ -93,7 +93,7 @@ def test_liveness_set_order_and_duplicates():
     assert repeated_observations([o,other]) == "REPLAN_READY_WORK"
 
 
-def test_legacy_migration_preserves_native_gates():
+def test_legacy_migration_preserves_native_gates(tmp_path):
     from server.task_liveness import migration_preview, reviewed_completion
     old = dict(task_id="t",work_nodes=[{"id":"x","action":"read"}])
     assert migration_preview(old,{})["status"] == "MIGRATION_INCOMPLETE"
@@ -104,7 +104,19 @@ def test_legacy_migration_preserves_native_gates():
     with pytest.raises(ValueError):
         migration_preview(old,{"x":dict(metadata,requires_submission=False)})
     event = reviewed_completion(new,"x","r",["receipt"],"review")
-    assert work_progress(new,[event],[],False)[0] is None
+    with pytest.raises(ValueError,match="review index required"):
+        work_progress(new,[event],[],False)
+    import json
+    receipt = dict(receipt_id="review",task_id="t",node_id="x",revision_binding="r",
+                   evidence_refs=["receipt"],decision="ACCEPT_COMPLETION",
+                   producer_role="A06",reviewer_role="A05",
+                   producer_worker="worker-1",reviewer_worker="worker-2")
+    data=json.dumps(receipt).encode()
+    (tmp_path/"review.json").write_bytes(data)
+    index={"review":{"path":"review.json","sha256":hashlib.sha256(data).hexdigest()}}
+    assert work_progress(new,[event],[],False,review_context=(tmp_path,index))[0] is None
+    with pytest.raises(ValueError):
+        work_progress(new,[dict(event,evidence_refs=["other"])],[],False,review_context=(tmp_path,index))
     with pytest.raises(ValueError):
         work_progress(new,[dict(event,revision_binding="old")],[],False)
 
@@ -135,3 +147,55 @@ def test_replay_receipt_binding(tmp_path):
     (tmp_path/"ra").write_bytes(b"changed")
     with pytest.raises(ValueError):
         replay_consumption([a,b],tmp_path,idx)
+
+
+def test_round2_empty_and_cross_thread(tmp_path):
+    from server.trace_evidence import replay_consumption
+    from server.stdio_diagnostics import classify_receipts
+    empty = replay_consumption([{"event_id":"legacy","event":"legacy"}],tmp_path,{})
+    assert not empty["receipt_bytes_verified"] and empty["unmapped_event_count"] == 1
+    assert empty["coverage_status"] == "NO_MAPPED_EVENTS"
+    ctx=dict(host_id="h",turn_id="t",provider_id="p")
+    assert not classify_receipts(tmp_path,{},[],ctx)["receipt_bytes_verified"]
+    a,b=trace()
+    with pytest.raises(ValueError):
+        consumption_view([a,dict(b,thread_id="other")])
+
+
+def test_round2_known_stdio_failure_with_prior_gap(tmp_path):
+    import json
+    from server.stdio_diagnostics import classify_receipts
+    ctx=dict(host_id="h",turn_id="t",provider_id="p")
+    data=json.dumps(dict(ctx,receipt_id="r",stage="initialize_response",observed=False)).encode()
+    (tmp_path/"r").write_bytes(data)
+    result=classify_receipts(tmp_path,{"r":{"path":"r","sha256":hashlib.sha256(data).hexdigest()}},["r"],ctx)
+    assert result["next_evidence"]=="configured"
+    assert result["known_failed_stages"]==["initialize_response"]
+
+
+def test_round2_distinct_turns_and_prose():
+    from server.task_liveness import observation_replay
+    row=dict(source_turn_id="t1",node_states={"x":"BLOCKED"},eligible_ready=[],
+             verified_milestones=[],blockers=[dict(incident_id="i",resource_domain="h",
+             node_id="x",code="transport_error",description="old")])
+    assert observation_replay([row,row])["status"]=="INSUFFICIENT_OBSERVATIONS"
+    other=dict(row,source_turn_id="t2",blockers=[dict(row["blockers"][0],description="new words")])
+    assert observation_replay([row,other])["status"]=="WAIT_OR_ESCALATE_MINIMAL_BLOCKER"
+
+
+def test_round2_incident_reclassification():
+    p=dict(task_id="t",work_nodes=[node("x")])
+    e=dict(incident_id="i",blocker_type="transport_error",next_action="inspect",resume_when="receipt")
+    assert recovery_candidates(p,{"x":e})[0]["id"] == recovery_candidates(
+        p,{"x":dict(e,blocker_type="capability_missing")})[0]["id"]
+
+
+def test_round2_legacy_preview(tmp_path):
+    from scripts.research_resume import legacy_journal_preview
+    raw=b'{"status":"hold"}\n{"event":"work_blocked","node_id":"other"}\n{"event":"submitted","trial_id":"x"}\n'
+    path=tmp_path/"old.jsonl"
+    path.write_bytes(raw)
+    out=legacy_journal_preview(dict(work_nodes=[node("x")]),path)
+    assert [r["status"] for r in out["rows"]]==[
+        "MISSING_EVENT_TYPE","UNKNOWN_NODE","RECONCILE_NATIVE_EVENT"]
+    assert path.read_bytes()==raw
