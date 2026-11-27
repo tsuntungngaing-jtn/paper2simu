@@ -33,3 +33,28 @@ Tests cover stale plan, cumulative attempts, changed budget, native history
 refusal, two process activation CAS, read-only reservation inspection, and
 host observation scope. Actual host, multi-machine and native gates remain
 unvalidated.
+
+
+## Round 8 — external checkpoint and historical review
+
+All pilot writes now require a JournalAnchor matching exact pre-append bytes,
+file identity, genesis and event count, plus a trusted journal_checkpoint
+verification. The external source MUST be monotonic and independently
+retained; a freshly calculated caller hash or permissive fixture does not
+protect against rollback. No production checkpoint issuer/store exists.
+No-history single-plan appends also enforce original attempt budget.
+Historical dispatch rechecks retained grant, event and artifact receipts;
+historical_dispatch verifier must attest original operation-time validity,
+not today's expiry. Missing receipts reject migration. Pure active_segment
+is a replay view, not an authorized allocation. Existing unanchored journals
+remain review material; do not reconstruct trusted checkpoints from them.
+
+Reservation metadata now freezes exact expected tail SHA and length.
+Old semantic-only records are explicitly SEMANTIC_ONLY, equivalent JSON
+with different bytes is SEMANTIC_MATCH_BYTES_DIFFER. Exact bytes are not
+proof of a valid transition. reconcile_owner checks externally anchored
+metadata, exact scope, exit observation and independent review, and returns
+only a candidate. No release, no live foreign PID inference.
+Host observation requires current anchored journal, matching active dispatch,
+trusted sequence floor and fresh journal-bound receipt. Missing context blocks.
+The immutable-index/new-receipt staging and actual host issuer remain open.

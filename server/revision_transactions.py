@@ -55,7 +55,7 @@ def active_segment(history,events,root,index,authority):
     Only the original single journal is used. Legacy/native/incident streams
     must be reconciled separately; never silently filter them during activation.
     """
-    from server.readonly_dispatch import KINDS, project
+    from server.readonly_dispatch import KINDS, project, verify_historical_dispatch
     if not isinstance(history,RevisionHistory):
         raise ValueError("approved revision history required")
     current=history.initial_plan_sha256
@@ -66,6 +66,7 @@ def active_segment(history,events,root,index,authority):
     used={current}
     revisions={n["id"]:{n["revision_binding"]} for n in plan["work_nodes"]}
     seen,attempts,retired,segment,carry={},{},[],[],[]
+    operations=set()
     for e in events:
         kind=e.get("event")
         if kind not in KINDS|WORK|{ACTIVATION}:
@@ -81,6 +82,12 @@ def active_segment(history,events,root,index,authority):
         if kind!=ACTIVATION:
             if e.get("plan_sha256")!=current:
                 raise ValueError("event belongs to inactive or unbound plan")
+            if kind in KINDS:
+                op=e.get("operation_id")
+                if not isinstance(op,str) or not op.strip() or op in operations:
+                    raise ValueError("missing or duplicate historical operation identity")
+                operations.add(op)
+                verify_historical_dispatch(plan,e,root,index,authority)
             if kind=="dispatch_intent":
                 node=next((n for n in plan["work_nodes"] if n["id"]==e.get("node_id")),None)
                 if node is None:
@@ -141,15 +148,19 @@ def active_segment(history,events,root,index,authority):
     project(plan,segment,require_bindings=True)
     return {"active_plan_sha256":current,"events":segment,"retired":retired,
             "attempts":attempts,"carry_candidates":carry,
+            "history_status":"REPLAY_ONLY_EXTERNAL_CHECKPOINT_REQUIRED",
             "native_execution_authorized":False,"host_authenticity_verified":False}
 
 
-def activate_revision(history,journal,event,*,expected_sha256,root,approved_index,authority):
+def activate_revision(history,journal,event,*,expected_sha256,root,approved_index,authority,journal_anchor=None):
     """Atomically append one approved transition to the original local journal."""
     from server.readonly_dispatch import _append_checked
     if event.get("event")!=ACTIVATION:
         raise ValueError("revision activation event required")
-    def validate(events):
+    def validate(events,raw,identity):
+        from server.journal_anchor import require_anchor
+        require_anchor(journal_anchor,task_id=event["task_id"],genesis_sha256=history.initial_plan_sha256,
+                       raw=raw,events=events,identity=identity,authority=authority)
         for old in events:
             if old.get("event_id")==event.get("event_id"):
                 if old!=event:

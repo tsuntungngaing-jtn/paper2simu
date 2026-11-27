@@ -8,6 +8,8 @@ from pathlib import Path
 import pytest
 from server.readonly_dispatch import append_event, snapshot, project
 from server.review_authority import ReviewAuthority, content_digest
+from server.journal_anchor import JournalAnchor
+from server.readonly_dispatch import _file_identity
 
 
 def node(ident,role="A01",**kw):
@@ -45,11 +47,17 @@ def receipt(root,index,e,**overrides):
     store(root,index,e["grant_id"],dict(grant,**overrides))
 
 
+def fixture_anchor(j,p,sha=None):
+    digest,events=snapshot(j)
+    return JournalAnchor(p["task_id"],content_digest(p),sha or digest,len(events),_file_identity(j.stat()))
+
+
 def append(root,index,e,sha,allow=True):
     return append_event(plan(),root/"journal",e,expected_sha256=sha,root=root,
                         approved_index=index,authenticate=lambda e,r:allow,
                         ready_check=lambda p,events,n:True,
-                        authority=ReviewAuthority(content_digest(plan()),content_digest(index),lambda k,v:True))
+                        authority=ReviewAuthority(content_digest(plan()),content_digest(index),lambda k,v:True),
+                        journal_anchor=fixture_anchor(root/"journal",plan(),sha))
 
 
 def contender(root,index,e,sha,queue):
@@ -215,3 +223,38 @@ def test_readonly_action_and_trust_boundary(tmp_path):
         append_event(plan(),j,e,expected_sha256=snapshot(j)[0],root=tmp_path,
                      approved_index=idx,authenticate=lambda e,r:True,ready_check=lambda p,events,n:True)
     assert j.read_bytes()==b""
+
+
+def test_round6_zero_budget_without_history(tmp_path):
+    p=plan()
+    p["work_nodes"][0]["attempt_budget"]=0
+    j=tmp_path/"journal"
+    j.write_bytes(b"")
+    e=event(plan_sha256=content_digest(p))
+    idx={}
+    receipt(tmp_path,idx,e)
+    with pytest.raises(ValueError,match="budget exhausted"):
+        append_event(p,j,e,expected_sha256=snapshot(j)[0],root=tmp_path,approved_index=idx,
+                     authenticate=lambda e,r:True,ready_check=lambda p,es,n:True,
+                     authority=ReviewAuthority(content_digest(p),content_digest(idx),lambda k,v:True),
+                     journal_anchor=fixture_anchor(j,p))
+    assert not j.read_bytes()
+
+
+def test_round6_missing_anchor_and_changed_genesis(tmp_path):
+    p=plan()
+    j=tmp_path/"journal"
+    j.write_bytes(b"")
+    e=event()
+    idx={}
+    receipt(tmp_path,idx,e)
+    kw=dict(expected_sha256=snapshot(j)[0],root=tmp_path,approved_index=idx,
+            authenticate=lambda e,r:True,ready_check=lambda p,es,n:True,
+            authority=ReviewAuthority(content_digest(p),content_digest(idx),lambda k,v:True))
+    with pytest.raises(ValueError,match="checkpoint required"):
+        append_event(p,j,e,**kw)
+    a=fixture_anchor(j,p)
+    from dataclasses import replace
+    with pytest.raises(ValueError,match="checkpoint/genesis"):
+        append_event(p,j,e,**kw,journal_anchor=replace(a,genesis_sha256="0"*64))
+    assert not j.read_bytes()

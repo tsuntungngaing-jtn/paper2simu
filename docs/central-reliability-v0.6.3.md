@@ -188,3 +188,7 @@ multi-writer cross-revision transactions and carry-forward remain open.
 ## Round 7 local architecture
 
 Shared CAS writer for dispatch and opt-in revision activation, immutable task-wide controls, cumulative dispatch attempts, old segment retention, unresolved-dispatch guard and reviewed carry candidates only. See [revision transactions pilot](revision-transactions-pilot.md). Reservation inspection does not release; host observation is an injected read-only contract, not a Codex adapter. No native or production migration.
+
+## Round 8 (Round 6 feedback)
+
+R6-01/02/03: require externally verified exact journal checkpoints for all pilot appends, check single-plan budget, reverify historical grant/event/artifact receipts. The callback remains an external trust boundary, not a production issuer. R6-05/06: exact expected serialized tail digest, semantic-only legacy classification, externally anchored owner reconciliation candidate; no lock release. R6-07: active anchored journal and fresh monotonic observation scope. R6-04/08/09/10 remain separate migration, dynamic evidence staging, scientific dependency and liveness work. No native migration or new authority.

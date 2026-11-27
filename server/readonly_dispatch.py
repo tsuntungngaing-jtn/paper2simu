@@ -159,7 +159,7 @@ def snapshot(journal):
     return _digest(raw),events
 
 
-def _grant(plan,node,event,root,index,authority):
+def _grant(plan,node,event,root,index,authority,*,historical=False):
     ident=_id(event.get("grant_id"))
     if ident==event.get("receipt_id"):
         raise ValueError("operation grant must be distinct from action receipt")
@@ -178,9 +178,11 @@ def _grant(plan,node,event,root,index,authority):
     now=time.time()
     start,expiry=grant.get("valid_from"),grant.get("expires_at")
     if (type(start) not in (int,float) or type(expiry) not in (int,float) or
-        not math.isfinite(start) or not math.isfinite(expiry) or not start<=now<expiry):
+        not math.isfinite(start) or not math.isfinite(expiry) or not start<expiry or
+        (not historical and not start<=now<expiry)):
         raise ValueError("operation grant missing or expired")
-    require_verified(authority,"operation_grant",grant)
+    require_verified(authority,"historical_operation_grant" if historical else "operation_grant",grant)
+    return grant
 
 
 def _ready(plan,events,node,root,index,authority):
@@ -226,15 +228,18 @@ def _append_checked(journal,event,expected_sha256,validate):
         raw,events=_read(path)
         if _digest(raw)!=expected_sha256:
             return {"status":"STALE_JOURNAL"}
+        line=(json.dumps(event,sort_keys=True,allow_nan=False)+"\n").encode()
         _reservation_metadata(lock,{"reservation_id":uuid.uuid4().hex,"pid":os.getpid(),
              "process_creation_identity":current_process_identity(),"observed_at":time.time(),
              "file_identity":list(identity),"original_sha256":_digest(raw),
              "original_length":len(raw),"event_sha256":content_digest(event),
+             "expected_tail_sha256":_digest(line),"expected_tail_length":len(line),
              "phase":"PRE_APPEND","native_execution_authorized":False})
-        result=validate(events)
+        result=validate(events,raw,identity)
         if result is not None:
             return dict(result,journal_sha256=_digest(raw))
-        line=(json.dumps(event,sort_keys=True,allow_nan=False)+"\n").encode()
+        if line!=(json.dumps(event,sort_keys=True,allow_nan=False)+"\n").encode():
+            raise ValueError("event changed during validation")
         with path.open("r+b") as stream:
             if (_file_identity(os.fstat(stream.fileno()))!=identity or
                     _file_identity(path.stat())!=identity or stream.read()!=raw):
@@ -259,22 +264,29 @@ def _append_checked(journal,event,expected_sha256,validate):
 
 
 def append_event(plan,journal,event,*,expected_sha256,root,approved_index,authenticate,
-                 ready_check, authority=None, revision_history=None):
+                 ready_check, authority=None, revision_history=None, journal_anchor=None):
     """Append a read-only event with trusted review and current-plan admission.
 
     revision_history is an independently supplied initial plan and retained
     plan map (see revision_transactions). No activation is inferred from a
     filename, caller's current plan or a revision label.
     """
-    def validate(all_events):
-        return _validate_dispatch(plan,all_events,event,root,approved_index,
+    def validate(all_events,raw,identity):
+        from server.journal_anchor import require_anchor
+        result=_validate_dispatch(plan,all_events,event,root,approved_index,
                                   authenticate,ready_check,authority,revision_history)
+        genesis=revision_history.initial_plan_sha256 if revision_history is not None else content_digest(plan)
+        require_anchor(journal_anchor,task_id=plan["task_id"],genesis_sha256=genesis,
+                       raw=raw,events=all_events,identity=identity,authority=authority)
+        return result
     return _append_checked(journal,event,expected_sha256,validate)
 
 
 def _validate_dispatch(plan,all_events,event,root,approved_index,authenticate,
                        ready_check,authority,revision_history):
     from server.revision_transactions import active_segment, ACTIVATION
+    if authority is None:
+        raise ValueError("independently approved plan and index authority required")
     if revision_history is not None:
         # Replay prior revisions from approved plan bytes and scoped receipts.
         state=active_segment(revision_history,all_events,root,approved_index,authority)
@@ -286,6 +298,9 @@ def _validate_dispatch(plan,all_events,event,root,approved_index,authenticate,
             raise ValueError("revision history required; do not use stale plan")
         events=all_events
         state=None
+        for prior in events:
+            if prior.get("event") in KINDS:
+                verify_historical_dispatch(plan,prior,root,approved_index,authority)
     if event.get("event") not in KINDS:
         raise ValueError("unsupported pilot event")
     node=next((n for n in plan["work_nodes"] if n["id"]==event.get("node_id")),None)
@@ -309,11 +324,21 @@ def _validate_dispatch(plan,all_events,event,root,approved_index,authenticate,
     if any(old.get("operation_id")==event["operation_id"] for old in all_events if old.get("event") in KINDS):
         raise ValueError("operation identity already used")
     if event["event"]=="dispatch_intent":
-        if state is not None and state["attempts"].get(node["id"],0)>=node["attempt_budget"]:
+        spent=(state["attempts"].get(node["id"],0) if state is not None else
+               len({e.get("event_id") for e in all_events if e.get("event")=="dispatch_intent" and e.get("node_id")==node["id"]}))
+        if spent>=node["attempt_budget"]:
             raise ValueError("original attempt budget exhausted")
         _ready(plan,events,node,root,approved_index,authority)
         if ready_check(plan,events,node) is not True:
             raise ValueError("unverified dependencies or admission")
+    _verify_artifacts(event,root,approved_index,authority,authenticate)
+    project(plan,events+[event],require_bindings=True)
+    require_authority(plan,approved_index,authority)
+    return None
+
+
+
+def _verify_artifacts(event,root,approved_index,authority,authenticate=None):
     if event["event"]=="dispatch_output":
         for ident,digest in event.get("artifacts",{}).items():
             if _digest(load_retained_bytes(root,approved_index,ident))!=digest:
@@ -330,11 +355,23 @@ def _validate_dispatch(plan,all_events,event,root,approved_index,authenticate,
                      "producer_revision_binding","producer_plan_sha256",
                      "producer_dispatch_id","dispatch_id","artifact_id","artifact_sha256",
                      "producer_worker_id","producer_thread_id","worker_id","thread_id","reviewer_worker_id")}
-            if part.get("handoff_binding")!=binding or part.get("receipt_kind")!=field or authenticate(event,part) is not True:
+            if part.get("handoff_binding")!=binding or part.get("receipt_kind")!=field or (authenticate is not None and authenticate(event,part) is not True):
                 raise ValueError("handoff evidence rejected")
             require_verified(authority,field,part)
         if len({event[k] for k in ("send_receipt_id","read_receipt_id","review_receipt_id")})!=3:
             raise ValueError("handoff receipts must be distinct")
-    project(plan,events+[event],require_bindings=True)
-    require_authority(plan,approved_index,authority)
-    return None
+
+
+def verify_historical_dispatch(plan,event,root,index,authority):
+    """Recheck retained grant, event and artifacts; trusted host verifies issuance
+    and authorization at the historical operation time, not current expiry.
+    """
+    node=next((n for n in plan["work_nodes"] if n["id"]==event.get("node_id")),None)
+    if node is None or event.get("plan_sha256")!=content_digest(plan):
+        raise ValueError("historical dispatch plan mismatch")
+    grant=_grant(plan,node,event,root,index,authority,historical=True)
+    receipt=load_receipt(root,index,event.get("receipt_id"))
+    if receipt.get("event_projection")!=event:
+        raise ValueError("historical dispatch receipt mismatch")
+    require_verified(authority,"historical_dispatch",{"event":event,"grant":grant,"receipt":receipt})
+    _verify_artifacts(event,root,index,authority)

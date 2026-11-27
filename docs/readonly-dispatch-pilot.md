@@ -62,3 +62,5 @@ in the separate send/read/review receipts. Actual cross-revision carry
 and production TRACE used remain unimplemented.
 
 Round 7: see [revision transactions pilot](revision-transactions-pilot.md) for opt-in local activation and active-segment dispatch. Both use the same CAS writer. Existing unbound histories cannot be silently migrated; no production activation or native authorization.
+
+Round 8: all local pilot appends require an independently retained JournalAnchor and trusted monotonic checkpoint verification. No-history budget is enforced. Historical dispatch receipts are rechecked; old unanchored histories are not allocation authority. See revision transactions pilot. Actual issuer/store and real host ACL remain BLOCKED.

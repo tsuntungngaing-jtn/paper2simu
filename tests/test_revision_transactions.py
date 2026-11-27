@@ -6,6 +6,8 @@ from pathlib import Path
 import pytest
 from server.readonly_dispatch import append_event, snapshot
 from server.review_authority import ReviewAuthority, content_digest
+from server.journal_anchor import JournalAnchor
+from server.readonly_dispatch import _file_identity
 from server.revision_transactions import RevisionHistory, activate_revision, active_segment
 from server.journal_reconciliation import inspect_reservation, current_process_identity
 def plan():
@@ -55,13 +57,18 @@ def auth(p,idx):
     return ReviewAuthority(content_digest(p),content_digest(idx),lambda k,v:True)
 
 
+def fixture_anchor(j,h,sha=None):
+    digest,events=snapshot(j)
+    return JournalAnchor("t",h.initial_plan_sha256,sha or digest,len(events),_file_identity(j.stat()))
+
+
 def put(root,idx,p,h,j,kind,eid):
     e=event(kind,eid,revision_binding=p["work_nodes"][0]["revision_binding"],
             plan_sha256=content_digest(p),dispatch_id="d-"+p["work_nodes"][0]["revision_binding"])
     receipt(root,idx,e)
     return append_event(p,j,e,expected_sha256=snapshot(j)[0],root=root,approved_index=idx,
                         authenticate=lambda e,r:True,ready_check=lambda p,es,n:True,
-                        authority=auth(p,idx),revision_history=h)
+                        authority=auth(p,idx),revision_history=h,journal_anchor=fixture_anchor(j,h))
 
 
 def transition(root,idx,old,new,eid="rev"):
@@ -76,7 +83,7 @@ def transition(root,idx,old,new,eid="rev"):
 
 def activate(root,idx,new,h,j,e,sha=None):
     return activate_revision(h,j,e,expected_sha256=sha or snapshot(j)[0],root=root,
-                             approved_index=idx,authority=auth(new,idx))
+                             approved_index=idx,authority=auth(new,idx),journal_anchor=fixture_anchor(j,h,sha))
 
 
 def test_revision_activation_and_budget(tmp_path):
@@ -165,7 +172,13 @@ def test_reservation_inspection_is_readonly(tmp_path):
     assert inspect_reservation(j)["journal_outcome"]=="PARTIAL_TAIL"
     j.write_bytes(raw+(json.dumps(e)+"\n").encode())
     out=inspect_reservation(j)
-    assert out["journal_outcome"]=="INTENDED_EVENT_BYTES_MATCH"
+    assert out["journal_outcome"]=="SEMANTIC_ONLY"
+    line=(json.dumps(e)+"\n").encode()
+    m.update(expected_tail_sha256=hashlib.sha256(line).hexdigest(),expected_tail_length=len(line))
+    (lock/"reservation.json").write_text(json.dumps(m))
+    assert inspect_reservation(j)["journal_outcome"]=="INTENDED_EVENT_BYTES_MATCH"
+    j.write_bytes(raw+(json.dumps(e,sort_keys=True,indent=None,separators=(",",":"))+"\n").encode())
+    assert inspect_reservation(j)["journal_outcome"]=="SEMANTIC_MATCH_BYTES_DIFFER"
     assert out["owner_state"]=="UNKNOWN" and not out["release_authorized"]
     assert lock.is_dir()
 
@@ -182,6 +195,40 @@ def test_host_observation_no_adapter_and_scoped_receipt(tmp_path):
     store(tmp_path,idx,"observation",dict(receipt_id="observation",host_binding=binding,status="RETURNED"))
     kw=dict(dispatch=e,call_id=binding["call_id"],root=tmp_path,index=idx,authority=auth(p,idx))
     assert observe_dispatch(p,**kw)["status"]=="BLOCKED_HOST_ADAPTER"
-    assert not observe_dispatch(p,**kw,observer=lambda call:"observation")["completion_verified"]
+    assert observe_dispatch(p,**kw,observer=lambda call:"observation")["status"]=="BLOCKED_JOURNAL_CONTEXT"
     with pytest.raises(ValueError,match="registration mismatch"):
         observe_dispatch(p,**dict(kw,call_id="wrong"),observer=lambda call:"observation")
+
+
+def test_round6_history_receipts_and_truncation(tmp_path):
+    old,new,h,j,idx=fixture(tmp_path)
+    put(tmp_path,idx,old,h,j,"dispatch_intent","i")
+    for kind,eid in [("dispatch_ack","a"),("dispatch_claim","c"),("dispatch_running","run"),("dispatch_failed","f")]:
+        put(tmp_path,idx,old,h,j,kind,eid)
+    e=transition(tmp_path,idx,old,new)
+    anchor=fixture_anchor(j,h)
+    raw=j.read_bytes()
+    saved=idx.pop("grant-i")
+    with pytest.raises(ValueError,match="absent from approved index"):
+        activate(tmp_path,idx,new,h,j,e)
+    idx["grant-i"]=saved
+    j.write_bytes(b"")
+    with pytest.raises(ValueError,match="checkpoint/genesis"):
+        activate_revision(h,j,e,expected_sha256=snapshot(j)[0],root=tmp_path,
+                          approved_index=idx,authority=auth(new,idx),journal_anchor=anchor)
+    j.write_bytes(raw)
+    assert activate(tmp_path,idx,new,h,j,e)["status"]=="RECORDED"
+
+
+def test_round6_metadata_anchor(tmp_path):
+    j=tmp_path/"journal"
+    j.write_bytes(b"")
+    lock=tmp_path/"journal.writer-reservation"
+    lock.mkdir()
+    m=lock/"reservation.json"
+    m.write_bytes(b'{}')
+    anchor=hashlib.sha256(m.read_bytes()).hexdigest()
+    m.write_bytes(b'{ }')
+    out=inspect_reservation(j,expected_metadata_sha256=anchor)
+    assert out["metadata_anchor_match"] is False
+    assert not out["release_authorized"] and lock.exists()
