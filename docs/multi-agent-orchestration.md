@@ -17,3 +17,6 @@ Design references: https://arxiv.org/abs/2512.08296 ; https://arxiv.org/abs/2503
 ## Optional P2S-TRACE-1.0 execution record
 
 When requested, apply [the execution trace companion](../paper2simu-execution-trace/SKILL.md) before dispatch. Freeze applicable roles, components and dependencies; capture actual host worker identities, invocation events, input/output hashes and downstream dispositions. Record conditional non-applicability, independent review and missing evidence separately. The existing handoff and verification guards remain authoritative; trace records neither confer authority nor authenticate worker identity by themselves. Do not force irrelevant roles or bypass vetoes.
+
+## Central revision
+For unattended work bind actual worker, role bundle hash, task revision and scope to every dispatch. A00 consumes the existing READY view; A06 proposes scoped recovery, A05 checks independent progress and scope, A08 records actual consumer dispositions without inferred use. Retain original max concurrency, unique Executor and all vetoes. A candidate is not authorization. A host that cannot actually dispatch or enforce ACL must report the specific blocker rather than fabricate a role instance.

@@ -7,6 +7,10 @@ from graphlib import TopologicalSorter
 import json
 from pathlib import Path
 import tempfile
+import sys
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 
 UNRESOLVED_STATES = {"UNKNOWN", "UNVERIFIED", "QUEUED", "RUNNING"}
@@ -39,6 +43,8 @@ def remaining(limit, previously_used, reserved):
 
 
 def work_progress(plan, events, pending_jobs, can_submit):
+    from server.task_liveness import validate_nodes, recovery_candidates
+    validate_nodes(plan)
     entries = plan.get("work_nodes", [])
     nodes = {entry["id"]: entry for entry in entries}
     if len(nodes) != len(entries):
@@ -107,6 +113,9 @@ def work_progress(plan, events, pending_jobs, can_submit):
                          f" | tried: {item['last_attempt']} | observed: {item['actual_return']}"
                          f" | resumes when: {item['resume_when']} | check next: {item['next_action']}"
                          f" | evidence: {', '.join(item['evidence_refs'])}")
+    for candidate in recovery_candidates(plan, blockers):
+        lines.append("  - RECOVERY CANDIDATE (verify authorization): " + candidate["id"]
+                     + " | " + candidate["action"] + " | proposed: " + candidate["proposed_next_action"])
     return (nodes[ready[0]]["action"] if ready else None), bool(waiting), lines
 
 

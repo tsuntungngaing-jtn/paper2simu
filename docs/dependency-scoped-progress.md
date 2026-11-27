@@ -26,3 +26,6 @@ Fluent 生产作业尚未提交，而短时停止演练已单独完成。生产 
 ## 在既有交接记录中使用
 
 在 `task-plan.json` 的可选 `work_nodes` 清单中填写节点 ID、动作和依赖。把阻塞、解除和完成事件写进原 trial journal。运行 `python scripts/research_resume.py refresh <task-output-directory>` 后，`resume.md` 会显示可推进节点、传递依赖和阻塞证据。原来只有阶段和 trial 的记录可直接继续使用。字段、示例和原作业未决时的提交限制见 [研究计划与交接](research-plan-and-handoff.md#track-independent-work-in-the-same-plan)。
+
+## Central revision
+Use the existing plan/journal and [central reliability contract](central-reliability-v0.6.3.md). An incident must retain a stable ID; generate scoped read-only diagnostic candidates and separately approve any repair. Do not count repeated reports as progress or let native admission block independent diagnostics. Failure transfer must not depend on completion of the failed node.

@@ -50,3 +50,6 @@ A skill-content update can be applied with the existing compatible MCP runtime. 
 ## v0.6.1 scheduled checks
 
 Apply [runtime reliability](runtime-reliability-v0.6.1.md) to the actual scheduled execution context, not a separate successful CLI session. The direct loopback probe is deliberately credential-free and does not perform MCP initialization. Do not reset the case clock at reconnect. Runtime rejects new queued jobs while historical recovery records or unreadable journals remain unresolved.
+
+## Fluent stdio diagnostics
+For a configured stdio provider use the [Fluent protocol evidence contract](fluent-stdio-initialization.md) before native attachment. It is not the HTTP 502 route. Record the earliest observed failure or missing evidence; never infer protocol success or restart a solver.
