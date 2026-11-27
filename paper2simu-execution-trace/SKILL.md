@@ -56,3 +56,6 @@ Provide a planned-vs-observed matrix, trace view, entity/activity/agent dependen
 - https://developers.openai.com/blog/eval-skills
 
 Deployment remains unverified until local adapter and native evidence tests pass. This file is a recording contract, not an installed collector, signature service, verified watchdog or new execution authority.
+
+## Central reliability revision (0.6.3)
+Preserve the original L0–L5 meanings in section 6. Do not infer ADOPTED or used from agent paths, role registration, output presence, HOLD or current config. Require explicit downstream receipt with producer event, exact artifact SHA-256, consumer step and plan revision. Use server.trace_evidence.consumption_view for the reviewed redacted projection; it checks linkage only, not source authenticity. Missing disposition is UNKNOWN. Infrastructure events have no paper ID. Preserve old raw events and mark invalid derived claims superseded. Local collectors/views must be independently upgraded and tested; they are not bundled here.

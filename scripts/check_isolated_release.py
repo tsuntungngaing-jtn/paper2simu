@@ -16,7 +16,7 @@ REQUIRED = {
     'references/recovery-history.json', 'benchmarks/runtime-capability-contract.json',
     'server/historical_evidence.py', 'server/historical_ledger.py',
     'tests/test_historical_evidence.py', 'tests/test_historical_ledger.py',
-    'docs/historical-ledger.md', 'docs/historical-evidence.md', 'tests/test_historical_recovery.py', 'paper2simu/SKILL.md', 'pyproject.toml',
+    'docs/historical-ledger.md', 'docs/historical-evidence.md', 'tests/test_historical_recovery.py', 'paper2simu/SKILL.md', 'paper2simu-execution-trace/SKILL.md', 'pyproject.toml',
 }
 
 

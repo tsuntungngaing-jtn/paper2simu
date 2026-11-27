@@ -74,3 +74,6 @@ candidate until real native and scheduling acceptance is recorded.
 Desktop reload remains optional and must block combined independent faults.
 If a catalog failure leaves independent gates unknown, the reload path must
 remain blocked; the missing-catalog symptom never overrides those gates.
+
+## Central revision
+Use --check-config for shape/hash checks without migration admission; tick still requires migration gates. Use --inspect for read-only unresolved records. Spawn intent and observed PID receipts are private; PID is not complete process identity. Ambiguous spawn or lost writes retain reservation. Strict fresh CLI lifecycle parsing must be checked against the installed CLI schema. No evidence-based release implementation or real host adapter is claimed.

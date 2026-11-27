@@ -3,7 +3,7 @@ import json
 import subprocess
 from pathlib import Path
 import pytest
-from server.scheduled_cli import tick, validate
+from server.scheduled_cli import tick, validate, inspect_state, _completed
 
 
 def config(tmp_path):
@@ -32,6 +32,8 @@ def fake(mode, calls):
     class Child:
         pid = 123
         def wait(self, timeout):
+            if mode == "exception":
+                raise OSError("synthetic wait failure")
             if mode == "timeout":
                 raise subprocess.TimeoutExpired("codex", timeout)
             return 1 if mode == "fail" else 0
@@ -41,7 +43,7 @@ def fake(mode, calls):
         assert b"existing resume record" in kw["stdin"].read()
         calls.append(argv)
         if mode == "ok":
-            kw["stdout"].write(b'{"type":"thread.started","thread_id":"t"}\n{"type":"turn.completed"}\n')
+            kw["stdout"].write(b'{"type":"thread.started","thread_id":"t"}\n{"type":"turn.started"}\n{"type":"turn.completed"}\n')
         if mode == "bad":
             kw["stdout"].write(b'{"type":"turn.failed"}\n')
         kw["stdout"].flush()
@@ -76,5 +78,33 @@ def test_migration_and_hash_gates(tmp_path):
     with pytest.raises(ValueError):
         validate(dict(c,desktop_schedule_disabled=False))
     Path(c["task_prompt"]).write_text("changed")
+    with pytest.raises(ValueError):
+        validate(c)
+
+def test_exception_keeps_pid_and_blocks(tmp_path):
+    c = config(tmp_path)
+    result = tick(c, fake("exception", []))
+    row = inspect_state(c["state_dir"])["unresolved"][0]
+    assert row["pid"] == 123 and row["spawn_receipt_exists"]
+    assert row["turn_id"] == result["turn_id"]
+    assert tick(c, fake("ok", []))["status"] == "PREVIOUS_TURN_UNRESOLVED"
+
+
+@pytest.mark.parametrize("tail", [
+    [{"type":"turn.completed"}],
+    [{"type":"turn.started"},{"type":"item.started","item":{"id":"a"}},{"type":"turn.completed"}],
+    [{"type":"turn.started"},{"type":"turn.completed"},{"type":"turn.started"}],
+    [{"type":"turn.started"},{"type":"turn.completed"},{"type":"error"}],
+])
+def test_reject_invalid_lifecycle(tmp_path, tail):
+    path = tmp_path/"turn.jsonl"
+    events = [{"type":"thread.started","thread_id":"t"}] + tail
+    path.write_text("".join(json.dumps(e)+"\n" for e in events))
+    assert not _completed(path)
+
+
+def test_config_shape_does_not_require_false_attestation(tmp_path):
+    c = dict(config(tmp_path), migration_authorized=False)
+    validate(c, admit=False)
     with pytest.raises(ValueError):
         validate(c)
