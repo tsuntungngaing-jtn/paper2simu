@@ -303,3 +303,12 @@ def test_round4_legacy_context_rejects_mixed_launch(tmp_path):
     with pytest.raises(ValueError,match="mixed launch"):
         classify_receipts(tmp_path,idx,["a","b"],ctx)
     assert classify_receipts(tmp_path,idx,["a"],ctx)["launch_scope_status"]=="SINGLE_DECLARED_SCOPE"
+
+
+def test_legacy_without_work_nodes_keeps_native_history():
+    from server.task_liveness import incident_projection
+    assert recovery_candidates({"task_id":"old"},{},events=[{"event":"submitted"}])==[]
+    assert incident_projection({"task_id":"old"},[])["incidents"]==[]
+    with pytest.raises(ValueError):
+        incident_projection({"task_id":"old"},[dict(event="incident_open",task_id="old",
+                            event_id="i",node_id="missing")])

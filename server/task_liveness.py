@@ -282,7 +282,7 @@ def incident_projection(plan, events):
     The host authenticates source/review receipts and serializes append.
     This projection never authorizes an attempt or native execution.
     """
-    nodes = {n["id"]:n for n in plan["work_nodes"]}
+    nodes = {n["id"]:n for n in plan.get("work_nodes", [])}
     scopes, seen_ids, seen_events = {}, set(), {}
     kinds = {"incident_open","incident_reclassified","incident_recovered",
              "incident_recurred","incident_attempt"}

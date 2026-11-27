@@ -160,3 +160,7 @@ cross-thread used, cross-process CAS or native ownership. Future dispatch
 requires single authoritative journal, stable event IDs and serialized claims
 across revisions; do not adopt the prototype's in-process lock or transient
 deduplication as production guarantees. Existing native gates remain unchanged.
+
+## Local read-only dispatch architecture pilot
+
+See [read-only dispatch pilot](readonly-dispatch-pilot.md). This is a minimal cooperating local writer and replay contract, not production deployment. It excludes native actions, preserves the original journal and requires authenticated host/ACL and dependency callbacks. Cross-thread handoff remains a pilot view, not a verified production TRACE used edge. No automatic retry or lock release.

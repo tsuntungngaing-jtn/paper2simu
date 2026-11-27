@@ -1,0 +1,205 @@
+"""Opt-in local read-only dispatch pilot, using the original journal.
+
+All writers must use the same canonical journal and serialized writer protocol.
+No production scheduler integration or native authorization. The supplied
+trusted verifier must validate actual host receipts and ACL; synthetic tests
+exercise the contract only. No automatic stale lock release.
+"""
+from contextlib import contextmanager
+import hashlib
+import json
+import os
+from pathlib import Path
+
+from server.task_liveness import validate_nodes, required_artifact_ids
+from server.receipt_evidence import load_retained_bytes, load_receipt
+
+STEPS = {
+    "dispatch_intent": (None, "INTENT"),
+    "dispatch_ack": ("INTENT", "DISPATCHED"),
+    "dispatch_claim": ("DISPATCHED", "CLAIMED"),
+    "dispatch_running": ("CLAIMED", "RUNNING"),
+    "dispatch_output": ("RUNNING", "OUTPUT_RECORDED"),
+    "dispatch_failed": ("RUNNING", "FAILED"),
+}
+KINDS = set(STEPS) | {"dispatch_unknown", "handoff_adopted"}
+READ_ROLES = {"A01","A02","A03","A05","A06","A07","A08","A09"}
+
+
+def _digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def _id(value):
+    if not isinstance(value,str) or not value.strip():
+        raise ValueError("missing stable identity")
+    return value
+
+
+def _scope(plan,node):
+    return (plan["task_id"],node["id"],node["revision_binding"],
+            node["resource_domain"])
+
+
+def _event_scope(event):
+    return tuple(_id(event.get(k)) for k in
+                 ("task_id","node_id","revision_binding","resource_domain"))
+
+
+def project(plan, events):
+    """Pure view; retained records are not proof of authenticated host actions."""
+    if not validate_nodes(plan):
+        raise ValueError("pilot requires reviewed strict plan")
+    nodes = {n["id"]:n for n in plan["work_nodes"]}
+    active, seen, handoffs = {}, {}, {}
+    for event in events:
+        kind = event.get("event")
+        if kind not in KINDS:
+            continue
+        eid = _id(event.get("event_id"))
+        raw = json.dumps(event,sort_keys=True,allow_nan=False)
+        if eid in seen:
+            if seen[eid]!=raw:
+                raise ValueError("conflicting event ID")
+            continue
+        seen[eid]=raw
+        node=nodes.get(event.get("node_id"))
+        if node is None or _event_scope(event)!=_scope(plan,node):
+            raise ValueError("dispatch scope/revision mismatch")
+        if node["operation_scope"] not in {"read_only","independent_review"} or node["owner_role"] not in READ_ROLES:
+            raise ValueError("pilot permits only read-only specialist work")
+        if event.get("role")!=node["owner_role"]:
+            raise ValueError("role mismatch")
+        _id(event.get("receipt_id"))
+        worker, thread = _id(event.get("worker_id")), _id(event.get("thread_id"))
+        dispatch = _id(event.get("dispatch_id"))
+        current=active.get(node["id"])
+        if kind=="handoff_adopted":
+            if current is None or current["state"] not in {"RUNNING","OUTPUT_RECORDED"} or (dispatch,worker,thread)!=current["identity"]:
+                raise ValueError("handoff consumer not bound to dispatch")
+            producer=active.get(event.get("producer_node_id"))
+            if producer is None or producer["state"]!="OUTPUT_RECORDED" or producer["identity"]!=(event.get("producer_dispatch_id"),event.get("producer_worker_id"),event.get("producer_thread_id")):
+                raise ValueError("handoff producer not bound to output")
+            artifact=_id(event.get("artifact_id"))
+            if producer["artifacts"].get(artifact)!=event.get("artifact_sha256") or artifact not in producer["artifacts"]:
+                raise ValueError("artifact not in recorded output")
+            if event.get("disposition")!="ADOPTED" or event.get("consumer_input_sha256")!=event["artifact_sha256"]:
+                raise ValueError("no matching actual consumption")
+            reviewer=_id(event.get("reviewer_worker_id"))
+            if reviewer in {worker,producer["identity"][1]}:
+                raise ValueError("handoff review not independent")
+            key=(_id(event.get("handoff_id")))
+            edge=(producer["identity"][0],dispatch,artifact)
+            if key in handoffs or any(v==edge for v in handoffs.values()):
+                raise ValueError("duplicate handoff")
+            handoffs[key]=edge
+            continue
+        old,new=STEPS.get(kind,(None,"OUTCOME_UNKNOWN"))
+        if kind=="dispatch_unknown":
+            if current is None or current["state"] not in {"INTENT","DISPATCHED","CLAIMED","RUNNING"}:
+                raise ValueError("no unresolved dispatch")
+        elif old is None:
+            if current is not None:
+                raise ValueError("existing dispatch; reconciliation required")
+            if any(v["identity"][0]==dispatch for v in active.values()):
+                raise ValueError("duplicate dispatch identity")
+        elif current is None or current["state"]!=old:
+            raise ValueError("invalid dispatch transition")
+        if current is not None and current["identity"]!=(dispatch,worker,thread):
+            raise ValueError("dispatch owner changed")
+        artifacts={}
+        if kind=="dispatch_output":
+            artifacts=event.get("artifacts")
+            if not isinstance(artifacts,dict) or not required_artifact_ids(node).issubset(artifacts):
+                raise ValueError("incomplete output manifest")
+            if not all(isinstance(k,str) and isinstance(v,str) and len(v)==64 and all(c in "0123456789abcdef" for c in v) for k,v in artifacts.items()):
+                raise ValueError("invalid artifact digest")
+        active[node["id"]]={"state":new,"identity":(dispatch,worker,thread),"artifacts":artifacts}
+    return {"dispatches":active,"handoffs":handoffs,"native_execution_authorized":False,
+            "host_authenticity_verified":False}
+
+
+def _read(path):
+    raw=path.read_bytes()
+    if raw and not raw.endswith(b"\n"):
+        raise ValueError("partial journal tail: reconcile before append")
+    events=[json.loads(line) for line in raw.decode("utf-8-sig").splitlines() if line.strip()]
+    if any(not isinstance(e,dict) or not e.get("event") for e in events):
+        raise ValueError("unmapped journal event")
+    return raw,events
+
+
+def snapshot(journal):
+    raw,events=_read(Path(journal).resolve(strict=True))
+    return _digest(raw),events
+
+
+def append_event(plan,journal,event,*,expected_sha256,root,approved_index,authenticate,
+                 ready_check):
+    """CAS append under local OS atomic directory reservation.
+
+    Trusted host must supply authenticate(event,receipt) and ready_check(plan,
+    events,node) from its actual ACL/verified dependency context. All original
+    journal writers must honor this reservation before pilot migration.
+    If append may have partially succeeded, retain reservation for review.
+    """
+    path=Path(journal).resolve(strict=True)
+    lock=path.with_name(path.name+".writer-reservation")
+    try:
+        lock.mkdir()
+    except FileExistsError:
+        return {"status":"WRITER_BUSY_OR_UNRESOLVED"}
+    uncertain=False
+    try:
+        raw,events=_read(path)
+        if _digest(raw)!=expected_sha256:
+            return {"status":"STALE_JOURNAL"}
+        if event.get("event") not in KINDS:
+            raise ValueError("unsupported pilot event")
+        node=next((n for n in plan["work_nodes"] if n["id"]==event.get("node_id")),None)
+        if node is None:
+            raise ValueError("unknown work node")
+        receipt=load_receipt(root,approved_index,event.get("receipt_id"))
+        if receipt.get("event_projection")!=event or authenticate(event,receipt) is not True:
+            raise ValueError("trusted host receipt/ACL rejected")
+        for old in events:
+            if old.get("event_id")==event.get("event_id"):
+                if old!=event:
+                    raise ValueError("conflicting event identity")
+                return {"status":"ALREADY_RECORDED","journal_sha256":_digest(raw)}
+        if event["event"]=="dispatch_intent" and ready_check(plan,events,node) is not True:
+            raise ValueError("unverified dependencies or admission")
+        if event["event"]=="dispatch_output":
+            for ident,digest in event.get("artifacts",{}).items():
+                if _digest(load_retained_bytes(root,approved_index,ident))!=digest:
+                    raise ValueError("output bytes mismatch")
+        if event["event"]=="handoff_adopted":
+            if _digest(load_retained_bytes(root,approved_index,event["artifact_id"]))!=event["artifact_sha256"]:
+                raise ValueError("handoff bytes mismatch")
+            for field in ("send_receipt_id","read_receipt_id","review_receipt_id"):
+                ident=_id(event.get(field))
+                if ident==event["receipt_id"]:
+                    raise ValueError("distinct handoff receipts required")
+                part=load_receipt(root,approved_index,ident)
+                binding={k:event[k] for k in ("handoff_id","task_id","revision_binding",
+                         "producer_dispatch_id","dispatch_id","artifact_id","artifact_sha256",
+                         "producer_worker_id","producer_thread_id","worker_id","thread_id","reviewer_worker_id")}
+                if part.get("handoff_binding")!=binding or part.get("receipt_kind")!=field or authenticate(event,part) is not True:
+                    raise ValueError("handoff evidence rejected")
+            if len({event[k] for k in ("send_receipt_id","read_receipt_id","review_receipt_id")})!=3:
+                raise ValueError("handoff receipts must be distinct")
+        project(plan,events+[event])
+        line=(json.dumps(event,sort_keys=True,allow_nan=False)+"\n").encode()
+        uncertain=True
+        with path.open("ab") as stream:
+            stream.write(line)
+            stream.flush()
+            os.fsync(stream.fileno())
+        if path.read_bytes()!=raw+line:
+            raise ValueError("journal changed during append: retain reservation")
+        uncertain=False
+        return {"status":"RECORDED","journal_sha256":_digest(raw+line),
+                "native_execution_authorized":False}
+    finally:
+        if not uncertain:
+            lock.rmdir()
