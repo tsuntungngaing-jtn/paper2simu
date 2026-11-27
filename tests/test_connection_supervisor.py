@@ -73,3 +73,15 @@ def test_stale_or_wrong_context(tmp_path):
     for s in (snapshot(context="manual"), snapshot(observed_at=900)):
         with pytest.raises(ValueError):
             step(tmp_path/"state.db", s, now=1000)
+
+@pytest.mark.parametrize("catalog,readonly", [(False,False),(True,False)])
+@pytest.mark.parametrize("gate", ["executor_ok","runtime_ok","native_ok","history_ok"])
+@pytest.mark.parametrize("value", [False,None])
+def test_combined_fault_never_refreshes(tmp_path, catalog, readonly, gate, value):
+    calls = []
+    s = snapshot(catalog_ok=catalog, readonly_ok=readonly, **{gate:value})
+    out = step(tmp_path/"state.db", s, lambda *a: calls.append(a), now=1000)
+    assert out["action"] == "COMBINED_FAULT_BLOCKED"
+    assert gate in out["refresh_blockers"]
+    assert calls == []
+    assert not out["native_execution_authorized"]

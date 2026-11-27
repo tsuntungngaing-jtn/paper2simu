@@ -64,6 +64,8 @@ Report archive restore, saved-solution zero-iteration readback, fresh replay, sc
 
 ## Scheduled and overnight runs
 
+- Where Desktop has no verified host refresh interface, the opt-in [scheduled CLI host](../docs/scheduled-cli-host-v0.6.3.md) is an alternative execution lane after explicit migration and provider/writer verification. Never start it in parallel with the existing Desktop writer. Preserve original task journals and budgets. CLI lifecycle completion is not native execution or acceptance.
+
 - Before any scheduled native dispatch or resumed turn, apply [host connection supervisor v0.6.3](../docs/connection-supervisor-v0.6.3.md). Distinguish missing MCP catalog from transport, Executor, native and historical gates. Use supported host refresh only under the documented admission and bounded retry policy; acknowledgement requires next-turn actual Executor and original-job verification. If host RPC is unavailable, report the exact blocker once; do not repeatedly substitute paper reading for native progress.
 
 - Load [scheduled connection recovery](../docs/scheduled-connection-recovery.md) every scheduled turn. Use this turn's registered MCP tools, including for status checks. Never send solver queries through `write_stdin`, an old PTY, or another chat's terminal session.

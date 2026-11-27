@@ -88,7 +88,15 @@ def step(db_path, snapshot, rpc=None, now=None):
                    "(id INTEGER PRIMARY KEY, payload TEXT NOT NULL)")
         db.execute("BEGIN IMMEDIATE")
         if status in ("CATALOG_BLOCKED", "MCP_CALL_BLOCKED"):
-            if s["reload_supported"] is not True or rpc is None:
+            # A missing catalog must not mask an independent failed or unknown gate.
+            # The host may obtain these observations from separately authorized,
+            # current native records; otherwise stay blocked, never assume True.
+            gates = ("executor_ok", "runtime_ok", "native_ok", "history_ok")
+            blockers = [key for key in gates if s[key] is not True]
+            if blockers:
+                out["refresh_blockers"] = blockers
+                out["action"] = "COMBINED_FAULT_BLOCKED"
+            elif s["reload_supported"] is not True or rpc is None:
                 out["action"] = "HOST_REFRESH_UNAVAILABLE"
             elif s["reload_authorized"] is not True or s["refresh_safe"] is not True:
                 out["action"] = "HOST_REFRESH_NOT_ADMITTED"

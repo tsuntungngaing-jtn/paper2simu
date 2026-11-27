@@ -76,3 +76,7 @@ idle pilot host first; preserve original output roots and job/clock/coordination
 ledgers. Do not advertise autonomous Desktop reconnect where its host control
 interface is unavailable. Roll back by disabling the adapter and reverting the
 candidate while preserving all original ledgers and recovery observations.
+
+## PC10 follow-up
+
+Combined catalog/read-only faults with any executor/runtime/native/history flag false or unknown now return COMBINED_FAULT_BLOCKED. For Desktop deployments with no supported host adapter, consider the explicitly migrated [scheduled CLI host](scheduled-cli-host-v0.6.3.md). It is a new execution lane, not a refresh of the original Desktop thread. Production migration and native validation remain NOT_RUN.

@@ -1,6 +1,6 @@
 # Paper2Simu v0.6.3 candidate — Host connection recovery
 
-[Connection supervisor](docs/connection-supervisor-v0.6.3.md): bounded host-side refresh, persistent recovery attempts, actual scheduled Executor verification and explicit missing-host-adapter state. Real desktop/native validation NOT_RUN.
+[Connection supervisor](docs/connection-supervisor-v0.6.3.md): bounded host-side refresh, persistent recovery attempts, actual scheduled Executor verification and explicit missing-host-adapter state. Real desktop/native validation NOT_RUN. PC10 follow-up adds combined-fault blocking and an opt-in [scheduled CLI host](docs/scheduled-cli-host-v0.6.3.md) with fresh process per durable turn; not a stock Desktop adapter.
 
 ## v0.6.2 historical job reconciliation
 
