@@ -209,15 +209,9 @@ def _reservation_metadata(lock,record):
 
 
 
-def append_event(plan,journal,event,*,expected_sha256,root,approved_index,authenticate,
-                 ready_check, authority=None):
-    """CAS append under local OS atomic directory reservation.
-
-    Trusted host must supply authenticate(event,receipt) and ready_check(plan,
-    events,node) from its actual ACL/verified dependency context. All original
-    journal writers must honor this reservation before pilot migration.
-    If append may have partially succeeded, retain reservation for review.
-    """
+def _append_checked(journal,event,expected_sha256,validate):
+    """One local cooperating writer protocol for all pilot event types."""
+    from server.journal_reconciliation import current_process_identity
     path=Path(journal).resolve(strict=True)
     identity=_file_identity(path.stat())
     lock=path.with_name(path.name+".writer-reservation")
@@ -233,56 +227,13 @@ def append_event(plan,journal,event,*,expected_sha256,root,approved_index,authen
         if _digest(raw)!=expected_sha256:
             return {"status":"STALE_JOURNAL"}
         _reservation_metadata(lock,{"reservation_id":uuid.uuid4().hex,"pid":os.getpid(),
-             "process_creation_identity":None,"observed_at":time.time(),
+             "process_creation_identity":current_process_identity(),"observed_at":time.time(),
              "file_identity":list(identity),"original_sha256":_digest(raw),
              "original_length":len(raw),"event_sha256":content_digest(event),
              "phase":"PRE_APPEND","native_execution_authorized":False})
-        if event.get("event") not in KINDS:
-            raise ValueError("unsupported pilot event")
-        node=next((n for n in plan["work_nodes"] if n["id"]==event.get("node_id")),None)
-        if node is None:
-            raise ValueError("unknown work node")
-        plan_sha=require_authority(plan,approved_index,authority)
-        if event.get("plan_sha256")!=plan_sha:
-            raise ValueError("dispatch plan digest mismatch")
-        if node["operation_scope"] not in {"read_only","independent_review"} or node["owner_role"] not in READ_ROLES:
-            raise ValueError("pilot permits only read-only specialist work")
-        _grant(plan,node,event,root,approved_index,authority)
-        receipt=load_receipt(root,approved_index,event.get("receipt_id"))
-        if receipt.get("event_projection")!=event or authenticate(event,receipt) is not True:
-            raise ValueError("trusted host receipt/ACL rejected")
-        require_verified(authority,"dispatch_receipt",receipt)
-        for old in events:
-            if old.get("event_id")==event.get("event_id"):
-                if old!=event:
-                    raise ValueError("conflicting event identity")
-                return {"status":"ALREADY_RECORDED","journal_sha256":_digest(raw)}
-        if event["event"]=="dispatch_intent":
-            _ready(plan,events,node,root,approved_index,authority)
-            if ready_check(plan,events,node) is not True:
-                raise ValueError("unverified dependencies or admission")
-        if event["event"]=="dispatch_output":
-            for ident,digest in event.get("artifacts",{}).items():
-                if _digest(load_retained_bytes(root,approved_index,ident))!=digest:
-                    raise ValueError("output bytes mismatch")
-        if event["event"]=="handoff_adopted":
-            if _digest(load_retained_bytes(root,approved_index,event["artifact_id"]))!=event["artifact_sha256"]:
-                raise ValueError("handoff bytes mismatch")
-            for field in ("send_receipt_id","read_receipt_id","review_receipt_id"):
-                ident=_id(event.get(field))
-                if ident==event["receipt_id"]:
-                    raise ValueError("distinct handoff receipts required")
-                part=load_receipt(root,approved_index,ident)
-                binding={k:event[k] for k in ("handoff_id","task_id","revision_binding","plan_sha256",
-                         "producer_revision_binding","producer_plan_sha256",
-                         "producer_dispatch_id","dispatch_id","artifact_id","artifact_sha256",
-                         "producer_worker_id","producer_thread_id","worker_id","thread_id","reviewer_worker_id")}
-                if part.get("handoff_binding")!=binding or part.get("receipt_kind")!=field or authenticate(event,part) is not True:
-                    raise ValueError("handoff evidence rejected")
-                require_verified(authority,field,part)
-            if len({event[k] for k in ("send_receipt_id","read_receipt_id","review_receipt_id")})!=3:
-                raise ValueError("handoff receipts must be distinct")
-        project(plan,events+[event],require_bindings=True)
+        result=validate(events)
+        if result is not None:
+            return dict(result,journal_sha256=_digest(raw))
         line=(json.dumps(event,sort_keys=True,allow_nan=False)+"\n").encode()
         with path.open("r+b") as stream:
             if (_file_identity(os.fstat(stream.fileno()))!=identity or
@@ -305,3 +256,85 @@ def append_event(plan,journal,event,*,expected_sha256,root,approved_index,authen
         if not uncertain:
             (lock/"reservation.json").unlink(missing_ok=True)
             lock.rmdir()
+
+
+def append_event(plan,journal,event,*,expected_sha256,root,approved_index,authenticate,
+                 ready_check, authority=None, revision_history=None):
+    """Append a read-only event with trusted review and current-plan admission.
+
+    revision_history is an independently supplied initial plan and retained
+    plan map (see revision_transactions). No activation is inferred from a
+    filename, caller's current plan or a revision label.
+    """
+    def validate(all_events):
+        return _validate_dispatch(plan,all_events,event,root,approved_index,
+                                  authenticate,ready_check,authority,revision_history)
+    return _append_checked(journal,event,expected_sha256,validate)
+
+
+def _validate_dispatch(plan,all_events,event,root,approved_index,authenticate,
+                       ready_check,authority,revision_history):
+    from server.revision_transactions import active_segment, ACTIVATION
+    if revision_history is not None:
+        # Replay prior revisions from approved plan bytes and scoped receipts.
+        state=active_segment(revision_history,all_events,root,approved_index,authority)
+        if state["active_plan_sha256"]!=content_digest(plan):
+            raise ValueError("inactive plan cannot dispatch")
+        events=state["events"]
+    else:
+        if any(e.get("event")==ACTIVATION for e in all_events):
+            raise ValueError("revision history required; do not use stale plan")
+        events=all_events
+        state=None
+    if event.get("event") not in KINDS:
+        raise ValueError("unsupported pilot event")
+    node=next((n for n in plan["work_nodes"] if n["id"]==event.get("node_id")),None)
+    if node is None:
+        raise ValueError("unknown work node")
+    plan_sha=require_authority(plan,approved_index,authority)
+    if event.get("plan_sha256")!=plan_sha:
+        raise ValueError("dispatch plan digest mismatch")
+    if node["operation_scope"] not in {"read_only","independent_review"} or node["owner_role"] not in READ_ROLES:
+        raise ValueError("pilot permits only read-only specialist work")
+    _grant(plan,node,event,root,approved_index,authority)
+    receipt=load_receipt(root,approved_index,event.get("receipt_id"))
+    if receipt.get("event_projection")!=event or authenticate(event,receipt) is not True:
+        raise ValueError("trusted host receipt/ACL rejected")
+    require_verified(authority,"dispatch_receipt",receipt)
+    for old in all_events:
+        if old.get("event_id")==event.get("event_id"):
+            if old!=event:
+                raise ValueError("conflicting event identity")
+            return {"status":"ALREADY_RECORDED"}
+    if any(old.get("operation_id")==event["operation_id"] for old in all_events if old.get("event") in KINDS):
+        raise ValueError("operation identity already used")
+    if event["event"]=="dispatch_intent":
+        if state is not None and state["attempts"].get(node["id"],0)>=node["attempt_budget"]:
+            raise ValueError("original attempt budget exhausted")
+        _ready(plan,events,node,root,approved_index,authority)
+        if ready_check(plan,events,node) is not True:
+            raise ValueError("unverified dependencies or admission")
+    if event["event"]=="dispatch_output":
+        for ident,digest in event.get("artifacts",{}).items():
+            if _digest(load_retained_bytes(root,approved_index,ident))!=digest:
+                raise ValueError("output bytes mismatch")
+    if event["event"]=="handoff_adopted":
+        if _digest(load_retained_bytes(root,approved_index,event["artifact_id"]))!=event["artifact_sha256"]:
+            raise ValueError("handoff bytes mismatch")
+        for field in ("send_receipt_id","read_receipt_id","review_receipt_id"):
+            ident=_id(event.get(field))
+            if ident==event["receipt_id"]:
+                raise ValueError("distinct handoff receipts required")
+            part=load_receipt(root,approved_index,ident)
+            binding={k:event[k] for k in ("handoff_id","task_id","revision_binding","plan_sha256",
+                     "producer_revision_binding","producer_plan_sha256",
+                     "producer_dispatch_id","dispatch_id","artifact_id","artifact_sha256",
+                     "producer_worker_id","producer_thread_id","worker_id","thread_id","reviewer_worker_id")}
+            if part.get("handoff_binding")!=binding or part.get("receipt_kind")!=field or authenticate(event,part) is not True:
+                raise ValueError("handoff evidence rejected")
+            require_verified(authority,field,part)
+        if len({event[k] for k in ("send_receipt_id","read_receipt_id","review_receipt_id")})!=3:
+            raise ValueError("handoff receipts must be distinct")
+    project(plan,events+[event],require_bindings=True)
+    require_authority(plan,approved_index,authority)
+    return None

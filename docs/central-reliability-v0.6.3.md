@@ -184,3 +184,7 @@ of handoff and rejects cross-revision. Trusted callback and actual Provider
 ACL are still separate requirements. No production activation.
 R5-07/08: reservation diagnostics only; full process birth, reconciliation,
 multi-writer cross-revision transactions and carry-forward remain open.
+
+## Round 7 local architecture
+
+Shared CAS writer for dispatch and opt-in revision activation, immutable task-wide controls, cumulative dispatch attempts, old segment retention, unresolved-dispatch guard and reviewed carry candidates only. See [revision transactions pilot](revision-transactions-pilot.md). Reservation inspection does not release; host observation is an injected read-only contract, not a Codex adapter. No native or production migration.

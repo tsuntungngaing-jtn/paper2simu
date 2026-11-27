@@ -60,3 +60,5 @@ unbound dispatch sequences. Review migration rather than editing history.
 Handoff rejects different revisions, and binds both plan/revision identities
 in the separate send/read/review receipts. Actual cross-revision carry
 and production TRACE used remain unimplemented.
+
+Round 7: see [revision transactions pilot](revision-transactions-pilot.md) for opt-in local activation and active-segment dispatch. Both use the same CAS writer. Existing unbound histories cannot be silently migrated; no production activation or native authorization.
