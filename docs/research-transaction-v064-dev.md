@@ -36,3 +36,5 @@ reservation, even if journal bytes appear complete. No automatic release.
 Round 8 CI failure: existing dispatch takes precedence over exhausted budget
 for an already recorded node; zero-budget new dispatch still rejects. Tests
 check both. No acceptance threshold changes.
+
+Store-backed append also enforces the three-outstanding-specialist cap inside the shared writer reservation, not merely in candidate selection. Added integration regression for genesis enrollment, actual append, checkpoint finalization, candidate removal and truncated-journal rejection. The authority in that test is synthetic.

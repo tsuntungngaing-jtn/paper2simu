@@ -57,6 +57,13 @@ class ResearchTransaction:
                 if e.get("event")=="dispatch_intent":
                     spent[e["node_id"]]=spent.get(e["node_id"],0)+1
         view=project(plan,segment,require_bindings=True)["dispatches"]
+        from server.receipt_evidence import load_receipt
+        for e in segment:
+            if e.get("event")=="work_unblocked":
+                receipt=load_receipt(root,index,e.get("source_receipt_id"))
+                if receipt.get("event_projection")!=e or e.get("plan_sha256")!=content_digest(plan):
+                    raise ValueError("unblock review scope mismatch")
+                require_verified(authority,"work_unblocked",receipt)
         state=work_progress(plan,segment,[],False,review_context=(root,index,authority),state_only=True)
         running=sum(v["state"] in {"INTENT","DISPATCHED","CLAIMED","RUNNING","OUTCOME_UNKNOWN"} for v in view.values())
         nodes={n["id"]:n for n in plan["work_nodes"]}

@@ -282,6 +282,17 @@ def append_event(plan,journal,event,*,expected_sha256,root,approved_index,authen
         genesis=revision_history.initial_plan_sha256 if revision_history is not None else content_digest(plan)
         require_anchor(journal_anchor,task_id=plan["task_id"],genesis_sha256=genesis,
                        raw=raw,events=all_events,identity=identity,authority=authority)
+        if checkpoint_store is not None:
+            current,pending=checkpoint_store.inspect()
+            if current!=journal_anchor or pending is not None:
+                raise ValueError("independent checkpoint mismatch or pending")
+            if result is None and event["event"]=="dispatch_intent":
+                segment=all_events if revision_history is None else active_events_for_limit(
+                    revision_history,all_events,root,approved_index,authority)
+                outstanding=sum(v["state"] in {"INTENT","DISPATCHED","CLAIMED","RUNNING","OUTCOME_UNKNOWN"}
+                                for v in project(plan,segment,require_bindings=True)["dispatches"].values())
+                if outstanding>=3:
+                    raise ValueError("three outstanding specialist limit reached")
         return result
     return _append_checked(journal,event,expected_sha256,validate,checkpoint_store=checkpoint_store,journal_anchor=journal_anchor)
 
@@ -381,3 +392,8 @@ def verify_historical_dispatch(plan,event,root,index,authority):
         raise ValueError("historical dispatch receipt mismatch")
     require_verified(authority,"historical_dispatch",{"event":event,"grant":grant,"receipt":receipt})
     _verify_artifacts(event,root,index,authority)
+
+
+def active_events_for_limit(history,events,root,index,authority):
+    from server.revision_transactions import active_segment
+    return active_segment(history,events,root,index,authority)["events"]
