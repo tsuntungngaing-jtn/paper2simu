@@ -7,6 +7,10 @@ from graphlib import TopologicalSorter
 import json
 from pathlib import Path
 import tempfile
+import sys
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 
 UNRESOLVED_STATES = {"UNKNOWN", "UNVERIFIED", "QUEUED", "RUNNING"}
@@ -38,7 +42,9 @@ def remaining(limit, previously_used, reserved):
     return str(max(0, limit - previously_used - reserved))
 
 
-def work_progress(plan, events, pending_jobs, can_submit):
+def work_progress(plan, events, pending_jobs, can_submit, *, review_context=None, state_only=False):
+    from server.task_liveness import validate_nodes, recovery_candidates, verify_completion_receipt
+    strict = validate_nodes(plan)
     entries = plan.get("work_nodes", [])
     nodes = {entry["id"]: entry for entry in entries}
     if len(nodes) != len(entries):
@@ -74,6 +80,13 @@ def work_progress(plan, events, pending_jobs, can_submit):
         elif node_id in blockers or not set(dependencies[node_id]).issubset(completed):
             raise ValueError(f"{node_id}: resolve its blockers and dependencies before marking it complete")
         else:
+            if strict and (event.get("revision_binding") != nodes[node_id]["revision_binding"]
+                           or not event.get("review_receipt")):
+                raise ValueError(f"{node_id}: completion requires current revision and review receipt")
+            if strict:
+                if review_context is None:
+                    raise ValueError(f"{node_id}: independently approved review index required")
+                verify_completion_receipt(plan,event,*review_context)
             completed.add(node_id)
 
     waiting = {}
@@ -96,6 +109,8 @@ def work_progress(plan, events, pending_jobs, can_submit):
         else:
             ready.append(node_id)
 
+    if state_only:
+        return {"ready":ready,"completed":sorted(completed),"waiting":waiting}
     lines = []
     if nodes:
         lines.append("- Work by dependency:")
@@ -107,10 +122,17 @@ def work_progress(plan, events, pending_jobs, can_submit):
                          f" | tried: {item['last_attempt']} | observed: {item['actual_return']}"
                          f" | resumes when: {item['resume_when']} | check next: {item['next_action']}"
                          f" | evidence: {', '.join(item['evidence_refs'])}")
+    for key, item in blockers.items():
+        if not item.get("incident_id") or not nodes[key].get("resource_domain"):
+            lines.append("  - RECOVERY MAPPING REQUIRED: " + key
+                         + " | record reviewed resource_domain and stable incident_id; no inferred authorization")
+    for candidate in recovery_candidates(plan, blockers, events=events):
+        lines.append("  - RECOVERY CANDIDATE (verify authorization): " + candidate["id"]
+                     + " | " + candidate["status"] + " | " + candidate["action"] + " | proposed: " + candidate["proposed_next_action"])
     return (nodes[ready[0]]["action"] if ready else None), bool(waiting), lines
 
 
-def render_summary(plan, events, journal):
+def render_summary(plan, events, journal, *, review_context=None):
     phases = {phase["id"]: phase for phase in plan["phases"]}
     if not phases or len(phases) != len(plan["phases"]):
         raise ValueError("plan must have unique phase IDs")
@@ -206,7 +228,7 @@ def render_summary(plan, events, journal):
     phase_budget = remaining(phase.get("max_new_solves"), phase.get("prior_solve_attempts"),
                              sum(value == phase_id for value in reservations.values()))
     can_submit = total not in {"0", "UNKNOWN"} and phase_budget not in {"0", "UNKNOWN"}
-    ready_action, work_waiting, progress_lines = work_progress(plan, events, pending, can_submit)
+    ready_action, work_waiting, progress_lines = work_progress(plan, events, pending, can_submit, review_context=review_context)
     if ready_action:
         next_action = ready_action
         if pending:
@@ -239,11 +261,11 @@ def render_summary(plan, events, journal):
     return "\n".join(lines) + "\n"
 
 
-def refresh(task_dir, journal=None):
+def refresh(task_dir, journal=None, *, review_context=None):
     plan = json.loads((task_dir / "task-plan.json").read_text(encoding="utf-8-sig"))
     if journal is None:
         journal = task_dir / plan.get("journal", "trials/events.jsonl")
-    summary = render_summary(plan, read_events(journal), journal)
+    summary = render_summary(plan, read_events(journal), journal, review_context=review_context)
     target = task_dir / "resume.md"
     temporary = None
     try:
@@ -263,12 +285,18 @@ def main():
     task = commands.add_parser("refresh", help="write the task's resume.md")
     task.add_argument("task_dir", type=Path)
     task.add_argument("--journal", type=Path, help="override the event journal path for this refresh")
+    preview = commands.add_parser("legacy-preview", help="audit legacy lines without replay or writes")
+    preview.add_argument("plan", type=Path)
+    preview.add_argument("journal", type=Path)
     board = commands.add_parser("board", help="print a read-only view of existing resume.md files")
     board.add_argument("summaries", type=Path, nargs="+")
     args = parser.parse_args()
     try:
         if args.command == "refresh":
             print(refresh(args.task_dir, args.journal))
+        elif args.command == "legacy-preview":
+            plan = json.loads(args.plan.read_text(encoding="utf-8-sig"))
+            print(json.dumps(legacy_journal_preview(plan,args.journal),ensure_ascii=False))
         else:
             for path in args.summaries:
                 if path.name != "resume.md":
@@ -279,6 +307,56 @@ def main():
                     print(f"# {path}\n\nSummary unavailable: {error}\n")
     except (OSError, KeyError, TypeError, ValueError) as error:
         parser.exit(2, f"Unable to refresh handoff: {error}\n")
+
+
+# Legacy logs are evidence sources, never authoritative trial journals.
+def legacy_journal_preview(plan, path):
+    """Read-only line audit; preserve physical lines and overlapping flags."""
+    import hashlib
+    nodes = {n["id"] for n in plan.get("work_nodes",[])}
+    rows = []
+    native = {"submission_started","submitted","job_observed","evaluated"}
+    markers = {"job_id","operation_id","run_id","trial_id","runtime_id",
+               "original_job_id","original_operation_id","original_deadline",
+               "deadline","deadline_utc","case_clock","case_clock_id","hard_deadline",
+               "job_status","native_state","native_job_id"}
+    def fields(value):
+        if isinstance(value,dict):
+            return ({k for k,v in value.items() if k in markers and v is not None}
+                    | set().union(*(fields(v) for v in value.values())))
+        if isinstance(value,list):
+            return set().union(*(fields(v) for v in value))
+        return set()
+    for number, raw in enumerate(Path(path).read_bytes().splitlines(keepends=True),1):
+        status = "REVIEW_MAPPING_REQUIRED"
+        flags = set()
+        found = set()
+        if not raw.strip():
+            status = "BLANK_ROW"
+        else:
+            try:
+                item = json.loads(raw.decode("utf-8-sig"))
+                found = fields(item)
+                if not isinstance(item,dict) or not item.get("event"):
+                    status = "MISSING_EVENT_TYPE"
+                elif item["event"] in WORK_EVENTS and item.get("node_id") not in nodes:
+                    status = "UNKNOWN_NODE"
+                elif item["event"] in WORK_EVENTS and not item.get("evidence_refs"):
+                    status = "MISSING_EVIDENCE"
+                elif item["event"] in WORK_EVENTS:
+                    status = "REVIEW_WORK_EVENT"
+                elif item["event"] in native:
+                    status = "RECONCILE_NATIVE_EVENT"
+                if found or status == "RECONCILE_NATIVE_EVENT":
+                    flags.add("POSSIBLE_NATIVE_RECONCILIATION")
+            except (ValueError,UnicodeError,TypeError):
+                status = "INVALID_ROW"
+                flags.add("UNCLASSIFIED_CONTENT")
+        rows.append({"line":number,"sha256":hashlib.sha256(raw).hexdigest(),
+                     "status":status,"flags":sorted(flags),"native_markers":sorted(found)})
+    return {"status":"PREVIEW_ONLY","rows":rows,
+            "unresolved_native":[row["line"] for row in rows if row["flags"]],
+            "native_execution_authorized":False}
 
 
 if __name__ == "__main__":

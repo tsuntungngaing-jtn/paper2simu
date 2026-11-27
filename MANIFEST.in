@@ -25,3 +25,5 @@ recursive-include scripts *.py
 recursive-include server *.py
 recursive-include tests *.py
 include .github/workflows/isolated-executor.yml
+
+recursive-include paper2simu-execution-trace *.md

@@ -16,11 +16,23 @@ spec.loader.exec_module(release)
 class ReleaseTests(unittest.TestCase):
     def fixture(self, root):
         for name in ['SKILL.md','README.md','LICENSE','pyproject.toml','server/main.py',
-                     'vendor/installed-mcp/LICENSE','examples/catalog.json']:
+                     'vendor/installed-mcp/LICENSE','examples/catalog.json',
+                     'paper2simu/SKILL.md','paper2simu-execution-trace/SKILL.md']:
             p=root/name
             p.parent.mkdir(parents=True,exist_ok=True)
             p.write_text('{}' if p.suffix=='.json' else 'public source',encoding='utf-8')
         (root/'vendor/installed-mcp/SNAPSHOT.json').write_text(json.dumps({'files':[]}),encoding='utf-8')
+
+    def test_required_trace_and_publication_predicate(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            self.fixture(root)
+            (root/'paper2simu-execution-trace/SKILL.md').unlink()
+            with self.assertRaisesRegex(ValueError,'Missing required distribution file'):
+                release.public_files(root)
+            for name in ['docs/file.bin','docs/file.pdf']:
+                with self.assertRaises(ValueError):
+                    release.publication_path(Path(name))
 
     def test_private_named_asset_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:

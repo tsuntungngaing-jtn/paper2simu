@@ -9,11 +9,12 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 ROOT_FILES = {'SKILL.md','README.md','LICENSE','NOTICE.md','.gitignore','pyproject.toml','setup.py','MANIFEST.in','COMSOFLENT_SKILL.md'}
-DIRECTORIES = {'agent-knowledge','server','vendor','examples','docs','scripts','tests','schemas','benchmarks','tutorials','paper2simu','prompts','rsi','uncertainty','comsoflent','research_design'}
+DIRECTORIES = {'agent-knowledge','server','vendor','examples','docs','scripts','tests','schemas','benchmarks','tutorials','paper2simu','paper2simu-execution-trace','prompts','rsi','uncertainty','comsoflent','research_design'}
 EXTENSIONS = {'.py','.md','.toml','.json','.cff','.ps1'}
 SKIP_PARTS = {'.git','.venv','__pycache__','.pytest_cache','runs','runtime','dist','build'}
 FORBIDDEN_EXTENSIONS = {'.csv','.png','.mph','.mphbin','.log','.pdf','.step','.stp','.pem','.key','.pfx','.zip','.pyc','.pyo'}
@@ -21,6 +22,42 @@ FORBIDDEN_EXTENSIONS = {'.csv','.png','.mph','.mphbin','.log','.pdf','.step','.s
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()
+
+
+REQUIRED_PATHS = {"SKILL.md","README.md","LICENSE","pyproject.toml","server/main.py",
+                  "vendor/installed-mcp/LICENSE","vendor/installed-mcp/SNAPSHOT.json",
+                  "examples/catalog.json","paper2simu/SKILL.md","paper2simu-execution-trace/SKILL.md"}
+
+
+def publication_path(rel):
+    rel = Path(rel)
+    if any(part in SKIP_PARTS or part.endswith('.egg-info') for part in rel.parts):
+        return False
+    if len(rel.parts)==1:
+        if rel.name not in ROOT_FILES:
+            return False
+    elif rel.parts[0] == '.codex':
+        # Only the reviewed specialist role files; never package local config or secrets.
+        if len(rel.parts) != 3 or rel.parts[1] != 'agents' or rel.name not in {
+            'paper2simu_paper_reader.toml', 'paper2simu_documentation_expert.toml',
+            'paper2simu_physics_reviewer.toml', 'paper2simu_supervisor.toml',
+            'paper2simu_recovery_agent.toml', 'paper2simu_executor.toml',
+            'paper2simu_acceptance_agent.toml', 'paper2simu_recorder.toml',
+            'paper2simu_experiment_designer.toml'}:
+            return False
+    elif rel.as_posix() == 'references/recovery-history.json':
+        pass
+    elif rel.parts[0] not in DIRECTORIES:
+        return False
+    if rel.suffix.lower() in FORBIDDEN_EXTENSIONS or rel.name.startswith('.env'):
+        raise ValueError(f'Forbidden file in a publication directory: {rel}')
+    pack_jsonl = (rel.suffix.lower() == '.jsonl' and len(rel.parts) >= 4
+                  and rel.parts[:2] == ('agent-knowledge', 'packs')
+                  and rel.parts[2] in {'Paper2Simu-Knowledge-r1', 'Paper2Simu-Solver-Knowledge-r2'})
+    formal = rel.as_posix() in {'docs/formal/Coordination.tla','docs/formal/Coordination.cfg'}
+    if rel.suffix.lower() not in EXTENSIONS and rel.name not in ROOT_FILES and not pack_jsonl and not formal:
+        raise ValueError(f'Unreviewed file type in publication directory: {rel}')
+    return True
 
 
 def public_files(root=ROOT):
@@ -34,30 +71,8 @@ def public_files(root=ROOT):
             continue
         if p.is_symlink() or not p.resolve().is_relative_to(root):
             raise ValueError(f'Symlinks are not published: {rel}')
-        if len(rel.parts)==1:
-            if p.name not in ROOT_FILES:
-                continue
-        elif rel.parts[0] == '.codex':
-            # Only the reviewed specialist role files; never package local config or secrets.
-            if len(rel.parts) != 3 or rel.parts[1] != 'agents' or rel.name not in {
-                'paper2simu_paper_reader.toml', 'paper2simu_documentation_expert.toml',
-                'paper2simu_physics_reviewer.toml', 'paper2simu_supervisor.toml',
-                'paper2simu_recovery_agent.toml', 'paper2simu_executor.toml',
-                'paper2simu_acceptance_agent.toml', 'paper2simu_recorder.toml',
-                'paper2simu_experiment_designer.toml'}:
-                continue
-        elif rel.as_posix() == 'references/recovery-history.json':
-            pass
-        elif rel.parts[0] not in DIRECTORIES:
+        if not publication_path(rel):
             continue
-        if p.suffix.lower() in FORBIDDEN_EXTENSIONS or p.name.startswith('.env'):
-            raise ValueError(f'Forbidden file in a publication directory: {rel}')
-        pack_jsonl = (p.suffix.lower() == '.jsonl' and len(rel.parts) >= 4
-                      and rel.parts[:2] == ('agent-knowledge', 'packs')
-                      and rel.parts[2] in {'Paper2Simu-Knowledge-r1', 'Paper2Simu-Solver-Knowledge-r2'})
-        formal = rel.as_posix() in {'docs/formal/Coordination.tla','docs/formal/Coordination.cfg'}
-        if p.suffix.lower() not in EXTENSIONS and p.name not in ROOT_FILES and not pack_jsonl and not formal:
-            raise ValueError(f'Unreviewed file type in publication directory: {rel}')
         data=p.read_bytes()
         # Match file-name/word markers, not accidental substrings in SHA digests.
         private_terms=['D'+'BC', 'codex'+'-clipboard', 'AppData'+'\\Local\\Temp']
@@ -78,8 +93,7 @@ def public_files(root=ROOT):
                 raise ValueError(f'Private key in {rel}')
         result.append((rel.as_posix(), data))
     present={name for name,_ in result}
-    for required in ['SKILL.md','README.md','LICENSE','pyproject.toml','server/main.py',
-                     'vendor/installed-mcp/LICENSE','examples/catalog.json']:
+    for required in sorted(REQUIRED_PATHS):
         if required not in present:
             raise ValueError(f'Missing required distribution file: {required}')
     snapshot_path=root/'vendor/installed-mcp/SNAPSHOT.json'
@@ -94,6 +108,40 @@ def public_files(root=ROOT):
     return result
 
 
+def source_identity(root, files):
+    """Bind exact published bytes to a Git SHA when available.
+
+    A non-Git source or line-ending/content differences are explicitly unverified.
+    No secrets or working-tree private paths are recorded.
+    """
+    try:
+        commit = subprocess.check_output(["git","-C",str(root),"rev-parse","HEAD"],
+                                         stderr=subprocess.DEVNULL, text=True).strip()
+        if not re.fullmatch(r"[0-9a-f]{40}",commit):
+            raise ValueError("unsupported object format")
+        raw = subprocess.check_output(["git","-C",str(root),"ls-tree","-r","-z",commit],
+                                      stderr=subprocess.DEVNULL)
+        tree = {}
+        for entry in raw.split(b"\0"):
+            if entry:
+                meta, name = entry.split(b"\t",1)
+                tree[name.decode("utf-8")] = meta.split()[2].decode("ascii")
+        # Determine eligible tracked paths from Git, not the supplied list.
+        # Reuse the publication policy on path names; no checkout mutation.
+        expected = {name for name in tree if publication_path(Path(name))}
+        supplied = {name for name,_ in files}
+        complete = REQUIRED_PATHS.issubset(expected) and supplied == expected and len(supplied)==len(files)
+        matches = complete and all(tree.get(name) == hashlib.sha1(
+            ("blob "+str(len(data))+"\0").encode("ascii")+data).hexdigest()
+            for name,data in files)
+        return {"build_protocol":"paper2simu-release/2","source_commit":commit,
+                "source_binding":"EXACT_PUBLISHED_BYTES" if matches else "PUBLISHED_BYTES_DIFFER",
+                "path_set_complete":complete,"expected_path_count":len(expected)}
+    except (OSError, ValueError, subprocess.CalledProcessError):
+        return {"build_protocol":"paper2simu-release/2","source_commit":None,
+                "source_binding":"UNVERIFIED"}
+
+
 def build(output, root=ROOT):
     output=Path(output).resolve()
     if output.is_relative_to(Path(root).resolve()):
@@ -101,6 +149,7 @@ def build(output, root=ROOT):
     files=public_files(root)
     manifest={'format':1,'skill_name':'paper2simu','display_name':'Paper2Simu','author':'Mengzhu Guohe (Douyin)','files':[
         {'path':name,'bytes':len(data),'sha256':digest(data)} for name,data in files]}
+    manifest.update(source_identity(root, files))
     files.append(('RELEASE_MANIFEST.json',(json.dumps(manifest,indent=2)+'\n').encode()))
     output.parent.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as archive:

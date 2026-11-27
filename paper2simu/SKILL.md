@@ -4,7 +4,7 @@ description: Reproduce engineering papers, build reusable article knowledge pack
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.6.3"
+  version: "0.6.4.dev0"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -63,6 +63,8 @@ Report archive restore, saved-solution zero-iteration readback, fresh replay, sc
 - Honor authorization already supplied by the user. Read-only access does not authorize solves or source overwrites; authorized modeling/solve tasks do not need repeated permission for ordinary steps. Operator code still requires the environment's explicit opt-in. Connection recovery is not paper-reproduction acceptance.
 
 ## Scheduled and overnight runs
+
+- Apply [central reliability revision](../docs/central-reliability-v0.6.3.md) for unattended work. Pin actual build/role/prompt/provider identity. Extend the existing task plan and journal, not a parallel authority. Recovery candidates are not authorizations. Use explicit TRACE consumer evidence; no inferred ADOPTED. A pending CLI reservation is inspectable but never automatically cleared. Distinguish workflow liveness from native stall.
 
 - Where Desktop has no verified host refresh interface, the opt-in [scheduled CLI host](../docs/scheduled-cli-host-v0.6.3.md) is an alternative execution lane after explicit migration and provider/writer verification. Never start it in parallel with the existing Desktop writer. Preserve original task journals and budgets. CLI lifecycle completion is not native execution or acceptance.
 
@@ -134,3 +136,23 @@ Keep an unresolved job blocked until the resource guard verifies a scoped ledger
 ## Execution provenance (P2S-TRACE-1.0)
 
 For paper reproduction with requested Skill/Agent tracing, load the [execution trace companion](../paper2simu-execution-trace/SKILL.md) before dispatch, and bind the prospective plan and observed trace to existing task, input, operation, trial and review IDs. Record actual host calls, component use, outputs and downstream dispositions; no self-reported invocation or fabricated events. Follow the original authorization, independent review and native readback gates; missing trace evidence cannot support a complete-trace claim. Keep P2S-DATA-1.0 categories and existing journals authoritative. This opt-in extension does not change the v0.6.2 task thresholds, resource limits or solver permissions. Pin the actual deployed commit; do not represent this extension as the original approved commit.
+
+For PC8-style legacy plans, use the reviewed migration preview and original journal per the central reliability contract. Missing resource/incident mapping must be reported, not silently treated as no recovery work. Bind completion to current revision and reviewed evidence. Never mistake retained receipt hashes for host authentication or a solver permission.
+
+For unattended work apply the Round 2 counterexample rules in the central reliability contract: legacy line audit before migration; no completion from an arbitrary review string; distinct original turns and normalized stable facts; no empty TRACE verification or unapproved cross-thread use. Missing evidence remains explicit. Use the original writer and native gates; no automatic lock release.
+
+Round 3: distinguish isolated provider success from production Desktop readiness. Inspect launch-scoped evidence, separate first missing and failed stages, verify retained artifact digests, flag possible-native legacy records, replay reviewed incident lifecycle and verify CLI chain against an independent anchor. See central reliability contract. No automatic release or production migration.
+
+Round 4: strict work completion requires the reviewed structured required_artifacts manifest, not just the subset in a receipt. Bind incident events to task identity and consult original lifecycle on candidate generation. Missing lifecycle evidence permits diagnostic mapping only. Reject mixed stdio launch/origin even for legacy callers. Retain all native and historical guards.
+
+For explicitly approved isolated read-only dispatch experiments, use [read-only dispatch pilot](../docs/readonly-dispatch-pilot.md). Never activate in production before all original writers share the reservation protocol and actual host receipt/ACL verification is established. Existing task completion and native gates remain authoritative; no native actions or automatic retries in the pilot.
+
+Round 5: for strict completion require externally approved full plan and evidence index digests via ReviewAuthority, exact reviewed receipt and required artifacts. The isolated read-only dispatch pilot refuses multi-link journals, enforces original journal readiness within CAS, requires scoped independent expiring grants and rejects cross-revision handoff. Do not treat caller-created digests or permissive callbacks as real host authorization. Legacy records remain review gaps; no automatic lock release or production activation.
+
+Round 7 opt-in isolated architecture: use the shared CAS revision transaction pilot with explicitly approved genesis/plan history and retained activation receipts. Preserve old events and cumulative attempts; reject unresolved dispatch, native/legacy history and unreviewed migration. Carry candidates do not satisfy dependencies. Reservation inspection is read-only; host observation requires an actual supported read-only adapter and trusted call binding. See [revision transactions pilot](../docs/revision-transactions-pilot.md). No automatic clear, production activation or native authorization.
+
+Round 8: opt-in pilot writes require externally approved monotonic JournalAnchor (genesis, exact journal SHA, sequence, file identity), not self-calculated hashes; enforce budget with or without revision history and replay retained historical receipts. Missing issuer/history blocks authorization. Distinguish semantic tail match from exact bytes; owner reconciliation is a candidate only. Host observations require current anchored dispatch and freshness. Existing native clocks, resources and scientific gates are unchanged.
+
+## v0.6.4-dev local research transactions (opt-in)
+
+See [Round 9 integration contract](../docs/research-transaction-v064-dev.md). Use a separately administered checkpoint store, reviewed dependency manifests and additive evidence deltas. Candidate selection is read-only, at most three outstanding specialists; no automatic actual host calls or remote resource grant. A04 remains sole native writer. Keep all original acceptance, clock, budget, provenance and independent vetoes. No production migration or solver invocation under this pilot.

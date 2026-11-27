@@ -754,10 +754,19 @@ class Runtime:
                 self.jobs[job_id].update(status="completed", result=result, completed_at=time.time())
         except Exception as error:
             detail = {"type": type(error).__name__, "message": str(error)[:12000]}
+            # Publish a terminal failure only after attempting to persist its evidence.
+            # A filesystem failure must still be visible and must not imply success.
+            evidence_state = "MISSING_OUTPUT_DIRECTORY"
+            try:
+                if directory.exists():
+                    (directory / "job-error.json").write_text(json.dumps(detail, ensure_ascii=False, indent=2), encoding="utf-8")
+                    evidence_state = "WRITTEN"
+            except OSError as persistence_error:
+                evidence_state = "WRITE_FAILED"
+                detail["evidence_error"] = str(persistence_error)[:1000]
             with self.lock:
-                self.jobs[job_id].update(status="failed", error=detail, completed_at=time.time())
-            if directory.exists():
-                (directory / "job-error.json").write_text(json.dumps(detail, ensure_ascii=False, indent=2), encoding="utf-8")
+                self.jobs[job_id].update(status="failed", error=detail,
+                                         error_evidence_state=evidence_state, completed_at=time.time())
 
     def job_status(self, job_id: str | None = None, operation_id: str | None = None) -> dict:
         if (job_id is None) == (operation_id is None):
