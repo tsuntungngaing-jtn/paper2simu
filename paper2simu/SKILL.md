@@ -4,7 +4,7 @@ description: Reproduce engineering papers, build reusable article knowledge pack
 license: MIT
 metadata:
   display_name: Paper2Simu
-  version: "0.6.2"
+  version: "0.6.3"
   compatibility: "COMSOL MCP + official PyFluent MCP (separate installations)"
 ---
 
@@ -63,6 +63,10 @@ Report archive restore, saved-solution zero-iteration readback, fresh replay, sc
 - Honor authorization already supplied by the user. Read-only access does not authorize solves or source overwrites; authorized modeling/solve tasks do not need repeated permission for ordinary steps. Operator code still requires the environment's explicit opt-in. Connection recovery is not paper-reproduction acceptance.
 
 ## Scheduled and overnight runs
+
+- Where Desktop has no verified host refresh interface, the opt-in [scheduled CLI host](../docs/scheduled-cli-host-v0.6.3.md) is an alternative execution lane after explicit migration and provider/writer verification. Never start it in parallel with the existing Desktop writer. Preserve original task journals and budgets. CLI lifecycle completion is not native execution or acceptance.
+
+- Before any scheduled native dispatch or resumed turn, apply [host connection supervisor v0.6.3](../docs/connection-supervisor-v0.6.3.md). Distinguish missing MCP catalog from transport, Executor, native and historical gates. Use supported host refresh only under the documented admission and bounded retry policy; acknowledgement requires next-turn actual Executor and original-job verification. If host RPC is unavailable, report the exact blocker once; do not repeatedly substitute paper reading for native progress.
 
 - Load [scheduled connection recovery](../docs/scheduled-connection-recovery.md) every scheduled turn. Use this turn's registered MCP tools, including for status checks. Never send solver queries through `write_stdin`, an old PTY, or another chat's terminal session.
 - If the registered local HTTP MCP endpoint returns `502` before a tool response, follow the [loopback HTTP 502 check](../docs/scheduled-connection-recovery.md#loopback-http-502) before attempting solver attachment. After renewing the client connection, check the original job IDs through the registered provider before continuing.

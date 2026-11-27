@@ -30,11 +30,11 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Build self-contained ZIP, check manifest and hashes
         run: |
-          python scripts/release.py --output ../Paper2Simu-v0.6.2.zip
+          python scripts/release.py --output ../Paper2Simu-v0.6.3.zip
           python - <<'PY'
           import hashlib, json, zipfile
           from pathlib import Path
-          p = Path("../Paper2Simu-v0.6.2.zip")
+          p = Path("../Paper2Simu-v0.6.3.zip")
           with zipfile.ZipFile(p) as z:
               manifest = json.loads(z.read("paper2simu/RELEASE_MANIFEST.json"))
               assert manifest["skill_name"] == "paper2simu"

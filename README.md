@@ -1,4 +1,8 @@
-# Paper2Simu v0.6.2 — Historical job reconciliation
+# Paper2Simu v0.6.3 candidate — Host connection recovery
+
+[Connection supervisor](docs/connection-supervisor-v0.6.3.md): bounded host-side refresh, persistent recovery attempts, actual scheduled Executor verification and explicit missing-host-adapter state. Real desktop/native validation NOT_RUN. PC10 follow-up adds combined-fault blocking and an opt-in [scheduled CLI host](docs/scheduled-cli-host-v0.6.3.md) with fresh process per durable turn; not a stock Desktop adapter.
+
+## v0.6.2 historical job reconciliation
 
 The [historical reconciliation contract](docs/historical-ledger.md) describes how a local resource administrator can record an independently reviewed resource decision for one historical job. The original manifest, scientific outcome and case budget retain their original meaning.
 
@@ -20,7 +24,7 @@ The [historical reconciliation contract](docs/historical-ledger.md) describes ho
 
 [System requirements](docs/multi-agent-system-v0.5.1.md) · [Role registry](agent-knowledge/registry.json) · [Orchestration and deployment](docs/multi-agent-orchestration.md) · [F1–F7 fault protocol](docs/multi-agent-fault-recovery.md) · [Learning and benchmark](docs/multi-agent-learning-and-benchmark.md)
 
-Ten roles (host + nine specialists), separate Executor and supervisory veto, independent acceptance, knowledge receipts and deterministic offline admission checks. Actual Codex dispatch, MCP permission isolation, native solver and cross-machine recovery NOT_RUN. No new background daemon. Preserve [0.4.5 single-agent](https://github.com/tsuntungngaing-jtn/paper2simu/tree/release/paper2simu-0.4.5) and [0.5.0 multi-agent](https://github.com/tsuntungngaing-jtn/paper2simu/tree/release/paper2simu-0.5.0) as independent control groups. The following retained README contains historical instructions; current v0.6.2 contract takes precedence.
+Ten roles (host + nine specialists), separate Executor and supervisory veto, independent acceptance, knowledge receipts and deterministic offline admission checks. Actual Codex dispatch, MCP permission isolation, native solver and cross-machine recovery NOT_RUN. No new background daemon. Preserve [0.4.5 single-agent](https://github.com/tsuntungngaing-jtn/paper2simu/tree/release/paper2simu-0.4.5) and [0.5.0 multi-agent](https://github.com/tsuntungngaing-jtn/paper2simu/tree/release/paper2simu-0.5.0) as independent control groups. The following retained README contains historical instructions; current v0.6.3 contract takes precedence.
 
 ## Article knowledge and SolidWorks
 
@@ -30,7 +34,7 @@ The source repository does not ship a stale generated release manifest: run the 
 
 # Paper2Simu — Paper-to-Simulation for COMSOL and Ansys Fluent
 
-**Current version: v0.6.2. Commercial-solver verification of this release remains NOT_RUN.**
+**Current candidate version: v0.6.3. Commercial-solver verification of this release remains NOT_RUN.**
 
 Paper2Simu unifies the evidence-first COMSOL Automatic pipeline (up to v0.7.6) and the ComsoFlent v0.1.0 MCP-routing preview. The project is no longer named ComsoFlent. The canonical repository is [paper2simu](https://github.com/tsuntungngaing-jtn/paper2simu). Legacy names in historical notes are attribution and compatibility references, not separate active products.
 
@@ -38,9 +42,9 @@ Paper2Simu unifies the evidence-first COMSOL Automatic pipeline (up to v0.7.6) a
 
 **Skill entry:** [paper2simu/SKILL.md](paper2simu/SKILL.md) or the compatibility [root SKILL.md](SKILL.md). Additional architecture: [legacy ComsoFlent migration design](docs/comsoflent-v0.1.0.md), [operations guard](docs/operations-reliability-v0.7.7-rc1.md), [vendor-native convergence](docs/native-convergence-policy.md).
 
-**Installation:** Python project `paper2simu==0.6.2` retains `comsol-automatic` and `comsol-skill-mcp` command aliases for existing COMSOL setups; new aliases: `paper2simu`, `paper2simu-comsol-mcp`. These aliases start the **COMSOL MCP service**, not a Fluent solver. Install official [Ansys PyFluent MCP](https://github.com/ansys/pyfluent-mcp) separately with its documented Python environment and register a distinct host server ID. Do not assume a single shared virtualenv can satisfy both products.
+**Installation:** Python project `paper2simu==0.6.3` retains `comsol-automatic` and `comsol-skill-mcp` command aliases for existing COMSOL setups; new aliases: `paper2simu`, `paper2simu-comsol-mcp`. These aliases start the **COMSOL MCP service**, not a Fluent solver. Install official [Ansys PyFluent MCP](https://github.com/ansys/pyfluent-mcp) separately with its documented Python environment and register a distinct host server ID. Do not assume a single shared virtualenv can satisfy both products.
 
-**Release migration:** `python scripts/release.py --output ../Paper2Simu-v0.6.2.zip` and `python scripts/install_skill.py` produce the new package/install name without overwriting an existing directory. Keep the old install until a complete rollback-tested integration is accepted. Never transfer COMSOL tokens or private solver artifacts into the public Git repository.
+**Release migration:** `python scripts/release.py --output ../Paper2Simu-v0.6.3.zip` and `python scripts/install_skill.py` produce the new package/install name without overwriting an existing directory. Keep the old install until a complete rollback-tested integration is accepted. Never transfer COMSOL tokens or private solver artifacts into the public Git repository.
 
 ## Execution/acceptance separation (v0.2.2+)
 

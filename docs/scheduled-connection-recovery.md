@@ -1,5 +1,7 @@
 # Scheduled solver connection recovery
 
+For v0.6.3 first apply the [host connection supervisor](connection-supervisor-v0.6.3.md) on every scheduled turn. Missing tool catalog with healthy transport follows the bounded host refresh path when an authorized adapter exists. The following attachment and reconciliation checks remain mandatory; a refresh is never a solver restart or proof of recovery.
+
 ## Set up the scheduled task
 
 Record the host, solver family, registered MCP server ID, expected native solver endpoint or approved session reference, output directory, task ownership, and cutoff as a date and time with a timezone or UTC offset. For a recurring window, record its recurrence and timezone. Keep the current job IDs, run/model identities and checkpoint paths in the task's existing durable journal so the next turn can recover them without chat history. Keep connection credentials in the configured provider. A COMSOL MCP transport URL and the COMSOL Multiphysics backend host/port are separate fields.

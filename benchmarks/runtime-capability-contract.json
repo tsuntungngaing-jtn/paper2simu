@@ -1,5 +1,5 @@
 {
-  "version": "0.6.2",
+  "version": "0.6.3",
   "scope": "canonical COMSOL shared-JVM and opt-in Windows isolated connector; not a native validation certificate",
   "required_tools": [
     "comsol_queue_status",
