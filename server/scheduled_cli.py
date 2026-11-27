@@ -129,6 +129,7 @@ def inspect_state(state):
                      "pid": pid, "intent_exists": (state/(ident+".intent.json")).is_file(),
                      "spawn_receipt_exists": (state/(ident+".spawn.json")).is_file(),
                      "event_bytes": events.stat().st_size if events.is_file() else None,
+                     "exit_receipt_exists": (state/(ident+".exit.json")).is_file(),
                      "native_state": "UNKNOWN"})
     return {"status": "INSPECTION_ONLY", "unresolved": rows,
             "native_execution_authorized": False}
@@ -140,6 +141,27 @@ def _write_receipt(path, payload):
         stream.write("\n")
         stream.flush()
         os.fsync(stream.fileno())
+
+
+def _creation_identity(child):
+    """On Windows query the owned process handle, never reopen a recycled PID."""
+    if os.name != "nt" or not isinstance(child, subprocess.Popen):
+        return None
+    try:
+        import ctypes
+        from ctypes import wintypes
+        kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+        query = kernel.GetProcessTimes
+        query.argtypes = [wintypes.HANDLE] + [ctypes.POINTER(wintypes.FILETIME)] * 4
+        query.restype = wintypes.BOOL
+        creation, exit_time, kernel_time, user_time = (wintypes.FILETIME() for _ in range(4))
+        if not query(int(child._handle), ctypes.byref(creation), ctypes.byref(exit_time),
+                     ctypes.byref(kernel_time), ctypes.byref(user_time)):
+            return None
+        return {"source":"windows_owned_process_handle",
+                "creation_filetime":(creation.dwHighDateTime << 32) | creation.dwLowDateTime}
+    except (AttributeError, OSError, ValueError, TypeError):
+        return None
 
 
 def tick(config, popen=subprocess.Popen):
@@ -198,13 +220,17 @@ def tick(config, popen=subprocess.Popen):
                               stdout=stdout, stderr=stderr, shell=False)
                 _write_receipt(state/(turn+".spawn.json"), {
                     "turn_id": turn, "pid": child.pid, "observed_at": time.time(),
-                    "process_creation_identity": None, "native_state": "UNKNOWN"})
+                    "process_creation_identity": _creation_identity(child), "native_state": "UNKNOWN"})
                 mark("RUNNING",child.pid)
                 try:
                     code = child.wait(timeout=wait)
                 except subprocess.TimeoutExpired:
                     # No process-tree kill; native children may still be alive.
                     return mark("CLI_TIMEOUT_UNRESOLVED",child.pid)
+            _write_receipt(state/(turn+".exit.json"), {
+                "turn_id":turn, "pid":child.pid, "exit_code":code,
+                "observed_at":time.time(), "event_sha256":_sha(events.read_bytes()),
+                "native_state":"UNKNOWN"})
             if code != 0 or not _completed(events):
                 return mark("CLI_OUTCOME_UNRESOLVED",child.pid)
             return mark("CLI_COMPLETED",child.pid)

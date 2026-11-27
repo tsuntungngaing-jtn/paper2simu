@@ -44,7 +44,7 @@ def remaining(limit, previously_used, reserved):
 
 def work_progress(plan, events, pending_jobs, can_submit):
     from server.task_liveness import validate_nodes, recovery_candidates
-    validate_nodes(plan)
+    strict = validate_nodes(plan)
     entries = plan.get("work_nodes", [])
     nodes = {entry["id"]: entry for entry in entries}
     if len(nodes) != len(entries):
@@ -80,6 +80,9 @@ def work_progress(plan, events, pending_jobs, can_submit):
         elif node_id in blockers or not set(dependencies[node_id]).issubset(completed):
             raise ValueError(f"{node_id}: resolve its blockers and dependencies before marking it complete")
         else:
+            if strict and (event.get("revision_binding") != nodes[node_id]["revision_binding"]
+                           or not event.get("review_receipt")):
+                raise ValueError(f"{node_id}: completion requires current revision and review receipt")
             completed.add(node_id)
 
     waiting = {}
@@ -113,6 +116,10 @@ def work_progress(plan, events, pending_jobs, can_submit):
                          f" | tried: {item['last_attempt']} | observed: {item['actual_return']}"
                          f" | resumes when: {item['resume_when']} | check next: {item['next_action']}"
                          f" | evidence: {', '.join(item['evidence_refs'])}")
+    for key, item in blockers.items():
+        if not item.get("incident_id") or not nodes[key].get("resource_domain"):
+            lines.append("  - RECOVERY MAPPING REQUIRED: " + key
+                         + " | record reviewed resource_domain and stable incident_id; no inferred authorization")
     for candidate in recovery_candidates(plan, blockers):
         lines.append("  - RECOVERY CANDIDATE (verify authorization): " + candidate["id"]
                      + " | " + candidate["action"] + " | proposed: " + candidate["proposed_next_action"])

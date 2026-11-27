@@ -83,3 +83,55 @@ def test_stdio_unknown_not_inferred():
     assert classify({"configured":True})["next_evidence"] == "environment_ok"
     assert classify({"configured":True,"environment_ok":False})["status"] == "EXECUTABLE_ENV_INVALID"
     assert classify({})["status"] == "UNKNOWN"
+
+
+def test_liveness_set_order_and_duplicates():
+    o = dict(node_states={"x":"READY"},blockers=["a","b"],
+             verified_milestones=["m1","m2"],eligible_ready=["x","y"])
+    other = dict(o,blockers=["b","a","a"],verified_milestones=["m2","m1"],
+                 eligible_ready=["y","x"])
+    assert repeated_observations([o,other]) == "REPLAN_READY_WORK"
+
+
+def test_legacy_migration_preserves_native_gates():
+    from server.task_liveness import migration_preview, reviewed_completion
+    old = dict(task_id="t",work_nodes=[{"id":"x","action":"read"}])
+    assert migration_preview(old,{})["status"] == "MIGRATION_INCOMPLETE"
+    metadata = dict(owner_role="A06",operation_scope="read_only",completion_evidence="receipt",
+                    resource_domain="host",revision_binding="r",attempt_budget=1,failure_edges=[])
+    new = migration_preview(old,{"x":metadata})["plan"]
+    assert "work_schema" not in old and new["work_nodes"][0]["id"] == "x"
+    with pytest.raises(ValueError):
+        migration_preview(old,{"x":dict(metadata,requires_submission=False)})
+    event = reviewed_completion(new,"x","r",["receipt"],"review")
+    assert work_progress(new,[event],[],False)[0] is None
+    with pytest.raises(ValueError):
+        work_progress(new,[dict(event,revision_binding="old")],[],False)
+
+
+def test_replay_receipt_binding(tmp_path):
+    import json
+    from server.trace_evidence import replay_consumption
+    from server.stdio_diagnostics import classify_receipts
+    a,b = trace()
+    a["source_receipt_id"]="ra"
+    b["source_receipt_id"]="rb"
+    idx={}
+    def put(ident,payload):
+        data=json.dumps(dict(payload,receipt_id=ident)).encode()
+        (tmp_path/ident).write_bytes(data)
+        idx[ident]={"path":ident,"sha256":hashlib.sha256(data).hexdigest()}
+    put("ra",{"event_projection":a})
+    put("rb",{"event_projection":b})
+    result=replay_consumption([a,b],tmp_path,idx)
+    assert result["receipt_bytes_verified"] and not result["authenticity_verified"]
+    with pytest.raises(ValueError):
+        replay_consumption([a,dict(b,disposition="HOLD")],tmp_path,idx)
+    ctx=dict(host_id="h",turn_id="t",provider_id="p")
+    put("s",dict(ctx,stage="configured",observed=True))
+    assert classify_receipts(tmp_path,idx,["s"],ctx)["next_evidence"]=="environment_ok"
+    with pytest.raises(ValueError):
+        classify_receipts(tmp_path,idx,["s"],dict(ctx,turn_id="old"))
+    (tmp_path/"ra").write_bytes(b"changed")
+    with pytest.raises(ValueError):
+        replay_consumption([a,b],tmp_path,idx)

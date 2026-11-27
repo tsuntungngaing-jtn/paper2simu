@@ -67,3 +67,21 @@ def consumption_view(events):
     return {"used": edges, "dispositions": len(decisions),
             "artifact_count": len(artifacts), "authenticity_verified": False,
             "native_execution_authorized": False}
+
+
+def replay_consumption(events, root, approved_index):
+    """Check exact normalized event against retained receipt projection.
+
+    Index must be independently approved; does not authenticate its collector.
+    Keep structural-only consumption_view separate for legacy offline tests.
+    """
+    from server.receipt_evidence import load_receipt
+    for event in events:
+        if event.get("event") not in ("artifact_observed","consumer_disposition"):
+            continue
+        receipt = load_receipt(root, approved_index, event.get("source_receipt_id"))
+        if receipt.get("event_projection") != event:
+            raise ValueError("event does not match retained receipt projection")
+    result = consumption_view(events)
+    result["receipt_bytes_verified"] = True
+    return result

@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -94,6 +95,34 @@ def public_files(root=ROOT):
     return result
 
 
+def source_identity(root, files):
+    """Bind exact published bytes to a Git SHA when available.
+
+    A non-Git source or line-ending/content differences are explicitly unverified.
+    No secrets or working-tree private paths are recorded.
+    """
+    try:
+        commit = subprocess.check_output(["git","-C",str(root),"rev-parse","HEAD"],
+                                         stderr=subprocess.DEVNULL, text=True).strip()
+        if not re.fullmatch(r"[0-9a-f]{40}",commit):
+            raise ValueError("unsupported object format")
+        raw = subprocess.check_output(["git","-C",str(root),"ls-tree","-r","-z",commit],
+                                      stderr=subprocess.DEVNULL)
+        tree = {}
+        for entry in raw.split(b"\0"):
+            if entry:
+                meta, name = entry.split(b"\t",1)
+                tree[name.decode("utf-8")] = meta.split()[2].decode("ascii")
+        matches = all(tree.get(name) == hashlib.sha1(
+            ("blob "+str(len(data))+"\0").encode("ascii")+data).hexdigest()
+            for name,data in files)
+        return {"build_protocol":"paper2simu-release/2","source_commit":commit,
+                "source_binding":"EXACT_PUBLISHED_BYTES" if matches else "PUBLISHED_BYTES_DIFFER"}
+    except (OSError, ValueError, subprocess.CalledProcessError):
+        return {"build_protocol":"paper2simu-release/2","source_commit":None,
+                "source_binding":"UNVERIFIED"}
+
+
 def build(output, root=ROOT):
     output=Path(output).resolve()
     if output.is_relative_to(Path(root).resolve()):
@@ -101,6 +130,7 @@ def build(output, root=ROOT):
     files=public_files(root)
     manifest={'format':1,'skill_name':'paper2simu','display_name':'Paper2Simu','author':'Mengzhu Guohe (Douyin)','files':[
         {'path':name,'bytes':len(data),'sha256':digest(data)} for name,data in files]}
+    manifest.update(source_identity(root, files))
     files.append(('RELEASE_MANIFEST.json',(json.dumps(manifest,indent=2)+'\n').encode()))
     output.parent.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as archive:

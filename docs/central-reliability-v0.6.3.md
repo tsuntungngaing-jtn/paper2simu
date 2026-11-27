@@ -44,3 +44,27 @@ remain NOT_RUN. Pending checks only block dependent work.
 - Existing composite refresh remains conservative until trusted action-scope
   adapter is verified. Read-only local diagnosis must not depend on solve
   authorization. Historical claim release and cross-host ownership stay guarded.
+
+
+## PC8 PR39 feedback follow-up
+
+- migration_preview takes explicit reviewed metadata for existing legacy IDs,
+  preserves existing gates and refuses missing/conflicting metadata. No write.
+  Renderer exposes missing resource/incident mapping; strict completion
+  requires current revision and review receipt. An omitted paper node must be
+  proposed under the original authorized task, not guessed from a report.
+- Liveness normalizes set-like fields independent of list order/duplicates.
+- Windows CLI records creation FILETIME through its owned Popen handle when
+  available and a separate exit receipt. Unknown creation identity and
+  spawn/receipt crash gaps still block; no automatic or forced clear.
+- receipt_evidence supports independently indexed retained redacted JSON
+  bytes; TRACE replay requires exact event projection; stdio replay requires
+  same host/turn/provider and rejects conflicting observations. These are
+  replay adapters, not live host capture or authentication.
+- ZIP manifest now contains build_protocol, source_commit and source_binding.
+  Exact published bytes are checked against Git blob hashes. Non-Git and
+  changed/CRLF-transformed sources are explicitly not exact-bound.
+  This is not a signed release or proof of runtime loading.
+- Actual PC8 host adapter, original task migration, original TRACE collector,
+  actual loaded deployment identity, CLI hard crash reconciliation, native
+  attachment, ACL and production migration remain NOT_RUN.

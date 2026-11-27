@@ -14,3 +14,5 @@ resource use is uncertain. Never use an unrelated CLI's success to establish
 Desktop health. Only a fresh read-only call in the real scheduled context
 proves that context has usable tools. No live handshake adapter supplied here.
 PC8 exact root cause and actual Fluent connection acceptance remain NOT_RUN.
+
+For reviewed redacted per-stage receipt JSON, use classify_receipts(root, approved_index, receipt_ids, expected_context). Each receipt contains receipt_id, host_id, turn_id, provider_id, stage, observed (true/false/null). Index entries contain path and SHA-256. Same-context linkage and bytes are checked; authentication and actual collection remain host responsibilities. Do not generate missing stage receipts.

@@ -108,3 +108,14 @@ def test_config_shape_does_not_require_false_attestation(tmp_path):
     validate(c, admit=False)
     with pytest.raises(ValueError):
         validate(c)
+
+
+def test_exit_receipt_and_unknown_identity(tmp_path):
+    c = config(tmp_path)
+    result = tick(c, fake("fail", []))
+    state = Path(c["state_dir"])
+    spawn = json.loads((state/(result["turn_id"]+".spawn.json")).read_text())
+    end = json.loads((state/(result["turn_id"]+".exit.json")).read_text())
+    assert spawn["process_creation_identity"] is None
+    assert end["exit_code"] == 1 and end["native_state"] == "UNKNOWN"
+    assert inspect_state(state)["unresolved"][0]["exit_receipt_exists"]

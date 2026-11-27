@@ -93,10 +93,74 @@ def repeated_observations(observations, threshold=2):
     def fingerprint(item):
         if any(k not in item for k in keys):
             raise ValueError("incomplete observation")
-        return json.dumps({k:item[k] for k in keys},sort_keys=True,allow_nan=False)
+        # These three fields are sets of normalized observations, not event order.
+        def canonical(value):
+            return json.dumps(value,sort_keys=True,separators=(",",":"),allow_nan=False)
+        normalized = {"node_states":item["node_states"]}
+        if not isinstance(normalized["node_states"],dict):
+            raise ValueError("node_states must map stable node IDs to state")
+        for key in ("blockers","verified_milestones","eligible_ready"):
+            if not isinstance(item[key],list):
+                raise ValueError(key + " must be a list")
+            normalized[key] = sorted({canonical(v) for v in item[key]})
+        return canonical(normalized)
     if len(observations) < threshold:
         return "INSUFFICIENT_OBSERVATIONS"
     tail = observations[-threshold:]
     if len({fingerprint(i) for i in tail}) != 1:
         return "STATE_CHANGED"
     return "REPLAN_READY_WORK" if tail[-1]["eligible_ready"] else "WAIT_OR_ESCALATE_MINIMAL_BLOCKER"
+
+
+def migration_preview(plan, reviewed_nodes):
+    """Return a proposed revision, never write or infer missing permissions.
+
+    reviewed_nodes maps existing node IDs to explicit reviewed metadata.
+    Preserve old IDs, actions, dependencies and native guards. New tasks need
+    a separately approved plan revision; do not infer them from prose.
+    """
+    from copy import deepcopy
+    proposed = deepcopy(plan)
+    nodes = proposed.get("work_nodes", [])
+    ids = {n["id"] for n in nodes}
+    if set(reviewed_nodes) - ids:
+        raise ValueError("unknown existing node in migration")
+    fields = {"owner_role","operation_scope","completion_evidence",
+              "resource_domain","revision_binding","attempt_budget","failure_edges"}
+    for node in nodes:
+        supplied = reviewed_nodes.get(node["id"], {})
+        if set(supplied) - fields:
+            raise ValueError("migration must preserve original node and gates")
+        for key, value in supplied.items():
+            if key in node and node[key] != value:
+                raise ValueError("existing metadata conflicts: " + node["id"])
+            node[key] = deepcopy(value)
+        node.setdefault("depends_on", [])
+    gaps = [{"node_id":n["id"],"missing":sorted(fields-set(n))}
+            for n in nodes if fields-set(n)]
+    if not nodes or gaps:
+        return {"status":"MIGRATION_INCOMPLETE","gaps":gaps,
+                "native_execution_authorized":False}
+    proposed["work_schema"] = "work-nodes/2"
+    validate_nodes(proposed)
+    return {"status":"PROPOSED_REVIEW_REQUIRED","plan":proposed,
+            "native_execution_authorized":False}
+
+
+def reviewed_completion(plan, node_id, revision, evidence_refs, review_receipt):
+    """Build an event proposal for the existing journal, not a completion claim.
+
+    The authorized writer must validate actual evidence and independence,
+    dependencies and blockers using the original renderer before appending.
+    """
+    nodes = {n["id"]:n for n in plan.get("work_nodes",[])}
+    if node_id not in nodes or nodes[node_id].get("revision_binding") != revision:
+        raise ValueError("unknown node or stale revision")
+    if not isinstance(evidence_refs,list) or not evidence_refs or not all(
+            isinstance(x,str) and x.strip() for x in evidence_refs):
+        raise ValueError("missing completion evidence")
+    if not isinstance(review_receipt,str) or not review_receipt.strip():
+        raise ValueError("missing review receipt")
+    return {"event":"work_completed","node_id":node_id,
+            "revision_binding":revision,"evidence_refs":sorted(set(evidence_refs)),
+            "review_receipt":review_receipt}
