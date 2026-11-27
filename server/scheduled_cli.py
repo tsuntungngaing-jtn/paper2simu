@@ -111,6 +111,55 @@ def _completed(events):
     return phase == "COMPLETE"
 
 
+def verify_chain(state, turn, *, anchor=None):
+    """Read-only inspection. Anchor must be independently retained digests."""
+    state = _path(state, True)
+    if not isinstance(turn,str) or not re.fullmatch(r"[0-9a-f]{32}",turn):
+        raise ValueError("invalid turn identity")
+    issues, digests, receipts = [], {}, {}
+    for kind in ("intent","spawn","exit"):
+        p=state/(turn+"."+kind+".json")
+        try:
+            if p.is_symlink() or not p.resolve().is_relative_to(state):
+                raise ValueError("outside state")
+            data=p.read_bytes()
+            digests[kind]=_sha(data)
+            obj=json.loads(data)
+            if not isinstance(obj,dict) or obj.get("turn_id")!=turn:
+                raise ValueError("wrong turn")
+            receipts[kind]=obj
+        except (OSError,ValueError,TypeError):
+            issues.append(kind+":MISSING_OR_INVALID")
+    intent,spawn,end=(receipts.get(k,{}) for k in ("intent","spawn","exit"))
+    if spawn and spawn.get("intent_sha256")!=digests.get("intent"):
+        issues.append("INTENT_LINK_MISMATCH")
+    if end and end.get("spawn_sha256")!=digests.get("spawn"):
+        issues.append("SPAWN_LINK_MISMATCH")
+    if end and (end.get("pid")!=spawn.get("pid") or end.get("process_creation_identity")!=spawn.get("process_creation_identity")):
+        issues.append("PROCESS_IDENTITY_MISMATCH")
+    ident=spawn.get("process_creation_identity")
+    if not isinstance(ident,dict) or type(ident.get("creation_filetime")) is not int or ident["creation_filetime"]<=0:
+        issues.append("PROCESS_CREATION_UNKNOWN")
+    if type(spawn.get("pid")) is not int or spawn["pid"]<=0 or type(end.get("exit_code")) is not int:
+        issues.append("PROCESS_OR_EXIT_UNKNOWN")
+    try:
+        p=state/(turn+".jsonl")
+        if p.is_symlink() or not p.resolve().is_relative_to(state):
+            raise ValueError("outside state")
+        digests["events"]=_sha(p.read_bytes())
+        if end and end.get("event_sha256")!=digests["events"]:
+            issues.append("EVENT_DIGEST_MISMATCH")
+    except (OSError,ValueError):
+        issues.append("EVENTS_MISSING_OR_INVALID")
+    if anchor is None:
+        issues.append("INDEPENDENT_ANCHOR_MISSING")
+    elif not isinstance(anchor,dict) or set(anchor)!={"intent","spawn","exit","events"} or anchor!=digests:
+        issues.append("ANCHOR_MISMATCH")
+    return {"status":"CHAIN_MATCHES_ANCHOR" if not issues else "UNRESOLVED",
+            "issues":issues,"digests":digests,"native_state":"UNKNOWN",
+            "native_execution_authorized":False,"release_authorized":False}
+
+
 def inspect_state(state):
     """Read-only inspection; never clear a CLI or native claim."""
     state = _path(state, True)
@@ -130,7 +179,8 @@ def inspect_state(state):
                      "spawn_receipt_exists": (state/(ident+".spawn.json")).is_file(),
                      "event_bytes": events.stat().st_size if events.is_file() else None,
                      "exit_receipt_exists": (state/(ident+".exit.json")).is_file(),
-                     "native_state": "UNKNOWN"})
+                     "native_state": "UNKNOWN",
+                     "chain_inspection": verify_chain(state,ident)})
     return {"status": "INSPECTION_ONLY", "unresolved": rows,
             "native_execution_authorized": False}
 

@@ -24,6 +24,42 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+REQUIRED_PATHS = {"SKILL.md","README.md","LICENSE","pyproject.toml","server/main.py",
+                  "vendor/installed-mcp/LICENSE","vendor/installed-mcp/SNAPSHOT.json",
+                  "examples/catalog.json","paper2simu/SKILL.md","paper2simu-execution-trace/SKILL.md"}
+
+
+def publication_path(rel):
+    rel = Path(rel)
+    if any(part in SKIP_PARTS or part.endswith('.egg-info') for part in rel.parts):
+        return False
+    if len(rel.parts)==1:
+        if rel.name not in ROOT_FILES:
+            return False
+    elif rel.parts[0] == '.codex':
+        # Only the reviewed specialist role files; never package local config or secrets.
+        if len(rel.parts) != 3 or rel.parts[1] != 'agents' or rel.name not in {
+            'paper2simu_paper_reader.toml', 'paper2simu_documentation_expert.toml',
+            'paper2simu_physics_reviewer.toml', 'paper2simu_supervisor.toml',
+            'paper2simu_recovery_agent.toml', 'paper2simu_executor.toml',
+            'paper2simu_acceptance_agent.toml', 'paper2simu_recorder.toml',
+            'paper2simu_experiment_designer.toml'}:
+            return False
+    elif rel.as_posix() == 'references/recovery-history.json':
+        pass
+    elif rel.parts[0] not in DIRECTORIES:
+        return False
+    if rel.suffix.lower() in FORBIDDEN_EXTENSIONS or rel.name.startswith('.env'):
+        raise ValueError(f'Forbidden file in a publication directory: {rel}')
+    pack_jsonl = (rel.suffix.lower() == '.jsonl' and len(rel.parts) >= 4
+                  and rel.parts[:2] == ('agent-knowledge', 'packs')
+                  and rel.parts[2] in {'Paper2Simu-Knowledge-r1', 'Paper2Simu-Solver-Knowledge-r2'})
+    formal = rel.as_posix() in {'docs/formal/Coordination.tla','docs/formal/Coordination.cfg'}
+    if rel.suffix.lower() not in EXTENSIONS and rel.name not in ROOT_FILES and not pack_jsonl and not formal:
+        raise ValueError(f'Unreviewed file type in publication directory: {rel}')
+    return True
+
+
 def public_files(root=ROOT):
     root=Path(root).resolve()
     result=[]
@@ -35,30 +71,8 @@ def public_files(root=ROOT):
             continue
         if p.is_symlink() or not p.resolve().is_relative_to(root):
             raise ValueError(f'Symlinks are not published: {rel}')
-        if len(rel.parts)==1:
-            if p.name not in ROOT_FILES:
-                continue
-        elif rel.parts[0] == '.codex':
-            # Only the reviewed specialist role files; never package local config or secrets.
-            if len(rel.parts) != 3 or rel.parts[1] != 'agents' or rel.name not in {
-                'paper2simu_paper_reader.toml', 'paper2simu_documentation_expert.toml',
-                'paper2simu_physics_reviewer.toml', 'paper2simu_supervisor.toml',
-                'paper2simu_recovery_agent.toml', 'paper2simu_executor.toml',
-                'paper2simu_acceptance_agent.toml', 'paper2simu_recorder.toml',
-                'paper2simu_experiment_designer.toml'}:
-                continue
-        elif rel.as_posix() == 'references/recovery-history.json':
-            pass
-        elif rel.parts[0] not in DIRECTORIES:
+        if not publication_path(rel):
             continue
-        if p.suffix.lower() in FORBIDDEN_EXTENSIONS or p.name.startswith('.env'):
-            raise ValueError(f'Forbidden file in a publication directory: {rel}')
-        pack_jsonl = (p.suffix.lower() == '.jsonl' and len(rel.parts) >= 4
-                      and rel.parts[:2] == ('agent-knowledge', 'packs')
-                      and rel.parts[2] in {'Paper2Simu-Knowledge-r1', 'Paper2Simu-Solver-Knowledge-r2'})
-        formal = rel.as_posix() in {'docs/formal/Coordination.tla','docs/formal/Coordination.cfg'}
-        if p.suffix.lower() not in EXTENSIONS and p.name not in ROOT_FILES and not pack_jsonl and not formal:
-            raise ValueError(f'Unreviewed file type in publication directory: {rel}')
         data=p.read_bytes()
         # Match file-name/word markers, not accidental substrings in SHA digests.
         private_terms=['D'+'BC', 'codex'+'-clipboard', 'AppData'+'\\Local\\Temp']
@@ -79,8 +93,7 @@ def public_files(root=ROOT):
                 raise ValueError(f'Private key in {rel}')
         result.append((rel.as_posix(), data))
     present={name for name,_ in result}
-    for required in ['SKILL.md','README.md','LICENSE','pyproject.toml','server/main.py',
-                     'vendor/installed-mcp/LICENSE','examples/catalog.json']:
+    for required in sorted(REQUIRED_PATHS):
         if required not in present:
             raise ValueError(f'Missing required distribution file: {required}')
     snapshot_path=root/'vendor/installed-mcp/SNAPSHOT.json'
@@ -115,24 +128,9 @@ def source_identity(root, files):
                 tree[name.decode("utf-8")] = meta.split()[2].decode("ascii")
         # Determine eligible tracked paths from Git, not the supplied list.
         # Reuse the publication policy on path names; no checkout mutation.
-        def eligible(name):
-            rel = Path(name)
-            parts = rel.parts
-            if any(p in SKIP_PARTS or p.endswith(".egg-info") for p in parts):
-                return False
-            if len(parts) == 1:
-                return rel.name in ROOT_FILES
-            if parts[0] == ".codex":
-                return len(parts)==3 and parts[1]=="agents" and rel.name in {
-                    "paper2simu_paper_reader.toml","paper2simu_documentation_expert.toml",
-                    "paper2simu_physics_reviewer.toml","paper2simu_supervisor.toml",
-                    "paper2simu_recovery_agent.toml","paper2simu_executor.toml",
-                    "paper2simu_acceptance_agent.toml","paper2simu_recorder.toml",
-                    "paper2simu_experiment_designer.toml"}
-            return name == "references/recovery-history.json" or parts[0] in DIRECTORIES
-        expected = {name for name in tree if eligible(name)}
+        expected = {name for name in tree if publication_path(Path(name))}
         supplied = {name for name,_ in files}
-        complete = bool(expected) and supplied == expected and len(supplied)==len(files)
+        complete = REQUIRED_PATHS.issubset(expected) and supplied == expected and len(supplied)==len(files)
         matches = complete and all(tree.get(name) == hashlib.sha1(
             ("blob "+str(len(data))+"\0").encode("ascii")+data).hexdigest()
             for name,data in files)

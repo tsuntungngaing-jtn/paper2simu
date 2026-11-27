@@ -104,3 +104,36 @@ remain NOT_RUN. Pending checks only block dependent work.
 No live host capture, real ACL, production legacy mapping, actual agent claim
 engine, cross-host transfer, or evidence-based reservation release is supplied
 by this revision. Native tests and PC8 Fluent recovery remain open.
+
+
+## PC8 Round 3 revision (display version 0.6.3)
+
+Isolated provider handshake and session_status succeeded with native
+connected=false; actual Desktop still failed initialization. Separate lanes.
+Bind host/turn/provider and when available launch/origin in retained receipts;
+first_missing_stage and first_failed_stage are independent. Replay is not
+live host capture.
+
+Legacy audit preserves physical lines and overlapping possible-native markers.
+Use python scripts/research_resume.py legacy-preview PLAN JOURNAL for read-only
+JSON output. unresolved_native is a review list, never a submission count or
+resource release. Strict completion requires retained artifact bytes and
+review-bound artifact_sha256 for all refs. refresh accepts review_context
+via trusted calling code; no untrusted auto-discovery. Worker authentication,
+full migration and scheduled host integration remain open.
+
+Incident projection replays lifecycle events in existing journal, preserves
+one node budget across recurrence, rejects duplicate generations. Caller must
+authenticate source, review and original budget. No execution authorization.
+
+CLI verify_chain checks intent/spawn/exit/events, links and independent anchor.
+inspect_state reports conservative inspection without anchor. No release,
+process kill or native terminal inference.
+
+Release shares one path predicate and requires both Skills. Git byte/path
+checking is not signed issuance or actual loaded identity.
+
+Open: real production telemetry and ACL, dispatch engine, authorized
+cross-thread handoff, legacy migration, cross-host ownership, native
+reconciliation/release and production liveness normalization.
+All original scientific gates and resource claims remain unchanged.

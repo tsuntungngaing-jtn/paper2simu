@@ -1,6 +1,5 @@
 """Classify observed official-provider handshake stages without launching it."""
-def classify(observed):
-    order = [
+STAGES = [
         ("configured","NOT_CONFIGURED"),
         ("environment_ok","EXECUTABLE_ENV_INVALID"),
         ("child_started","CHILD_START_FAILED"),
@@ -14,7 +13,8 @@ def classify(observed):
         ("native_attach_ok","NATIVE_ATTACH_FAILED"),
         ("license_ok","LICENSE_UNVERIFIED_OR_FAILED"),
     ]
-    for key, failure in order:
+def classify(observed):
+    for key, failure in STAGES:
         value = observed.get(key)
         if value is None:
             return {"status":"UNKNOWN","next_evidence":key,"native_execution_authorized":False}
@@ -29,6 +29,10 @@ def classify_receipts(root, approved_index, receipt_ids, expected_context):
     """Replay redacted same-context observations; no claim of host authenticity."""
     from server.receipt_evidence import load_receipt
     keys = ("host_id","turn_id","provider_id")
+    if "launch_id" in expected_context:
+        keys += ("launch_id",)
+    if "origin" in expected_context:
+        keys += ("origin",)
     if not all(isinstance(expected_context.get(k),str) and expected_context[k] for k in keys):
         raise ValueError("missing context")
     observed = {}
@@ -53,5 +57,7 @@ def classify_receipts(root, approved_index, receipt_ids, expected_context):
     out["known_failed_stages"] = sorted(k for k,v in observed.items() if v is False)
     out["observed_stages"] = sorted(k for k,v in observed.items() if v is not None)
     out["first_unresolved_stage"] = out.get("next_evidence")
+    out["first_missing_stage"] = next((k for k,_ in STAGES if observed.get(k) is None),None)
+    out["first_failed_stage"] = next((k for k,_ in STAGES if observed.get(k) is False),None)
     out["authenticity_verified"] = False
     return out

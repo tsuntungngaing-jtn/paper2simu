@@ -229,7 +229,7 @@ def verify_completion_receipt(plan, event, root, approved_index):
     The caller must independently establish the index's authority and actual
     worker identities. A hash alone is not authentication or a scientific PASS.
     """
-    from server.receipt_evidence import load_receipt
+    from server.receipt_evidence import load_receipt, load_retained_bytes
     node = next((n for n in plan["work_nodes"] if n["id"] == event["node_id"]),None)
     if node is None or event.get("revision_binding") != node["revision_binding"]:
         raise ValueError("unknown node or stale revision")
@@ -245,4 +245,78 @@ def verify_completion_receipt(plan, event, root, approved_index):
     producer, reviewer = receipt.get("producer_worker"),receipt.get("reviewer_worker")
     if not all(isinstance(v,str) and v.strip() for v in (producer,reviewer)) or producer == reviewer:
         raise ValueError("independent worker identities required")
+    artifacts = receipt.get("artifact_sha256")
+    refs = expected["evidence_refs"]
+    if not isinstance(artifacts,dict) or set(artifacts) != set(refs) or not refs:
+        raise ValueError("review must bind all artifact digests")
+    for ref in refs:
+        data = load_retained_bytes(root,approved_index,ref)
+        if hashlib.sha256(data).hexdigest() != artifacts[ref]:
+            raise ValueError("reviewed artifact changed")
     return True
+
+
+def incident_projection(plan, events):
+    """Replay approved incident events from the original journal; no writer.
+
+    The host authenticates source/review receipts and serializes append.
+    This projection never authorizes an attempt or native execution.
+    """
+    nodes = {n["id"]:n for n in plan["work_nodes"]}
+    scopes, seen_ids, seen_events = {}, set(), {}
+    kinds = {"incident_open","incident_reclassified","incident_recovered",
+             "incident_recurred","incident_attempt"}
+    for e in events:
+        if e.get("event") not in kinds:
+            continue
+        eid=e.get("event_id")
+        if not isinstance(eid,str) or not eid:
+            raise ValueError("missing incident event identity")
+        serialized=json.dumps(e,sort_keys=True,allow_nan=False)
+        if eid in seen_events:
+            if seen_events[eid]!=serialized:
+                raise ValueError("conflicting incident event")
+            continue
+        seen_events[eid]=serialized
+        n=nodes.get(e.get("node_id"))
+        if n is None or not n.get("resource_domain") or e.get("resource_domain") != n["resource_domain"]:
+            raise ValueError("invalid incident resource scope")
+        if e.get("revision_binding") != n.get("revision_binding") or not e.get("source_turn_id") or not e.get("evidence_refs"):
+            raise ValueError("missing incident revision or source evidence")
+        budget=n.get("attempt_budget")
+        if type(budget) is not int or budget<0:
+            raise ValueError("invalid original attempt budget")
+        key=(n["id"],n["resource_domain"])
+        ident=e.get("incident_id")
+        if not isinstance(ident,str) or not ident:
+            raise ValueError("missing incident ID")
+        kind=e["event"]
+        current=scopes.get(key)
+        if kind in {"incident_open","incident_recurred"}:
+            if ident in seen_ids or (kind=="incident_open" and current is not None):
+                raise ValueError("duplicate incident generation")
+            if kind=="incident_recurred" and (current is None or current["open"] or
+                     e.get("previous_incident_id")!=current["incident_id"] or not e.get("review_receipt")):
+                raise ValueError("recurrence requires reviewed closed generation")
+            spent=current["attempts_used"] if current else 0
+            current={"incident_id":ident,"generation":current["generation"]+1 if current else 1,
+                     "open":True,"attempts_used":spent,"classification":e.get("classification")}
+            scopes[key]=current
+            seen_ids.add(ident)
+        else:
+            if current is None or not current["open"] or current["incident_id"]!=ident:
+                raise ValueError("incident not active in scope")
+            if kind=="incident_reclassified":
+                current["classification"]=e.get("classification")
+            elif kind=="incident_recovered":
+                if not e.get("review_receipt"):
+                    raise ValueError("missing reviewed recovery evidence")
+                current["open"]=False
+            elif kind=="incident_attempt":
+                if current["attempts_used"]>=budget:
+                    raise ValueError("original attempt budget exhausted")
+                current["attempts_used"]+=1
+    return {"incidents":[dict(v,node_id=k[0],resource_domain=k[1],
+             attempts_remaining=max(0,nodes[k[0]]["attempt_budget"]-v["attempts_used"]))
+             for k,v in sorted(scopes.items())],
+            "source_authenticity_verified":False,"native_execution_authorized":False}

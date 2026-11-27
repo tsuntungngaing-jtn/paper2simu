@@ -18,3 +18,5 @@ PC8 exact root cause and actual Fluent connection acceptance remain NOT_RUN.
 For reviewed redacted per-stage receipt JSON, use classify_receipts(root, approved_index, receipt_ids, expected_context). Each receipt contains receipt_id, host_id, turn_id, provider_id, stage, observed (true/false/null). Index entries contain path and SHA-256. Same-context linkage and bytes are checked; authentication and actual collection remain host responsibilities. Do not generate missing stage receipts.
 
 Round 2: distinguish the first unresolved stage from all observed failed stages. A retained host report of initialize failure is not a confirmed child exit; never fill missing same-turn config/environment evidence from another turn. Empty receipt chain does not verify bytes.
+
+Round 3: isolated protocol handshake and session_status with connected=false establish only isolated provider response. Desktop tool discovery, native attachment, license and ACL remain separate. Request supported same-launch redacted host events; bind launch_id and origin in expected_context. Never combine isolated and production receipts. first_missing_stage and first_failed_stage are independent.

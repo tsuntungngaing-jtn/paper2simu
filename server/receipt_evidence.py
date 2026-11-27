@@ -11,7 +11,7 @@ import re
 HEX = re.compile(r"[0-9a-f]{64}\Z")
 
 
-def load_receipt(root, index, receipt_id):
+def load_retained_bytes(root, index, receipt_id):
     root = Path(root).resolve(strict=True)
     record = index.get(receipt_id)
     if not isinstance(record,dict):
@@ -28,7 +28,11 @@ def load_receipt(root, index, receipt_id):
     data = resolved.read_bytes()
     if hashlib.sha256(data).hexdigest() != expected:
         raise ValueError("receipt hash mismatch")
-    value = json.loads(data)
+    return data
+
+
+def load_receipt(root, index, receipt_id):
+    value = json.loads(load_retained_bytes(root,index,receipt_id))
     if not isinstance(value,dict) or value.get("receipt_id") != receipt_id:
         raise ValueError("receipt identity mismatch")
     return value

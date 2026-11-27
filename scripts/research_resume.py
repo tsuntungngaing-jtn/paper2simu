@@ -259,11 +259,11 @@ def render_summary(plan, events, journal, *, review_context=None):
     return "\n".join(lines) + "\n"
 
 
-def refresh(task_dir, journal=None):
+def refresh(task_dir, journal=None, *, review_context=None):
     plan = json.loads((task_dir / "task-plan.json").read_text(encoding="utf-8-sig"))
     if journal is None:
         journal = task_dir / plan.get("journal", "trials/events.jsonl")
-    summary = render_summary(plan, read_events(journal), journal)
+    summary = render_summary(plan, read_events(journal), journal, review_context=review_context)
     target = task_dir / "resume.md"
     temporary = None
     try:
@@ -283,12 +283,18 @@ def main():
     task = commands.add_parser("refresh", help="write the task's resume.md")
     task.add_argument("task_dir", type=Path)
     task.add_argument("--journal", type=Path, help="override the event journal path for this refresh")
+    preview = commands.add_parser("legacy-preview", help="audit legacy lines without replay or writes")
+    preview.add_argument("plan", type=Path)
+    preview.add_argument("journal", type=Path)
     board = commands.add_parser("board", help="print a read-only view of existing resume.md files")
     board.add_argument("summaries", type=Path, nargs="+")
     args = parser.parse_args()
     try:
         if args.command == "refresh":
             print(refresh(args.task_dir, args.journal))
+        elif args.command == "legacy-preview":
+            plan = json.loads(args.plan.read_text(encoding="utf-8-sig"))
+            print(json.dumps(legacy_journal_preview(plan,args.journal),ensure_ascii=False))
         else:
             for path in args.summaries:
                 if path.name != "resume.md":
@@ -301,33 +307,55 @@ def main():
         parser.exit(2, f"Unable to refresh handoff: {error}\n")
 
 
-if __name__ == "__main__":
-    main()
-
-
 # Legacy logs are evidence sources, never authoritative trial journals.
 def legacy_journal_preview(plan, path):
-    """Read-only line audit; do not replay, drop or rewrite native history."""
+    """Read-only line audit; preserve physical lines and overlapping flags."""
     import hashlib
     nodes = {n["id"] for n in plan.get("work_nodes",[])}
     rows = []
+    native = {"submission_started","submitted","job_observed","evaluated"}
+    markers = {"job_id","operation_id","run_id","trial_id","runtime_id",
+               "original_job_id","original_operation_id","original_deadline",
+               "deadline","deadline_utc","case_clock","case_clock_id","hard_deadline",
+               "job_status","native_state","native_job_id"}
+    def fields(value):
+        if isinstance(value,dict):
+            return ({k for k,v in value.items() if k in markers and v is not None}
+                    | set().union(*(fields(v) for v in value.values())))
+        if isinstance(value,list):
+            return set().union(*(fields(v) for v in value))
+        return set()
     for number, raw in enumerate(Path(path).read_bytes().splitlines(keepends=True),1):
-        if not raw.strip():
-            continue
         status = "REVIEW_MAPPING_REQUIRED"
-        try:
-            item = json.loads(raw.decode("utf-8-sig"))
-            if not isinstance(item,dict) or not item.get("event"):
-                status = "MISSING_EVENT_TYPE"
-            elif item["event"] in WORK_EVENTS and item.get("node_id") not in nodes:
-                status = "UNKNOWN_NODE"
-            elif item["event"] in WORK_EVENTS and not item.get("evidence_refs"):
-                status = "MISSING_EVIDENCE"
-            elif item["event"] in WORK_EVENTS:
-                status = "REVIEW_WORK_EVENT"
-            elif item["event"] in {"submission_started","submitted","job_observed","evaluated"}:
-                status = "RECONCILE_NATIVE_EVENT"
-        except (ValueError,UnicodeError):
-            status = "INVALID_ROW"
-        rows.append({"line":number,"sha256":hashlib.sha256(raw).hexdigest(),"status":status})
-    return {"status":"PREVIEW_ONLY","rows":rows,"native_execution_authorized":False}
+        flags = set()
+        found = set()
+        if not raw.strip():
+            status = "BLANK_ROW"
+        else:
+            try:
+                item = json.loads(raw.decode("utf-8-sig"))
+                found = fields(item)
+                if not isinstance(item,dict) or not item.get("event"):
+                    status = "MISSING_EVENT_TYPE"
+                elif item["event"] in WORK_EVENTS and item.get("node_id") not in nodes:
+                    status = "UNKNOWN_NODE"
+                elif item["event"] in WORK_EVENTS and not item.get("evidence_refs"):
+                    status = "MISSING_EVIDENCE"
+                elif item["event"] in WORK_EVENTS:
+                    status = "REVIEW_WORK_EVENT"
+                elif item["event"] in native:
+                    status = "RECONCILE_NATIVE_EVENT"
+                if found or status == "RECONCILE_NATIVE_EVENT":
+                    flags.add("POSSIBLE_NATIVE_RECONCILIATION")
+            except (ValueError,UnicodeError,TypeError):
+                status = "INVALID_ROW"
+                flags.add("UNCLASSIFIED_CONTENT")
+        rows.append({"line":number,"sha256":hashlib.sha256(raw).hexdigest(),
+                     "status":status,"flags":sorted(flags),"native_markers":sorted(found)})
+    return {"status":"PREVIEW_ONLY","rows":rows,
+            "unresolved_native":[row["line"] for row in rows if row["flags"]],
+            "native_execution_authorized":False}
+
+
+if __name__ == "__main__":
+    main()

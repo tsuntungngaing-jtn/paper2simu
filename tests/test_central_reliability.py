@@ -110,11 +110,18 @@ def test_legacy_migration_preserves_native_gates(tmp_path):
     receipt = dict(receipt_id="review",task_id="t",node_id="x",revision_binding="r",
                    evidence_refs=["receipt"],decision="ACCEPT_COMPLETION",
                    producer_role="A06",reviewer_role="A05",
-                   producer_worker="worker-1",reviewer_worker="worker-2")
+                   producer_worker="worker-1",reviewer_worker="worker-2",
+                   artifact_sha256={"receipt":hashlib.sha256(b"artifact").hexdigest()})
     data=json.dumps(receipt).encode()
     (tmp_path/"review.json").write_bytes(data)
     index={"review":{"path":"review.json","sha256":hashlib.sha256(data).hexdigest()}}
+    (tmp_path/"artifact").write_bytes(b"artifact")
+    index["receipt"]={"path":"artifact","sha256":hashlib.sha256(b"artifact").hexdigest()}
     assert work_progress(new,[event],[],False,review_context=(tmp_path,index))[0] is None
+    (tmp_path/"artifact").write_bytes(b"tampered")
+    with pytest.raises(ValueError):
+        work_progress(new,[event],[],False,review_context=(tmp_path,index))
+    (tmp_path/"artifact").write_bytes(b"artifact")
     with pytest.raises(ValueError):
         work_progress(new,[dict(event,evidence_refs=["other"])],[],False,review_context=(tmp_path,index))
     with pytest.raises(ValueError):
@@ -199,3 +206,66 @@ def test_round2_legacy_preview(tmp_path):
     assert [r["status"] for r in out["rows"]]==[
         "MISSING_EVENT_TYPE","UNKNOWN_NODE","RECONCILE_NATIVE_EVENT"]
     assert path.read_bytes()==raw
+
+
+def test_round3_legacy_multilabel_and_blank(tmp_path):
+    from scripts.research_resume import legacy_journal_preview
+    p=tmp_path/"legacy"
+    p.write_bytes(b'\n{"operation_id":"old","original_deadline":123}\n')
+    out=legacy_journal_preview({},p)
+    assert len(out["rows"])==2
+    assert out["rows"][0]["status"]=="BLANK_ROW"
+    assert out["rows"][1]["status"]=="MISSING_EVENT_TYPE"
+    assert out["unresolved_native"]==[2]
+
+
+def test_round3_missing_vs_failed(tmp_path):
+    import json
+    from server.stdio_diagnostics import classify_receipts
+    ctx=dict(host_id="h",turn_id="t",provider_id="p",launch_id="launch",origin="production")
+    data=json.dumps(dict(ctx,receipt_id="r",stage="configured",observed=False)).encode()
+    (tmp_path/"r").write_bytes(data)
+    result=classify_receipts(tmp_path,{"r":{"path":"r","sha256":hashlib.sha256(data).hexdigest()}},["r"],ctx)
+    assert result["first_failed_stage"]=="configured"
+    assert result["first_missing_stage"]=="environment_ok"
+    with pytest.raises(ValueError):
+        classify_receipts(tmp_path,{"r":{"path":"r","sha256":hashlib.sha256(data).hexdigest()}},["r"],dict(ctx,launch_id="other"))
+
+
+def test_round3_incident_budget_survives_recurrence():
+    from server.task_liveness import incident_projection
+    p=dict(work_nodes=[node("x",attempt_budget=1)])
+    common=dict(node_id="x",resource_domain="host",revision_binding="r",source_turn_id="t",evidence_refs=["e"])
+    def event(kind,eid,ident="i",**kw):
+        return dict(common,event=kind,event_id=eid,incident_id=ident,**kw)
+    seq=[event("incident_open","1"),event("incident_attempt","2"),
+         event("incident_recovered","3",review_receipt="r"),
+         event("incident_recurred","4","i2",previous_incident_id="i",review_receipt="r")]
+    assert incident_projection(p,seq)["incidents"][0]["attempts_remaining"]==0
+    with pytest.raises(ValueError):
+        incident_projection(p,seq+[event("incident_attempt","5","i2")])
+    with pytest.raises(ValueError):
+        incident_projection(p,seq[:2]+[event("incident_open","6","fresh")])
+
+
+def test_round3_chain_anchor_and_tampering(tmp_path):
+    import json
+    from server.scheduled_cli import verify_chain
+    turn="a"*32
+    def put(kind,obj):
+        data=json.dumps(dict(obj,turn_id=turn)).encode()
+        (tmp_path/(turn+"."+kind+".json")).write_bytes(data)
+        return hashlib.sha256(data).hexdigest()
+    ident={"creation_filetime":123}
+    i=put("intent",{})
+    s=put("spawn",dict(intent_sha256=i,pid=1,process_creation_identity=ident))
+    data=b"event"
+    (tmp_path/(turn+".jsonl")).write_bytes(data)
+    ehash=hashlib.sha256(data).hexdigest()
+    e=put("exit",dict(spawn_sha256=s,pid=1,process_creation_identity=ident,event_sha256=ehash,exit_code=0))
+    anchor=dict(intent=i,spawn=s,exit=e,events=ehash)
+    assert verify_chain(tmp_path,turn,anchor=anchor)["status"]=="CHAIN_MATCHES_ANCHOR"
+    assert not verify_chain(tmp_path,turn,anchor=anchor)["release_authorized"]
+    assert verify_chain(tmp_path,turn)["status"]=="UNRESOLVED"
+    put("exit",dict(spawn_sha256=s,pid=1,process_creation_identity=ident,event_sha256=ehash,exit_code=2))
+    assert "ANCHOR_MISMATCH" in verify_chain(tmp_path,turn,anchor=anchor)["issues"]
